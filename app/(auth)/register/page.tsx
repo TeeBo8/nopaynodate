@@ -63,7 +63,6 @@ export default function RegisterPage() {
       name: step1Data.name,
       email: step1Data.email,
       password: step1Data.password,
-      // @ts-expect-error - champs additionnels Better Auth
       gender: selectedGender,
     });
 

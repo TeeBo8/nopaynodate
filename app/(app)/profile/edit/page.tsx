@@ -48,9 +48,7 @@ export default function ProfileEditPage() {
   const [photos, setPhotos] = useState<string[]>([]);
   const [saved, setSaved] = useState(false);
 
-  const isWoman = session?.user && "gender" in session.user
-    ? (session.user as { gender?: string }).gender === "woman"
-    : false;
+  const isWoman = session?.user?.gender === "woman";
 
   const { data: myProfile } = api.profiles.myProfile.useQuery();
 
