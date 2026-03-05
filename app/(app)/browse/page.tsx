@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { profiles, users } from "@/server/db/schema";
-import { eq, ne, and } from "drizzle-orm";
+import { eq, ne, and, desc, sql } from "drizzle-orm";
 import { ProfileCard } from "@/components/profile-card";
 import { Search } from "lucide-react";
 
@@ -42,6 +42,10 @@ export default async function BrowsePage() {
         eq(users.gender, targetGender),
         ne(users.id, session.user.id)
       )
+    )
+    .orderBy(
+      desc(sql`CASE WHEN ${users.premiumUntil} > NOW() THEN 1 ELSE 0 END`),
+      desc(profiles.lastActive)
     )
     .limit(40);
 

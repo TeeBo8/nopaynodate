@@ -1,8 +1,9 @@
 import { headers } from "next/headers";
 import { stripe } from "@/server/stripe/client";
 import { db } from "@/server/db";
-import { deposits, dateRequests, users } from "@/server/db/schema";
+import { deposits, dateRequests, users, subscriptions } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
+import { generateId } from "@/lib/utils";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -50,6 +51,77 @@ export async function POST(req: Request) {
           .set({ isStripeVerified: true, updatedAt: new Date() })
           .where(eq(users.stripeAccountId, account.id));
       }
+      break;
+    }
+
+    case "customer.subscription.created":
+    case "customer.subscription.updated": {
+      const sub = event.data.object;
+      const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer.id;
+
+      const user = await db.query.users.findFirst({
+        where: eq(users.stripeCustomerId, customerId),
+      });
+      if (!user) break;
+
+      const isActive = sub.status === "active" || sub.status === "trialing";
+      const periodEnd = new Date((sub.items.data[0]?.current_period_end ?? sub.billing_cycle_anchor) * 1000);
+      const priceId = sub.items.data[0]?.price.id ?? "";
+
+      const existing = await db.query.subscriptions.findFirst({
+        where: eq(subscriptions.stripeSubscriptionId, sub.id),
+      });
+
+      if (existing) {
+        await db
+          .update(subscriptions)
+          .set({
+            status: sub.status as "active" | "past_due" | "canceled",
+            currentPeriodEnd: periodEnd,
+            updatedAt: new Date(),
+          })
+          .where(eq(subscriptions.stripeSubscriptionId, sub.id));
+      } else {
+        await db.insert(subscriptions).values({
+          id: generateId(),
+          userId: user.id,
+          stripeSubscriptionId: sub.id,
+          stripePriceId: priceId,
+          status: sub.status as "active" | "past_due" | "canceled",
+          currentPeriodEnd: periodEnd,
+        });
+      }
+
+      await db
+        .update(users)
+        .set({
+          premiumUntil: isActive ? periodEnd : null,
+          updatedAt: new Date(),
+        })
+        .where(eq(users.id, user.id));
+
+      break;
+    }
+
+    case "customer.subscription.deleted": {
+      const sub = event.data.object;
+      const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer.id;
+
+      const user = await db.query.users.findFirst({
+        where: eq(users.stripeCustomerId, customerId),
+      });
+      if (!user) break;
+
+      await db
+        .update(subscriptions)
+        .set({ status: "canceled", updatedAt: new Date() })
+        .where(eq(subscriptions.stripeSubscriptionId, sub.id));
+
+      await db
+        .update(users)
+        .set({ premiumUntil: null, updatedAt: new Date() })
+        .where(eq(users.id, user.id));
+
       break;
     }
 
