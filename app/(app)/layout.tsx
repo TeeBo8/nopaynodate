@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import Link from "next/link";
 import { auth } from "@/server/auth";
+import { Button } from "@/components/ui/button";
+import { Heart, Search, User, Settings } from "lucide-react";
 
 export default async function AppLayout({
   children,
@@ -15,6 +18,40 @@ export default async function AppLayout({
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Top nav */}
+      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
+        <div className="container mx-auto px-4 h-14 flex items-center justify-between">
+          <Link href="/browse" className="font-bold text-lg tracking-tight">
+            NoPayNoDate
+          </Link>
+          <nav className="flex items-center gap-1">
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/browse" className="gap-1.5">
+                <Search size={15} />
+                <span className="hidden sm:inline">Découvrir</span>
+              </Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/requests" className="gap-1.5">
+                <Heart size={15} />
+                <span className="hidden sm:inline">Demandes</span>
+              </Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href={`/profile/${session.user.id}`} className="gap-1.5">
+                <User size={15} />
+                <span className="hidden sm:inline">Profil</span>
+              </Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/settings" className="gap-1.5">
+                <Settings size={15} />
+              </Link>
+            </Button>
+          </nav>
+        </div>
+      </header>
+
       <main className="container mx-auto px-4 py-6">{children}</main>
     </div>
   );
