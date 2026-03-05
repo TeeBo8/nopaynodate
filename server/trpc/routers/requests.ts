@@ -5,6 +5,9 @@ import { createTRPCRouter, protectedProcedure } from "../index";
 import { dateRequests, deposits, users, profiles } from "@/server/db/schema";
 import { stripe } from "@/server/stripe/client";
 import { generateId } from "@/lib/utils";
+import { sendEmail } from "@/server/emails";
+import { MatchAccepteHommeEmail } from "@/server/emails/templates/match-accepte-homme";
+import { VirementRecuFemmeEmail } from "@/server/emails/templates/virement-recu-femme";
 
 export const requestsRouter = createTRPCRouter({
   send: protectedProcedure
@@ -94,6 +97,27 @@ export const requestsRouter = createTRPCRouter({
         .update(dateRequests)
         .set({ status: "accepted", updatedAt: new Date() })
         .where(eq(dateRequests.id, input.requestId));
+
+      // Email à l'homme : son match est accepté
+      const requesterUser = await ctx.db.query.users.findFirst({
+        where: eq(users.id, request.requesterId),
+      });
+      const targetUser = await ctx.db.query.users.findFirst({
+        where: eq(users.id, ctx.session.user.id),
+      });
+      if (requesterUser && targetUser) {
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+        await sendEmail({
+          to: requesterUser.email,
+          subject: `${targetUser.name} a accepté votre demande — le chat est ouvert !`,
+          react: MatchAccepteHommeEmail({
+            manName: requesterUser.name,
+            womanName: targetUser.name,
+            chatUrl: `${appUrl}/chat/${request.id}`,
+          }),
+        });
+      }
+
       return { success: true };
     }),
 
@@ -185,6 +209,18 @@ export const requestsRouter = createTRPCRouter({
               .update(dateRequests)
               .set({ status: "completed", updatedAt: new Date() })
               .where(eq(dateRequests.id, request.id));
+
+            // Email femme : virement reçu
+            const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+            await sendEmail({
+              to: targetUser.email,
+              subject: `Virement de $${(request.deposit.netAmount / 100).toFixed(2)} reçu`,
+              react: VirementRecuFemmeEmail({
+                womanName: targetUser.name,
+                netAmount: request.deposit.netAmount,
+                dashboardUrl: `${appUrl}/dashboard`,
+              }),
+            });
           }
         }
       }

@@ -4,6 +4,9 @@ import { db } from "@/server/db";
 import { deposits, dateRequests, users, subscriptions } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { generateId } from "@/lib/utils";
+import { sendEmail } from "@/server/emails";
+import { DepotRecuHommeEmail } from "@/server/emails/templates/depot-recu-homme";
+import { DepotRecuFemmeEmail } from "@/server/emails/templates/depot-recu-femme";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -39,6 +42,41 @@ export async function POST(req: Request) {
         .update(dateRequests)
         .set({ status: "paid", updatedAt: new Date() })
         .where(eq(dateRequests.id, dateRequestId));
+
+      // Emails : confirmation homme + notification femme
+      const deposit = await db.query.deposits.findFirst({
+        where: eq(deposits.stripePaymentIntentId, pi.id),
+      });
+      const request = await db.query.dateRequests.findFirst({
+        where: eq(dateRequests.id, dateRequestId),
+        with: { requester: true, target: true },
+      });
+      if (deposit && request) {
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+        await Promise.all([
+          sendEmail({
+            to: request.requester.email,
+            subject: `Dépôt confirmé — votre demande à ${request.target.name} est en attente`,
+            react: DepotRecuHommeEmail({
+              manName: request.requester.name,
+              womanName: request.target.name,
+              amount: deposit.amount,
+              chatUrl: `${appUrl}/requests`,
+            }),
+          }),
+          sendEmail({
+            to: request.target.email,
+            subject: `${request.requester.name} vous a envoyé une demande`,
+            react: DepotRecuFemmeEmail({
+              womanName: request.target.name,
+              manName: request.requester.name,
+              amount: deposit.amount,
+              netAmount: deposit.netAmount,
+              requestsUrl: `${appUrl}/requests`,
+            }),
+          }),
+        ]);
+      }
 
       break;
     }
