@@ -8,7 +8,9 @@ import { eq } from "drizzle-orm";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { MapPin, ShieldCheck, Heart } from "lucide-react";
+import Link from "next/link";
+import { MapPin, ShieldCheck } from "lucide-react";
+import { RequestButton } from "./request-button";
 
 function getAge(birthdate: string | null | undefined): number | null {
   if (!birthdate) return null;
@@ -131,7 +133,7 @@ export default async function PublicProfilePage({
       {/* CTA */}
       {isOwnProfile ? (
         <Button variant="outline" asChild>
-          <a href="/profile/edit">Modifier mon profil</a>
+          <Link href="/profile/edit">Modifier mon profil</Link>
         </Button>
       ) : canRequest ? (
         <div className="space-y-3">
@@ -144,11 +146,7 @@ export default async function PublicProfilePage({
               10% de commission). Si elle refuse, vous êtes remboursé à 100%.
             </p>
           </div>
-          <Button className="w-full gap-2" size="lg" disabled>
-            <Heart size={16} />
-            Demander un rendez-vous — {depositDisplay}
-            <span className="text-xs opacity-60 ml-1">(bientôt)</span>
-          </Button>
+          <RequestButton targetId={id} depositDisplay={depositDisplay} />
         </div>
       ) : null}
     </div>

@@ -1,4 +1,5 @@
 import { pgTable, text, integer, boolean, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 // Enums
 export const genderEnum = pgEnum("gender", ["man", "woman"]);
@@ -11,6 +12,7 @@ export const requestStatusEnum = pgEnum("request_status", [
   "refunded",
 ]);
 export const depositStatusEnum = pgEnum("deposit_status", [
+  "pending",
   "held",
   "released",
   "refunded",
@@ -160,6 +162,50 @@ export const subscriptions = pgTable("subscriptions", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+// Relations (pour les requêtes relationnelles Drizzle)
+export const usersRelations = relations(users, ({ one, many }) => ({
+  profile: one(profiles, { fields: [users.id], references: [profiles.userId] }),
+  sentRequests: many(dateRequests, { relationName: "requester" }),
+  receivedRequests: many(dateRequests, { relationName: "target" }),
+  messages: many(messages),
+}));
+
+export const profilesRelations = relations(profiles, ({ one }) => ({
+  user: one(users, { fields: [profiles.userId], references: [users.id] }),
+}));
+
+export const dateRequestsRelations = relations(dateRequests, ({ one }) => ({
+  requester: one(users, {
+    fields: [dateRequests.requesterId],
+    references: [users.id],
+    relationName: "requester",
+  }),
+  target: one(users, {
+    fields: [dateRequests.targetId],
+    references: [users.id],
+    relationName: "target",
+  }),
+  deposit: one(deposits, {
+    fields: [dateRequests.id],
+    references: [deposits.dateRequestId],
+  }),
+}));
+
+export const depositsRelations = relations(deposits, ({ one }) => ({
+  dateRequest: one(dateRequests, {
+    fields: [deposits.dateRequestId],
+    references: [dateRequests.id],
+  }),
+}));
+
+export const messagesRelations = relations(messages, ({ one }) => ({
+  dateRequest: one(dateRequests, {
+    fields: [messages.dateRequestId],
+    references: [dateRequests.id],
+  }),
+  sender: one(users, { fields: [messages.senderId], references: [users.id] }),
+}));
 
 // Types inférés
 export type User = typeof users.$inferSelect;

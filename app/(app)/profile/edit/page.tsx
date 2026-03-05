@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -45,16 +45,16 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 export default function ProfileEditPage() {
   const router = useRouter();
   const { data: session } = useSession();
-  const [photos, setPhotos] = useState<string[]>([]);
   const [saved, setSaved] = useState(false);
 
   const isWoman = session?.user?.gender === "woman";
 
   const { data: myProfile } = api.profiles.myProfile.useQuery();
 
-  useEffect(() => {
-    if (myProfile?.photos) setPhotos(myProfile.photos);
-  }, [myProfile]);
+  // Derive photos: use server data as base, override only when user edits
+  const serverPhotos = myProfile?.photos ?? [];
+  const [photosOverride, setPhotosOverride] = useState<string[] | null>(null);
+  const photos = photosOverride ?? serverPhotos;
 
   const updateUser = api.users.updateProfile.useMutation();
   const upsertProfile = api.profiles.upsert.useMutation();
@@ -87,7 +87,7 @@ export default function ProfileEditPage() {
   };
 
   const removePhoto = (url: string) => {
-    setPhotos((prev) => prev.filter((p) => p !== url));
+    setPhotosOverride((prev) => (prev ?? serverPhotos).filter((p) => p !== url));
   };
 
   return (
@@ -132,7 +132,7 @@ export default function ProfileEditPage() {
               endpoint="profilePhoto"
               onClientUploadComplete={(res) => {
                 const urls = res.map((r) => r.url);
-                setPhotos((prev) => [...prev, ...urls].slice(0, 6));
+                setPhotosOverride((prev) => [...(prev ?? serverPhotos), ...urls].slice(0, 6));
               }}
               onUploadError={(error) => console.error(error)}
               appearance={{
