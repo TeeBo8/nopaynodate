@@ -29,7 +29,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { X } from "lucide-react";
+import { X, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const profileSchema = z.object({
@@ -105,41 +105,50 @@ export default function ProfileEditPage() {
           <CardTitle className="text-base">Photos</CardTitle>
           <CardDescription>Ajoutez jusqu&apos;à 6 photos.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {photos.length > 0 && (
-            <div className="grid grid-cols-3 gap-3">
-              {photos.map((url) => (
-                <div key={url} className="relative aspect-square group">
-                  <Image
-                    src={url}
-                    alt="Photo profil"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removePhoto(url)}
-                    className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <X size={14} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-          {photos.length < 6 && (
-            <UploadButton
-              endpoint="profilePhoto"
-              onClientUploadComplete={(res) => {
-                const urls = res.map((r) => r.url);
-                setPhotosOverride((prev) => [...(prev ?? serverPhotos), ...urls].slice(0, 6));
-              }}
-              onUploadError={(error) => console.error(error)}
-              appearance={{
-                button: "ut-ready:bg-foreground ut-ready:text-background",
-              }}
-            />
-          )}
+        <CardContent>
+          <div className="grid grid-cols-3 gap-3">
+            {photos.map((url) => (
+              <div key={url} className="relative aspect-square group">
+                <Image
+                  src={url}
+                  alt="Photo profil"
+                  fill
+                  className="object-cover rounded-lg"
+                />
+                <button
+                  type="button"
+                  onClick={() => removePhoto(url)}
+                  className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+            {photos.length < 6 && (
+              <UploadButton
+                endpoint="profilePhoto"
+                onClientUploadComplete={(res) => {
+                  const urls = res.map((r) => r.url);
+                  setPhotosOverride((prev) => [...(prev ?? serverPhotos), ...urls].slice(0, 6));
+                }}
+                onUploadError={(error) => console.error(error)}
+                appearance={{
+                  container: "aspect-square w-full",
+                  button:
+                    "w-full h-full rounded-lg border-2 border-dashed border-border bg-muted/40 hover:bg-muted hover:border-foreground/30 transition-colors flex flex-col items-center justify-center gap-1 text-muted-foreground ut-ready:bg-muted/40 ut-uploading:bg-muted",
+                  allowedContent: "hidden",
+                }}
+                content={{
+                  button: (
+                    <span className="flex flex-col items-center gap-1">
+                      <Plus size={24} />
+                      <span className="text-xs">Ajouter</span>
+                    </span>
+                  ),
+                }}
+              />
+            )}
+          </div>
         </CardContent>
       </Card>
 
