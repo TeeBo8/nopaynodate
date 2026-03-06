@@ -6,6 +6,7 @@ import { useSession } from "@/lib/auth-client";
 import { api } from "@/lib/trpc-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { MessageCircle } from "lucide-react";
 
 const STATUS_LABELS: Record<
   string,
@@ -107,7 +108,17 @@ export default function RequestsPage() {
                   </p>
 
                   {/* Actions */}
-                  <div className="flex gap-2 mt-3 flex-wrap">
+                  <div className="flex gap-2 mt-3 flex-wrap items-center">
+                    {/* Chat : accessible si paid, accepted, ou completed */}
+                    {["paid", "accepted", "completed"].includes(req.status) && (
+                      <Button size="sm" variant="outline" asChild>
+                        <Link href={`/chat/${req.id}`}>
+                          <MessageCircle size={14} className="mr-1" />
+                          Chat
+                        </Link>
+                      </Button>
+                    )}
+
                     {/* Homme : payer si pending */}
                     {!isWoman && req.status === "pending" && (
                       <Button size="sm" asChild>
