@@ -1,8 +1,10 @@
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import Link from "next/link";
+import Image from "next/image";
 import { auth } from "@/server/auth";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Heart, Search, User, Settings } from "lucide-react";
 
 export default async function AppLayout({
@@ -21,8 +23,9 @@ export default async function AppLayout({
       {/* Top nav */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/browse" className="font-bold text-lg tracking-tight">
-            NoPayNoDate
+          <Link href="/browse" className="flex items-center gap-2 font-bold text-lg tracking-tight">
+            <Image src="/logo.svg" alt="NoPayNoDate" width={28} height={28} />
+            <span className="hidden sm:inline">NoPayNoDate</span>
           </Link>
           <nav className="flex items-center gap-1">
             <Button variant="ghost" size="sm" asChild>
@@ -48,6 +51,7 @@ export default async function AppLayout({
                 <Settings size={15} />
               </Link>
             </Button>
+            <ThemeToggle />
           </nav>
         </div>
       </header>

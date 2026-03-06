@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { signOut } from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
 import { api } from "@/lib/trpc-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +17,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Crown, Star, Trash2 } from "lucide-react";
+import { Crown, Star, Trash2, ShieldCheck } from "lucide-react";
+import Link from "next/link";
 import { Suspense } from "react";
 import { toast } from "sonner";
 
@@ -101,6 +102,8 @@ function PremiumSection() {
 export default function SettingsPage() {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.email === "admin@example.com";
 
   const deleteAccount = api.users.deleteAccount.useMutation({
     onSuccess: async () => {
@@ -133,6 +136,18 @@ export default function SettingsPage() {
           Se déconnecter
         </Button>
       </div>
+
+      {isAdmin && (
+        <div className="border border-border rounded-lg p-4 space-y-3">
+          <div className="flex items-center gap-2">
+            <ShieldCheck size={16} className="text-primary" />
+            <h2 className="font-medium">Administration</h2>
+          </div>
+          <Link href="/admin">
+            <Button variant="outline" size="sm">Accéder au panel admin</Button>
+          </Link>
+        </div>
+      )}
 
       <div className="border border-destructive/30 rounded-lg p-4 space-y-3">
         <div className="flex items-center gap-2">
