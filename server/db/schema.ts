@@ -3,6 +3,12 @@ import { relations } from "drizzle-orm";
 
 // Enums
 export const genderEnum = pgEnum("gender", ["man", "woman"]);
+export const reportReasonEnum = pgEnum("report_reason", [
+  "spam",
+  "fake_profile",
+  "inappropriate",
+  "other",
+]);
 export const requestStatusEnum = pgEnum("request_status", [
   "pending",
   "paid",
@@ -163,6 +169,19 @@ export const subscriptions = pgTable("subscriptions", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+// Reports
+export const reports = pgTable("reports", {
+  id: text("id").primaryKey(),
+  reporterId: text("reporter_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  reportedUserId: text("reported_user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  reason: reportReasonEnum("reason").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 // Relations (pour les requêtes relationnelles Drizzle)
 export const usersRelations = relations(users, ({ one, many }) => ({
   profile: one(profiles, { fields: [users.id], references: [profiles.userId] }),
@@ -207,6 +226,11 @@ export const messagesRelations = relations(messages, ({ one }) => ({
   sender: one(users, { fields: [messages.senderId], references: [users.id] }),
 }));
 
+export const reportsRelations = relations(reports, ({ one }) => ({
+  reporter: one(users, { fields: [reports.reporterId], references: [users.id] }),
+  reportedUser: one(users, { fields: [reports.reportedUserId], references: [users.id] }),
+}));
+
 // Types inférés
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
@@ -215,3 +239,4 @@ export type DateRequest = typeof dateRequests.$inferSelect;
 export type Deposit = typeof deposits.$inferSelect;
 export type Message = typeof messages.$inferSelect;
 export type Subscription = typeof subscriptions.$inferSelect;
+export type Report = typeof reports.$inferSelect;

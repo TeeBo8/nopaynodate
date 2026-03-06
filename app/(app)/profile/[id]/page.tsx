@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { MapPin, ShieldCheck } from "lucide-react";
 import { RequestButton } from "./request-button";
+import { ReportButton } from "./report-button";
 
 function getAge(birthdate: string | null | undefined): number | null {
   if (!birthdate) return null;
@@ -146,9 +147,14 @@ export default async function PublicProfilePage({
               10% de commission). Si elle refuse, vous êtes remboursé à 100%.
             </p>
           </div>
-          <RequestButton targetId={id} depositDisplay={depositDisplay} />
+          <div className="flex items-center justify-between">
+            <RequestButton targetId={id} depositDisplay={depositDisplay} />
+            <ReportButton reportedUserId={id} />
+          </div>
         </div>
-      ) : null}
+      ) : (
+        !isOwnProfile && <ReportButton reportedUserId={id} />
+      )}
     </div>
   );
 }

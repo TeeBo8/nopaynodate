@@ -1,12 +1,25 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { signOut } from "@/lib/auth-client";
 import { api } from "@/lib/trpc-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Crown, Star } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Crown, Star, Trash2 } from "lucide-react";
 import { Suspense } from "react";
+import { toast } from "sonner";
 
 function PremiumSection() {
   const router = useRouter();
@@ -87,6 +100,19 @@ function PremiumSection() {
 
 export default function SettingsPage() {
   const router = useRouter();
+  const [deleting, setDeleting] = useState(false);
+
+  const deleteAccount = api.users.deleteAccount.useMutation({
+    onSuccess: async () => {
+      toast.success("Compte supprimé.");
+      await signOut();
+      router.push("/");
+    },
+    onError: () => {
+      toast.error("Erreur lors de la suppression. Réessayez.");
+      setDeleting(false);
+    },
+  });
 
   async function handleSignOut() {
     await signOut();
@@ -101,14 +127,51 @@ export default function SettingsPage() {
         <PremiumSection />
       </Suspense>
 
-      <div className="border border-border rounded-lg p-4 space-y-2">
+      <div className="border border-border rounded-lg p-4 space-y-3">
         <h2 className="font-medium">Compte</h2>
-        <p className="text-sm text-muted-foreground">
-          Gérez votre compte et vos préférences.
-        </p>
-        <Button variant="destructive" onClick={handleSignOut}>
+        <Button variant="outline" onClick={handleSignOut}>
           Se déconnecter
         </Button>
+      </div>
+
+      <div className="border border-destructive/30 rounded-lg p-4 space-y-3">
+        <div className="flex items-center gap-2">
+          <Trash2 size={16} className="text-destructive" />
+          <h2 className="font-medium text-destructive">Zone dangereuse</h2>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          La suppression de votre compte est irréversible. Toutes vos données,
+          photos et conversations seront définitivement effacées.
+        </p>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive" size="sm" disabled={deleting}>
+              Supprimer mon compte
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Supprimer votre compte ?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Cette action est irréversible. Votre profil, vos photos,
+                vos conversations et votre abonnement seront supprimés
+                définitivement.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                onClick={() => {
+                  setDeleting(true);
+                  deleteAccount.mutate();
+                }}
+              >
+                Oui, supprimer mon compte
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
