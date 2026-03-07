@@ -8,6 +8,7 @@ import { LandingFeatures } from "./_components/landing/features";
 import { LandingStats } from "./_components/landing/stats";
 import { LandingPricing } from "./_components/landing/pricing";
 import { LandingFaq } from "./_components/landing/faq";
+import { LandingReality } from "./_components/landing/reality";
 import { LandingCta } from "./_components/landing/cta";
 import { LandingFooter } from "./_components/landing/footer";
 
@@ -22,6 +23,7 @@ export default async function HomePage() {
       <LandingNavbar />
       <main>
         <LandingHero />
+        <LandingReality />
         <LandingStats />
         <LandingHowItWorks />
         <LandingFeatures />

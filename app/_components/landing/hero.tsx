@@ -23,9 +23,11 @@ export function LandingHero() {
       </h1>
 
       <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-        Fini le ghosting. Les hommes versent un dépôt pour contacter une femme.
-        Elle accepte ou refuse — le dépôt est remboursé si elle dit non.
-        Chaque échange vaut quelque chose.
+        Les femmes dépensent en moyenne{" "}
+        <strong className="text-foreground">2 381$/an</strong> pour se préparer
+        à des dates avec des inconnus non investis. Sur NoPayNoDate, chaque
+        homme verse un dépôt avant de vous contacter. Vous acceptez ou refusez
+        — libre à vous.
       </p>
 
       <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
