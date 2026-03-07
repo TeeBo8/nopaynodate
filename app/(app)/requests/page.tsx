@@ -6,7 +6,7 @@ import { useSession } from "@/lib/auth-client";
 import { api } from "@/lib/trpc-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, AlertCircle } from "lucide-react";
 
 const STATUS_LABELS: Record<
   string,
@@ -36,6 +36,9 @@ export default function RequestsPage() {
   const { data: session } = useSession();
   const isWoman = session?.user?.gender === "woman";
 
+  const { data: me } = api.users.me.useQuery();
+  const hasStripeAccount = !!me?.stripeAccountId;
+
   const { data: requests, refetch } = api.requests.myRequests.useQuery();
   const acceptRequest = api.requests.accept.useMutation({
     onSuccess: () => refetch(),
@@ -52,6 +55,24 @@ export default function RequestsPage() {
       <h1 className="text-2xl font-semibold">
         {isWoman ? "Demandes reçues" : "Mes demandes"}
       </h1>
+
+      {/* Alerte Stripe Express manquant — femmes uniquement */}
+      {isWoman && !hasStripeAccount && (
+        <div className="flex items-start gap-3 rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 px-4 py-3 text-sm">
+          <AlertCircle className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
+          <div className="flex-1">
+            <p className="font-semibold text-amber-800 dark:text-amber-300">
+              Compte Stripe Express requis pour recevoir des paiements
+            </p>
+            <p className="mt-0.5 text-amber-700 dark:text-amber-400">
+              Configurez votre compte bancaire pour pouvoir accepter les demandes et recevoir vos dépôts.
+            </p>
+            <Button size="sm" className="mt-2" asChild>
+              <Link href="/payments/onboarding">Configurer mon compte →</Link>
+            </Button>
+          </div>
+        </div>
+      )}
 
       {!requests?.length ? (
         <p className="text-muted-foreground text-sm">
@@ -136,7 +157,8 @@ export default function RequestsPage() {
                           onClick={() =>
                             acceptRequest.mutate({ requestId: req.id })
                           }
-                          disabled={acceptRequest.isPending}
+                          disabled={acceptRequest.isPending || !hasStripeAccount}
+                          title={!hasStripeAccount ? "Configurez votre compte Stripe Express d'abord" : undefined}
                         >
                           Accepter
                         </Button>

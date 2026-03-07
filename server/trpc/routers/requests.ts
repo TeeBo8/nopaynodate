@@ -93,6 +93,18 @@ export const requestsRouter = createTRPCRouter({
           message: "Le dépôt n'a pas encore été reçu",
         });
       }
+
+      // Vérifier que la femme a bien configuré son compte Stripe Express
+      const currentUser = await ctx.db.query.users.findFirst({
+        where: eq(users.id, ctx.session.user.id),
+      });
+      if (!currentUser?.stripeAccountId) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Vous devez configurer votre compte Stripe Express avant d'accepter une demande.",
+        });
+      }
+
       await ctx.db
         .update(dateRequests)
         .set({ status: "accepted", updatedAt: new Date() })
