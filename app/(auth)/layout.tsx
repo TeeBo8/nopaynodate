@@ -1,3 +1,7 @@
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
+import { auth } from "@/server/auth";
+
 const HEARTS = [
   { left: "4%",  delay: "0s",    duration: "9s"   },
   { left: "12%", delay: "2.5s",  duration: "11s"  },
@@ -13,11 +17,14 @@ const HEARTS = [
 
 const HEART_SIZES = ["1.4rem","0.9rem","2rem","1.1rem","1.7rem","0.8rem","2.2rem","1.3rem","1.6rem","1rem"];
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (session) redirect("/browse");
+
   return (
     <div
       style={{

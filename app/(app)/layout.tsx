@@ -5,6 +5,7 @@ import Image from "next/image";
 import { auth } from "@/server/auth";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { BfcacheGuard } from "@/components/bfcache-guard";
 import { Heart, Search, User, Settings } from "lucide-react";
 
 export default async function AppLayout({
@@ -20,6 +21,7 @@ export default async function AppLayout({
 
   return (
     <div className="min-h-screen bg-background">
+      <BfcacheGuard />
       {/* Top nav */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
