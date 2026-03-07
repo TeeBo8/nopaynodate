@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 const f = createUploadthing();
 
 export const ourFileRouter = {
-  profilePhoto: f({ image: { maxFileSize: "4MB", maxFileCount: 6 } })
+  profilePhoto: f({ image: { maxFileSize: "8MB", maxFileCount: 6 } })
     .middleware(async () => {
       const session = await auth.api.getSession({ headers: await headers() });
       if (!session) throw new Error("Unauthorized");
