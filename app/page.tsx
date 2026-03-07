@@ -9,8 +9,11 @@ import { LandingStats } from "./_components/landing/stats";
 import { LandingPricing } from "./_components/landing/pricing";
 import { LandingFaq } from "./_components/landing/faq";
 import { LandingReality } from "./_components/landing/reality";
+import { LandingEscrowDiagram } from "./_components/landing/escrow-diagram";
 import { LandingCta } from "./_components/landing/cta";
 import { LandingFooter } from "./_components/landing/footer";
+import { LandingStickyCta } from "./_components/landing/sticky-cta";
+import { FadeIn } from "@/components/fade-in";
 
 export default async function HomePage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -23,15 +26,17 @@ export default async function HomePage() {
       <LandingNavbar />
       <main>
         <LandingHero />
-        <LandingReality />
-        <LandingStats />
-        <LandingHowItWorks />
-        <LandingFeatures />
-        <LandingPricing />
-        <LandingFaq />
-        <LandingCta />
+        <FadeIn><LandingReality /></FadeIn>
+        <FadeIn delay={100}><LandingStats /></FadeIn>
+        <FadeIn><LandingEscrowDiagram /></FadeIn>
+        <FadeIn><LandingHowItWorks /></FadeIn>
+        <FadeIn><LandingFeatures /></FadeIn>
+        <FadeIn><LandingPricing /></FadeIn>
+        <FadeIn><LandingFaq /></FadeIn>
+        <FadeIn><LandingCta /></FadeIn>
       </main>
       <LandingFooter />
+      <LandingStickyCta />
     </div>
   );
 }

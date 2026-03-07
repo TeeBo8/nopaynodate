@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowRight, ShieldCheck, MapPin, Heart } from "lucide-react";
+
+const mockProfiles = [
+  { initials: "S", name: "Sofia", age: 27, city: "Paris", deposit: 80, color: "bg-rose-400" },
+  { initials: "L", name: "Laura", age: 31, city: "Lyon", deposit: 50, color: "bg-violet-400" },
+  { initials: "C", name: "Camille", age: 25, city: "Bordeaux", deposit: 120, color: "bg-amber-400" },
+];
 
 export function LandingHero() {
   return (
@@ -45,6 +51,36 @@ export function LandingHero() {
       <p className="mt-6 text-sm text-muted-foreground">
         Inscription gratuite · Aucune carte bancaire requise
       </p>
+
+      {/* Mockup — aperçu de profils */}
+      <div className="mt-16 flex flex-wrap justify-center gap-4 w-full max-w-2xl">
+        {mockProfiles.map((p) => (
+          <div
+            key={p.name}
+            className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/80 backdrop-blur-sm px-4 py-3 shadow-sm"
+          >
+            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white font-bold text-sm ${p.color}`}>
+              {p.initials}
+            </div>
+            <div className="text-left">
+              <div className="font-semibold text-sm">
+                {p.name}, {p.age}
+              </div>
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <MapPin className="h-3 w-3" />
+                {p.city}
+              </div>
+            </div>
+            <div className="ml-2 flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+              <Heart className="h-3 w-3" />
+              {p.deposit}$
+            </div>
+          </div>
+        ))}
+        <div className="flex items-center gap-2 rounded-2xl border border-dashed border-border/60 px-4 py-3 text-xs text-muted-foreground">
+          + des profils près de chez vous
+        </div>
+      </div>
     </section>
   );
 }
