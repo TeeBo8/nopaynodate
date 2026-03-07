@@ -88,10 +88,20 @@ export function LandingPricing() {
           </Card>
         </div>
 
-        <p className="mt-8 text-center text-sm text-muted-foreground">
-          Note : les hommes versent également un dépôt (20–200$, fixé par la femme) pour initier le contact.
-          Ce dépôt est intégralement remboursé en cas de refus.
-        </p>
+        <div className="mt-8 rounded-xl border border-border/60 bg-muted/30 px-6 py-4 text-sm text-muted-foreground space-y-1.5">
+          <p>
+            <span className="font-semibold text-foreground">Dépôts (hommes) :</span>{" "}
+            20–200$ fixé par la femme, versé avant chaque contact. 100% remboursé si elle refuse.
+          </p>
+          <p>
+            <span className="font-semibold text-foreground">Commission plateforme :</span>{" "}
+            10% prélevés sur le dépôt lors du transfert à la femme après la date confirmée.
+          </p>
+          <p>
+            <span className="font-semibold text-foreground">Paiements via Stripe :</span>{" "}
+            Les femmes doivent connecter un compte Stripe Express pour recevoir leurs dépôts (gratuit, configuration en quelques minutes).
+          </p>
+        </div>
       </div>
     </section>
   );

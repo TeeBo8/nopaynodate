@@ -1,4 +1,4 @@
-import { CreditCard, MessageSquare, Calendar, Wallet, UserCheck, Heart } from "lucide-react";
+import { CreditCard, MessageSquare, Calendar, Wallet, UserCheck, Heart, Landmark } from "lucide-react";
 
 const stepsHomme = [
   {
@@ -23,22 +23,35 @@ const stepsHomme = [
 
 const stepsFemme = [
   {
-    icon: Wallet,
+    icon: UserCheck,
     step: "1",
+    title: "Créez votre profil",
+    desc: "Inscription gratuite en 2 minutes. Ajoutez vos photos, votre bio, votre ville.",
+  },
+  {
+    icon: Landmark,
+    step: "2",
+    title: "Connectez votre compte bancaire",
+    desc: "Un compte Stripe Express est requis pour recevoir vos dépôts. Configuration rapide, sécurisée, directement depuis l'app.",
+    highlight: true,
+  },
+  {
+    icon: Wallet,
+    step: "3",
     title: "Fixez votre prix",
-    desc: "Vous décidez du montant du dépôt. Plus il est élevé, plus vous filtrez les profils peu sérieux.",
+    desc: "Vous décidez du montant du dépôt (20–200$). Plus il est élevé, plus vous filtrez les profils peu sérieux.",
   },
   {
     icon: Heart,
-    step: "2",
+    step: "4",
     title: "Choisissez librement",
-    desc: "Acceptez ou refusez chaque demande. En cas de refus, le dépôt est remboursé automatiquement.",
+    desc: "Acceptez ou refusez chaque demande. En cas de refus, le dépôt est remboursé automatiquement à l'homme.",
   },
   {
     icon: Calendar,
-    step: "3",
-    title: "Confirmez la date",
-    desc: "Après la date, confirmez côté app. Le dépôt vous est transféré immédiatement via Stripe.",
+    step: "5",
+    title: "Confirmez la date & recevez",
+    desc: "Après la date, confirmez dans l'app. Le dépôt (moins 10% de commission plateforme) est viré sur votre compte.",
   },
 ];
 
@@ -90,13 +103,21 @@ export function LandingHowItWorks() {
             </div>
             <div className="space-y-8">
               {stepsFemme.map((step) => (
-                <div key={step.step} className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-primary/20 bg-primary/5">
+                <div
+                  key={step.step}
+                  className={`flex gap-4 ${"highlight" in step && step.highlight ? "rounded-xl border border-primary/30 bg-primary/5 p-4 -mx-4" : ""}`}
+                >
+                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 ${"highlight" in step && step.highlight ? "border-primary/60 bg-primary/15" : "border-primary/20 bg-primary/5"}`}>
                     <step.icon className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-bold text-muted-foreground">ÉTAPE {step.step}</span>
+                      {"highlight" in step && step.highlight && (
+                        <span className="rounded-full bg-primary/15 px-2 py-0.5 text-xs font-semibold text-primary">
+                          Requis
+                        </span>
+                      )}
                     </div>
                     <h3 className="mt-1 font-semibold">{step.title}</h3>
                     <p className="mt-1 text-sm text-muted-foreground">{step.desc}</p>

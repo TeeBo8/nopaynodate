@@ -1,8 +1,8 @@
 const stats = [
-  { value: "2 400+", label: "Profils vérifiés" },
-  { value: "870+", label: "Dates organisées" },
-  { value: "98%", label: "Taux de remboursement en cas de refus" },
-  { value: "4.9★", label: "Note moyenne utilisateurs" },
+  { value: "20–200$", label: "Dépôt fixé par la femme, avant chaque date" },
+  { value: "100%", label: "Remboursé automatiquement si elle dit non" },
+  { value: "10%", label: "Commission prélevée par la plateforme sur le dépôt" },
+  { value: "0$", label: "Pour s'inscrire et explorer les profils" },
 ];
 
 export function LandingStats() {
