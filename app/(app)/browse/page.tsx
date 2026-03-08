@@ -4,8 +4,7 @@ import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { profiles, users } from "@/server/db/schema";
 import { eq, ne, and, desc, sql } from "drizzle-orm";
-import { ProfileCard } from "@/components/profile-card";
-import { Search } from "lucide-react";
+import { BrowseClient } from "@/components/browse-client";
 
 export const dynamic = "force-dynamic";
 
@@ -48,49 +47,7 @@ export default async function BrowsePage() {
       desc(sql`CASE WHEN ${users.premiumUntil} > NOW() THEN 1 ELSE 0 END`),
       desc(profiles.lastActive)
     )
-    .limit(40);
+    .limit(60);
 
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Découvrir</h1>
-        <p className="text-muted-foreground mt-1">
-          {results.length > 0
-            ? `${results.length} profil${results.length > 1 ? "s" : ""} disponible${results.length > 1 ? "s" : ""}`
-            : "Aucun profil pour le moment."}
-        </p>
-      </div>
-
-      {results.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center gap-4">
-          <Search size={40} className="text-muted-foreground" />
-          <div>
-            <p className="font-medium">Aucun profil disponible</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Revenez plus tard, de nouveaux profils arrivent chaque jour.
-            </p>
-          </div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {results.map(({ profile, user }) => (
-            <ProfileCard
-              key={user.id}
-              userId={user.id}
-              name={user.name}
-              city={user.city}
-              bio={user.bio}
-              birthdate={user.birthdate}
-              photos={profile.photos ?? []}
-              depositAmount={profile.depositAmount}
-              isVerified={user.isVerified}
-              isPremium={
-                user.premiumUntil ? new Date(user.premiumUntil) > new Date() : false
-              }
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  return <BrowseClient results={results} gender={myGender ?? null} />;
 }
