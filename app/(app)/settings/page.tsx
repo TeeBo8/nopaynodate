@@ -153,7 +153,7 @@ export default function SettingsPage() {
         <h2 className="font-medium text-sm">Support</h2>
         <p className="text-sm text-muted-foreground">
           Un problème ou une question ?{" "}
-          <a href="mailto:admin@example.com" className="underline underline-offset-4 hover:text-foreground transition-colors">
+          <a href="mailto:contact@teebostudio.fr" className="underline underline-offset-4 hover:text-foreground transition-colors">
             Contactez-nous
           </a>
         </p>
