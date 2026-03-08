@@ -7,32 +7,32 @@ import {
 
 const faqs = [
   {
-    q: "Est-ce légal ? Ce n'est pas de la prostitution ?",
-    a: "Absolument légal, et absolument pas de la prostitution. Le dépôt n'est pas un paiement pour un rendez-vous sexuel — c'est une preuve d'engagement, exactement comme un acompte pour une réservation. Il compense les frais réels que les femmes engagent pour chaque date (coiffeur, tenue, transport…). Aucun acte n'est acheté, aucun service intime n'est inclus. Le modèle est similaire à une caution : si la date a lieu, le dépôt est transféré ; si elle est refusée, il est remboursé. Le contenu de la rencontre reste entièrement libre.",
+    q: "Is this legal? Is it not prostitution?",
+    a: "Completely legal, and absolutely not prostitution. The deposit is not a payment for a sexual encounter — it is a proof of commitment, exactly like a booking deposit. It compensates the real costs women incur for each date (hair, outfit, transport…). No act is purchased, no intimate service is included. The model is similar to a security deposit: if the date happens, the deposit is transferred; if declined, it is refunded. The content of the date remains entirely free.",
   },
   {
-    q: "Qu'est-ce que l'escrow ? Comment ça fonctionne concrètement ?",
-    a: "Quand un homme verse un dépôt, l'argent ne va pas immédiatement à la femme — il est conservé en séquestre (escrow) par Stripe, notre partenaire de paiement. Il reste bloqué jusqu'à l'issue de la demande : si la femme refuse, Stripe rembourse automatiquement l'homme. Si elle accepte et que la date est confirmée par les deux parties, Stripe transfère le dépôt (moins 10% de commission) sur le compte Stripe Express de la femme. L'argent ne transite jamais directement entre les deux personnes.",
+    q: "What is escrow? How does it work in practice?",
+    a: "When a man pays a deposit, the money does not go immediately to the woman — it is held in escrow by Stripe, our payment partner. It remains locked until the request is resolved: if the woman declines, Stripe automatically refunds the man. If she accepts and the date is confirmed by both parties, Stripe transfers the deposit (minus 10% commission) to the woman's Stripe Express account. The money never passes directly between the two people.",
   },
   {
-    q: "Pourquoi les femmes doivent-elles créer un compte Stripe Express ?",
-    a: "Pour recevoir des virements bancaires, Stripe impose une vérification d'identité légale — c'est une exigence réglementaire (KYC), pas un choix de notre part. La création d'un compte Stripe Express est gratuite, prend environ 5 minutes, et vous permet de recevoir vos dépôts directement sur votre compte bancaire. Stripe est le leader mondial des paiements en ligne, utilisé par Amazon, Shopify et des millions d'entreprises.",
+    q: "Why do women need to create a Stripe Express account?",
+    a: "To receive bank transfers, Stripe requires legal identity verification — this is a regulatory requirement (KYC), not our choice. Creating a Stripe Express account is free, takes about 5 minutes, and lets you receive your deposits directly to your bank account. Stripe is the world leader in online payments, used by Amazon, Shopify and millions of businesses.",
   },
   {
-    q: "Que se passe-t-il si la date ne se passe pas bien ou est annulée ?",
-    a: "Si la date est annulée avant d'avoir lieu, le dépôt est remboursé à l'homme. Si la date a eu lieu mais que l'une des parties conteste, notre équipe examine la situation. Le dépôt reste en escrow pendant cette période. Nous traitons chaque litige manuellement pour garantir l'équité des deux côtés.",
+    q: "What happens if the date doesn't go well or is cancelled?",
+    a: "If the date is cancelled before it happens, the deposit is refunded to the man. If the date took place but one party disputes it, our team reviews the situation. The deposit remains in escrow during this period. We handle each dispute manually to ensure fairness for both sides.",
   },
   {
-    q: "Les dépôts sont-ils vraiment remboursés si je dis non ?",
-    a: "Oui, à 100% et automatiquement. Quand une femme refuse une demande, Stripe déclenche immédiatement le remboursement. L'homme récupère l'intégralité de son dépôt sans démarche de sa part. C'est la garantie fondamentale du système : les femmes peuvent refuser librement, sans aucune conséquence financière pour l'homme.",
+    q: "Are deposits really refunded if I say no?",
+    a: "Yes, 100% and automatically. When a woman declines a request, Stripe immediately triggers the refund. The man gets his full deposit back with no action required. This is the core guarantee of the system: women can decline freely, with no financial consequences for the man.",
   },
   {
-    q: "Combien coûte la commission plateforme ?",
-    a: "NoPayNoDate prélève 10% sur chaque dépôt transféré à la femme, uniquement lorsque la date est confirmée. Si la femme refuse, aucune commission n'est prélevée. Par exemple : pour un dépôt de 100$, la femme reçoit 90$ et la plateforme conserve 10$. Cette commission finance la maintenance, la sécurité et le support.",
+    q: "How much is the platform commission?",
+    a: "NoPayNoDate takes 10% of each deposit transferred to the woman, only when the date is confirmed. If the woman declines, no commission is charged. For example: for a $100 deposit, the woman receives $90 and the platform keeps $10. This commission funds maintenance, security, and support.",
   },
   {
-    q: "Comment savoir que les profils sont réels ?",
-    a: "Chaque profil passe par une validation manuelle avant d'être visible. L'upload de photos, la bio, et les informations de profil sont vérifiés. Les comptes suspects sont supprimés. De plus, le mécanisme de dépôt lui-même filtre naturellement les profils non sérieux : personne ne verse 20–200$ pour un faux profil.",
+    q: "How do I know profiles are real?",
+    a: "Every profile goes through manual validation before becoming visible. Photo uploads, bio, and profile information are reviewed. Suspicious accounts are removed. Moreover, the deposit mechanism itself naturally filters out unserious profiles: nobody pays $20–200 for a fake profile.",
   },
 ];
 
@@ -42,10 +42,10 @@ export function LandingFaq() {
       <div className="mx-auto max-w-3xl">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Questions fréquentes
+            Frequently asked questions
           </h2>
           <p className="mt-4 text-muted-foreground text-lg">
-            Tout ce que vous voulez savoir avant de vous lancer.
+            Everything you want to know before getting started.
           </p>
         </div>
 

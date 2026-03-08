@@ -26,27 +26,27 @@ export function DepotRecuFemmeEmail({ womanName, manName, amount, netAmount, req
   return (
     <Html>
       <Head />
-      <Preview>{manName} vous a envoyé un dépôt de {dollars}$ — répondez maintenant</Preview>
+      <Preview>{manName} sent you a deposit of {dollars}$ — respond now</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>Nouvelle demande reçue</Heading>
-          <Text style={text}>Bonjour {womanName},</Text>
+          <Heading style={h1}>New request received</Heading>
+          <Text style={text}>Hi {womanName},</Text>
           <Text style={text}>
-            <strong>{manName}</strong> vous a envoyé une demande accompagnée d&apos;un dépôt de{" "}
+            <strong>{manName}</strong> sent you a request with a deposit of{" "}
             <strong>${dollars}</strong>.
           </Text>
           <Text style={text}>
-            Si vous acceptez, vous recevrez <strong>${net}</strong> une fois la date confirmée
-            par les deux parties. Si vous refusez, le dépôt est intégralement remboursé.
+            If you accept, you will receive <strong>${net}</strong> once the date is confirmed
+            by both parties. If you decline, the deposit is fully refunded.
           </Text>
           <Section style={btnContainer}>
             <Button style={btn} href={requestsUrl}>
-              Voir la demande
+              View request
             </Button>
           </Section>
           <Hr style={hr} />
           <Text style={footer}>
-            Vous pouvez accepter ou refuser depuis votre espace demandes.
+            You can accept or decline from your requests page.
           </Text>
         </Container>
       </Body>

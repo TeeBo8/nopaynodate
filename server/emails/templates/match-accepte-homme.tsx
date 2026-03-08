@@ -21,27 +21,27 @@ export function MatchAccepteHommeEmail({ manName, womanName, chatUrl }: Props) {
   return (
     <Html>
       <Head />
-      <Preview>{womanName} a accepté votre demande — le chat est maintenant ouvert !</Preview>
+      <Preview>{womanName} accepted your request — the chat is now open!</Preview>
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>C&apos;est un match !</Heading>
-          <Text style={text}>Bonjour {manName},</Text>
+          <Text style={text}>Hi {manName},</Text>
           <Text style={text}>
-            <strong>{womanName}</strong> a accepté votre demande. Le chat est maintenant
-            ouvert — c&apos;est le moment de briser la glace !
+            <strong>{womanName}</strong> accepted your request. The chat is now
+            open — time to break the ice!
           </Text>
           <Text style={text}>
-            Rappelez-vous : une fois la date confirmée par les deux parties, les fonds
-            lui seront transférés. Soyez respectueux et profitez de l&apos;échange.
+            Remember: once the date is confirmed by both parties, the funds
+            will be transferred to her. Be respectful and enjoy the conversation.
           </Text>
           <Section style={btnContainer}>
             <Button style={btn} href={chatUrl}>
-              Ouvrir le chat
+              Open chat
             </Button>
           </Section>
           <Hr style={hr} />
           <Text style={footer}>
-            NoPayNoDate — Des rencontres sérieuses, garanties.
+            NoPayNoDate — Serious dating, guaranteed.
           </Text>
         </Container>
       </Body>

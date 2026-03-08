@@ -4,23 +4,23 @@ import { Card, CardContent } from "@/components/ui/card";
 const features = [
   {
     icon: Ban,
-    title: "Zéro ghosting",
-    desc: "Le dépôt crée un engagement financier réel. Les hommes qui versent sont sérieux — les femmes le savent.",
+    title: "Zero ghosting",
+    desc: "The deposit creates a real financial commitment. Men who pay are serious — women know it.",
   },
   {
     icon: ShieldCheck,
-    title: "100% sécurisé",
-    desc: "Paiements via Stripe. Fonds en escrow jusqu'à confirmation des deux parties. Remboursement automatique en cas de refus.",
+    title: "100% secure",
+    desc: "Payments via Stripe. Funds in escrow until both parties confirm. Automatic refund if declined.",
   },
   {
     icon: Zap,
-    title: "Vous contrôlez tout",
-    desc: "Les femmes fixent leur montant, acceptent ou refusent librement. Aucune pression, aucun engagement avant d'avoir choisi.",
+    title: "You stay in control",
+    desc: "Women set their amount, accept or decline freely. No pressure, no commitment until you decide.",
   },
   {
     icon: Lock,
-    title: "Profils vérifiés",
-    desc: "Processus de vérification pour garantir l'authenticité. Fini les faux profils et les intentions floues.",
+    title: "Verified profiles",
+    desc: "Verification process to ensure authenticity. No more fake profiles or unclear intentions.",
   },
 ];
 
@@ -30,10 +30,10 @@ export function LandingFeatures() {
       <div className="mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Pourquoi NoPayNoDate est différent
+            Why NoPayNoDate is different
           </h2>
           <p className="mt-4 text-muted-foreground text-lg">
-            Le premier système de rencontres où chaque interaction a de la valeur.
+            The first dating system where every interaction has value.
           </p>
         </div>
 

@@ -35,8 +35,8 @@ import { X, Plus, CheckCircle2, AlertCircle, Camera, Landmark } from "lucide-rea
 import { cn } from "@/lib/utils";
 
 const profileSchema = z.object({
-  name: z.string().min(2, "Minimum 2 caractères"),
-  bio: z.string().max(500, "Maximum 500 caractères").optional(),
+  name: z.string().min(2, "Minimum 2 characters"),
+  bio: z.string().max(500, "Maximum 500 characters").optional(),
   city: z.string().max(100).optional(),
   birthdate: z.string().optional(),
   depositAmount: z.number().min(20).max(200).optional(),
@@ -97,13 +97,13 @@ export default function ProfileEditPage() {
 
   // Calcul du taux de complétion du profil
   const completionItems = [
-    { label: "Photo de profil", done: photos.length > 0 },
-    { label: "Prénom", done: !!form.watch("name") },
-    { label: "Ville", done: !!form.watch("city") },
+    { label: "Profile photo", done: photos.length > 0 },
+    { label: "First name", done: !!form.watch("name") },
+    { label: "City", done: !!form.watch("city") },
     { label: "Bio", done: (form.watch("bio")?.length ?? 0) > 10 },
     ...(isWoman ? [
-      { label: "Montant du dépôt", done: true },
-      { label: "Compte Stripe Express", done: hasStripeAccount },
+      { label: "Deposit amount", done: true },
+      { label: "Stripe Express account", done: hasStripeAccount },
     ] : []),
   ];
   const completionPct = Math.round((completionItems.filter((i) => i.done).length / completionItems.length) * 100);
@@ -111,16 +111,16 @@ export default function ProfileEditPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6 pb-10">
       <div>
-        <h1 className="text-2xl font-semibold">Mon profil</h1>
+        <h1 className="text-2xl font-semibold">My profile</h1>
         <p className="text-muted-foreground mt-1 text-sm">
-          Un profil complet augmente significativement vos chances de match.
+          A complete profile significantly increases your chances of a match.
         </p>
       </div>
 
       {/* Barre de complétion */}
       <div className="rounded-xl border border-border/60 bg-muted/30 px-5 py-4">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-sm font-semibold">Complétion du profil</span>
+          <span className="text-sm font-semibold">Profile completion</span>
           <span className={cn(
             "text-sm font-bold",
             completionPct === 100 ? "text-green-600 dark:text-green-400" : "text-primary"
@@ -156,7 +156,7 @@ export default function ProfileEditPage() {
             <CardTitle className="text-base">Photos</CardTitle>
           </div>
           <CardDescription>
-            Ajoutez jusqu&apos;à 6 photos · Max 8 MB par photo · Formats : JPG, PNG, WEBP
+            Add up to&apos;à 6 photos · Max 8 MB par photo · Formats : JPG, PNG, WEBP
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -165,13 +165,13 @@ export default function ProfileEditPage() {
               <div key={url} className="relative aspect-square group">
                 <Image
                   src={url}
-                  alt="Photo profil"
+                  alt="Profile photo"
                   fill
                   className="object-cover rounded-xl"
                 />
                 {idx === 0 && (
                   <span className="absolute bottom-1.5 left-1.5 rounded-md bg-black/60 px-1.5 py-0.5 text-[10px] text-white font-medium">
-                    Principale
+                    Main
                   </span>
                 )}
                 <button
@@ -201,7 +201,7 @@ export default function ProfileEditPage() {
                   button: (
                     <span className="flex flex-col items-center gap-1.5">
                       <Plus size={22} />
-                      <span className="text-xs font-medium">Ajouter</span>
+                      <span className="text-xs font-medium">Add</span>
                     </span>
                   ),
                 }}
@@ -218,7 +218,7 @@ export default function ProfileEditPage() {
           {photos.length === 0 && (
             <p className="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
               <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-              Au moins une photo est nécessaire pour apparaître dans le browse.
+              At least one photo is required to appear in browse.
             </p>
           )}
         </CardContent>
@@ -227,7 +227,7 @@ export default function ProfileEditPage() {
       {/* Infos */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Informations</CardTitle>
+          <CardTitle className="text-base">Information</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -237,9 +237,9 @@ export default function ProfileEditPage() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Prénom</FormLabel>
+                    <FormLabel>First name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Votre prénom" {...field} />
+                      <Input placeholder="Your first name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -251,7 +251,7 @@ export default function ProfileEditPage() {
                   name="city"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Ville</FormLabel>
+                      <FormLabel>City</FormLabel>
                       <FormControl>
                         <Input placeholder="Paris, Lyon, NYC…" {...field} />
                       </FormControl>
@@ -264,7 +264,7 @@ export default function ProfileEditPage() {
                   name="birthdate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Date de naissance</FormLabel>
+                      <FormLabel>Date of birth</FormLabel>
                       <FormControl>
                         <Input type="date" {...field} />
                       </FormControl>
@@ -281,14 +281,14 @@ export default function ProfileEditPage() {
                     <FormLabel>Bio</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Parlez de vous en quelques mots…"
+                        placeholder="Tell us a bit about yourself…"
                         className="resize-none"
                         rows={4}
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      {(field.value?.length ?? 0)}/500 caractères
+                      {(field.value?.length ?? 0)}/500 characters
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -304,10 +304,10 @@ export default function ProfileEditPage() {
                     name="depositAmount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Montant du dépôt demandé</FormLabel>
+                        <FormLabel>Requested deposit amount</FormLabel>
                         <FormDescription>
-                          L&apos;homme devra payer ce montant avant d&apos;accéder au chat.
-                          Plus le montant est élevé, plus vous filtrez les profils peu sérieux.
+                          The man must pay this amount before accessing the chat.
+                          The higher the amount, the more you filter out unserious profiles.
                         </FormDescription>
                         <FormControl>
                           <div className="space-y-4 pt-1">
@@ -359,10 +359,10 @@ export default function ProfileEditPage() {
                   className={cn(saved && "bg-green-600 hover:bg-green-600")}
                 >
                   {saved
-                    ? "Sauvegardé !"
+                    ? "Saved!"
                     : updateUser.isPending || upsertProfile.isPending
-                    ? "Sauvegarde…"
-                    : "Sauvegarder le profil"}
+                    ? "Saving…"
+                    : "Save profile"}
                 </Button>
               </div>
             </form>
@@ -393,25 +393,25 @@ export default function ProfileEditPage() {
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-sm">Compte Stripe Express</span>
+                  <span className="font-semibold text-sm">Stripe Express account</span>
                   {hasStripeAccount && (
                     <span className="flex items-center gap-1 rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-xs font-semibold text-green-700 dark:text-green-400">
-                      <CheckCircle2 className="h-3 w-3" /> Configuré
+                      <CheckCircle2 className="h-3 w-3" /> Configured
                     </span>
                   )}
                 </div>
                 {hasStripeAccount ? (
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Votre compte bancaire est prêt à recevoir les dépôts. Les virements arrivent automatiquement après chaque date confirmée (moins 10% de commission).
+                    Your bank account is ready to receive deposits. Transfers arrive automatically after each confirmed date (minus 10% commission).
                   </p>
                 ) : (
                   <>
                     <p className="mt-1 text-xs text-amber-700 dark:text-amber-400">
-                      Requis pour recevoir les dépôts. Configuration rapide (~5 min), vérification d&apos;identité légale via Stripe.
+                      Required to receive deposits. Quick setup (~5 min), legal identity verification via Stripe.
                     </p>
                     <Button size="sm" className="mt-3" asChild>
                       <Link href="/payments/onboarding">
-                        Configurer mon compte →
+                        Set up my account →
                       </Link>
                     </Button>
                   </>

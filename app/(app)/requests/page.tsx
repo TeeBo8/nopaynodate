@@ -15,21 +15,21 @@ const STATUS_LABELS: Record<
     variant: "default" | "secondary" | "destructive" | "outline";
   }
 > = {
-  pending: { label: "En attente de paiement", variant: "outline" },
-  paid: { label: "En attente de réponse", variant: "secondary" },
-  accepted: { label: "Acceptée", variant: "default" },
-  rejected: { label: "Rejetée", variant: "destructive" },
-  completed: { label: "Terminée", variant: "secondary" },
-  refunded: { label: "Remboursée", variant: "outline" },
+  pending: { label: "Awaiting payment", variant: "outline" },
+  paid: { label: "Awaiting response", variant: "secondary" },
+  accepted: { label: "Accepted", variant: "default" },
+  rejected: { label: "Rejected", variant: "destructive" },
+  completed: { label: "Completed", variant: "secondary" },
+  refunded: { label: "Refunded", variant: "outline" },
 };
 
 function timeAgo(date: Date | string): string {
   const diff = Date.now() - new Date(date).getTime();
   const minutes = Math.floor(diff / 60000);
-  if (minutes < 60) return `il y a ${minutes} min`;
+  if (minutes < 60) return `${minutes}m ago`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `il y a ${hours}h`;
-  return `il y a ${Math.floor(hours / 24)}j`;
+  if (hours < 24) return `${hours}h ago`;
+  return `${Math.floor(hours / 24)}d ago`;
 }
 
 export default function RequestsPage() {
@@ -53,7 +53,7 @@ export default function RequestsPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-4">
       <h1 className="text-2xl font-semibold">
-        {isWoman ? "Demandes reçues" : "Mes demandes"}
+        {isWoman ? "Received requests" : "My requests"}
       </h1>
 
       {/* Alerte Stripe Express manquant — femmes uniquement */}
@@ -62,13 +62,13 @@ export default function RequestsPage() {
           <AlertCircle className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
           <div className="flex-1">
             <p className="font-semibold text-amber-800 dark:text-amber-300">
-              Compte Stripe Express requis pour recevoir des paiements
+              Stripe Express account required to receive payments
             </p>
             <p className="mt-0.5 text-amber-700 dark:text-amber-400">
-              Configurez votre compte bancaire pour pouvoir accepter les demandes et recevoir vos dépôts.
+              Set up your bank account to accept requests and receive your deposits.
             </p>
             <Button size="sm" className="mt-2" asChild>
-              <Link href="/payments/onboarding">Configurer mon compte →</Link>
+              <Link href="/payments/onboarding">Set up my account →</Link>
             </Button>
           </div>
         </div>
@@ -76,7 +76,7 @@ export default function RequestsPage() {
 
       {!requests?.length ? (
         <p className="text-muted-foreground text-sm">
-          Aucune demande pour le moment.
+          No requests yet.
         </p>
       ) : (
         <div className="space-y-3">
@@ -120,7 +120,7 @@ export default function RequestsPage() {
 
                   {depositAmount && (
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      Dépôt : ${(depositAmount / 100).toFixed(0)}
+                      Deposit: ${(depositAmount / 100).toFixed(0)}
                     </p>
                   )}
 
@@ -144,7 +144,7 @@ export default function RequestsPage() {
                     {!isWoman && req.status === "pending" && (
                       <Button size="sm" asChild>
                         <Link href={`/payments/deposit/${req.id}`}>
-                          Payer le dépôt
+                          Pay deposit
                         </Link>
                       </Button>
                     )}
@@ -158,9 +158,9 @@ export default function RequestsPage() {
                             acceptRequest.mutate({ requestId: req.id })
                           }
                           disabled={acceptRequest.isPending || !hasStripeAccount}
-                          title={!hasStripeAccount ? "Configurez votre compte Stripe Express d'abord" : undefined}
+                          title={!hasStripeAccount ? "Set up your Stripe Express account first" : undefined}
                         >
-                          Accepter
+                          Accept
                         </Button>
                         <Button
                           size="sm"
@@ -170,7 +170,7 @@ export default function RequestsPage() {
                           }
                           disabled={rejectRequest.isPending}
                         >
-                          Rejeter
+                          Reject
                         </Button>
                       </>
                     )}
@@ -188,7 +188,7 @@ export default function RequestsPage() {
                         return (
                           <p className="text-xs text-muted-foreground">
                             {otherConfirmed
-                              ? "Les deux ont confirmé ✓"
+                              ? "Both confirmed ✓"
                               : "Confirmation envoyée — en attente de l'autre partie"}
                           </p>
                         );
@@ -202,7 +202,7 @@ export default function RequestsPage() {
                           }
                           disabled={confirmDate.isPending}
                         >
-                          Confirmer le rendez-vous
+                          Confirm the date
                         </Button>
                       );
                     })()}

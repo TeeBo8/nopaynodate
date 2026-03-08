@@ -26,17 +26,17 @@ type Profile = {
 };
 
 const DEPOSIT_FILTERS = [
-  { label: "Tous", min: 0, max: Infinity },
+  { label: "All", min: 0, max: Infinity },
   { label: "≤ $50", min: 0, max: 5000 },
   { label: "$51–100", min: 5001, max: 10000 },
   { label: "$101–200", min: 10001, max: 20000 },
 ] as const;
 
 const SORT_OPTIONS = [
-  { label: "Premium d'abord", value: "premium" },
-  { label: "Plus récents", value: "recent" },
-  { label: "Dépôt ↑", value: "deposit_asc" },
-  { label: "Dépôt ↓", value: "deposit_desc" },
+  { label: "Premium first", value: "premium" },
+  { label: "Most recent", value: "recent" },
+  { label: "Deposit ↑", value: "deposit_asc" },
+  { label: "Deposit ↓", value: "deposit_desc" },
 ] as const;
 
 type SortValue = (typeof SORT_OPTIONS)[number]["value"];
@@ -79,18 +79,18 @@ export function BrowseClient({ results, gender }: { results: Profile[]; gender: 
 
   const hasActiveFilters = search !== "" || depositFilter !== 0 || sort !== "premium";
 
-  const label = gender === "man" ? "femme" : "profil";
+  const label = gender === "man" ? "woman" : "profile";
 
   return (
     <div className="space-y-5">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Découvrir</h1>
+          <h1 className="text-2xl font-semibold">Discover</h1>
           <p className="text-muted-foreground text-sm mt-0.5">
             {filtered.length > 0
-              ? `${filtered.length} ${label}${filtered.length > 1 ? "s" : ""} disponible${filtered.length > 1 ? "s" : ""}`
-              : "Aucun résultat"}
+              ? `${filtered.length} ${label}${filtered.length > 1 ? "s" : ""} available`
+              : "No results"}
           </p>
         </div>
         <Button
@@ -100,7 +100,7 @@ export function BrowseClient({ results, gender }: { results: Profile[]; gender: 
           onClick={() => setShowFilters((v) => !v)}
         >
           <SlidersHorizontal size={15} />
-          Filtres
+          Filters
           {hasActiveFilters && (
             <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] font-bold">
               !
@@ -116,7 +116,7 @@ export function BrowseClient({ results, gender }: { results: Profile[]; gender: 
           <div className="relative">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Rechercher par prénom ou ville..."
+              placeholder="Search by name or city..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-9 pr-9"
@@ -133,7 +133,7 @@ export function BrowseClient({ results, gender }: { results: Profile[]; gender: 
 
           {/* Deposit filter */}
           <div>
-            <p className="text-xs font-medium text-muted-foreground mb-2">Montant du dépôt</p>
+            <p className="text-xs font-medium text-muted-foreground mb-2">Deposit amount</p>
             <div className="flex flex-wrap gap-2">
               {DEPOSIT_FILTERS.map((f, i) => (
                 <button
@@ -153,7 +153,7 @@ export function BrowseClient({ results, gender }: { results: Profile[]; gender: 
 
           {/* Sort */}
           <div>
-            <p className="text-xs font-medium text-muted-foreground mb-2">Trier par</p>
+            <p className="text-xs font-medium text-muted-foreground mb-2">Sort by</p>
             <div className="flex flex-wrap gap-2">
               {SORT_OPTIONS.map((s) => (
                 <button
@@ -177,7 +177,7 @@ export function BrowseClient({ results, gender }: { results: Profile[]; gender: 
               onClick={() => { setSearch(""); setDepositFilter(0); setSort("premium"); }}
               className="text-xs text-muted-foreground underline underline-offset-4 hover:text-foreground"
             >
-              Réinitialiser les filtres
+              Reset filters
             </button>
           )}
         </div>
@@ -188,16 +188,16 @@ export function BrowseClient({ results, gender }: { results: Profile[]; gender: 
         <div className="flex flex-col items-center justify-center py-24 text-center gap-4">
           <div className="text-5xl">🔍</div>
           <div>
-            <p className="font-medium">Aucun profil trouvé</p>
+            <p className="font-medium">No profiles found</p>
             <p className="text-sm text-muted-foreground mt-1">
               {hasActiveFilters
-                ? "Essayez d'élargir vos filtres."
-                : "Revenez plus tard, de nouveaux profils arrivent chaque jour."}
+                ? "Try broadening your filters."
+                : "Check back later — new profiles are added every day."}
             </p>
           </div>
           {hasActiveFilters && (
             <Button variant="outline" size="sm" onClick={() => { setSearch(""); setDepositFilter(0); setSort("premium"); }}>
-              Effacer les filtres
+              Clear filters
             </Button>
           )}
         </div>

@@ -11,10 +11,10 @@ import { Separator } from "@/components/ui/separator";
 import { Flag, Users, DollarSign, TrendingUp, Clock, Shield } from "lucide-react";
 
 const REASON_LABELS: Record<string, string> = {
-  spam: "Spam ou arnaque",
-  fake_profile: "Faux profil",
-  inappropriate: "Contenu inapproprié",
-  other: "Autre",
+  spam: "Spam or scam",
+  fake_profile: "Fake profile",
+  inappropriate: "Inappropriate content",
+  other: "Other",
 };
 
 function StatCard({
@@ -118,23 +118,23 @@ export default async function AdminPage() {
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="flex items-center gap-2">
         <Shield size={20} className="text-primary" />
-        <h1 className="text-2xl font-bold">Panel Admin</h1>
+        <h1 className="text-2xl font-bold">Admin Panel</h1>
       </div>
 
       {/* Stats utilisateurs */}
       <section className="space-y-3">
         <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
-          Utilisateurs
+          Users
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <StatCard icon={Users} label="Total" value={totalUsers} />
-          <StatCard icon={Users} label="Hommes" value={totalMen} />
-          <StatCard icon={Users} label="Femmes" value={totalWomen} />
+          <StatCard icon={Users} label="Men" value={totalMen} />
+          <StatCard icon={Users} label="Women" value={totalWomen} />
           <StatCard
             icon={Shield}
-            label="Premium actif"
+            label="Active Premium"
             value={activePremium}
-            sub="abonnements en cours"
+            sub="active subscriptions"
           />
         </div>
       </section>
@@ -147,43 +147,43 @@ export default async function AdminPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <StatCard
             icon={TrendingUp}
-            label="Revenue commissions"
+            label="Commission revenue"
             value={`$${revenue.toFixed(2)}`}
-            sub={`${releasedStats?.cnt ?? 0} virements effectués`}
+            sub={`${releasedStats?.cnt ?? 0} transfers completed`}
           />
           <StatCard
             icon={Clock}
-            label="En escrow"
+            label="In escrow"
             value={`$${heldAmount.toFixed(2)}`}
-            sub={`${heldStats?.cnt ?? 0} dépôts bloqués`}
+            sub={`${heldStats?.cnt ?? 0} deposits held`}
           />
           <StatCard
             icon={DollarSign}
-            label="Remboursés"
+            label="Refunded"
             value={refundedStats?.cnt ?? 0}
-            sub="dépôts refunded"
+            sub="refunded deposits"
           />
-          <StatCard icon={Flag} label="Signalements" value={totalReports} />
+          <StatCard icon={Flag} label="Reports" value={totalReports} />
         </div>
       </section>
 
       <Separator />
 
-      {/* Signalements récents */}
+      {/* Recent reports */}
       <section className="space-y-3">
         <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
-          Signalements récents ({totalReports})
+          Recent reports ({totalReports})
         </h2>
         {recentReports.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Aucun signalement.</p>
+          <p className="text-sm text-muted-foreground">No reports.</p>
         ) : (
           <div className="border border-border rounded-lg overflow-hidden">
             <table className="w-full text-sm">
               <thead className="bg-muted/50">
                 <tr>
-                  <th className="text-left px-4 py-2 font-medium">Signaleur</th>
-                  <th className="text-left px-4 py-2 font-medium">Signalé</th>
-                  <th className="text-left px-4 py-2 font-medium">Raison</th>
+                  <th className="text-left px-4 py-2 font-medium">Reporter</th>
+                  <th className="text-left px-4 py-2 font-medium">Reported</th>
+                  <th className="text-left px-4 py-2 font-medium">Reason</th>
                   <th className="text-left px-4 py-2 font-medium">Date</th>
                 </tr>
               </thead>
@@ -207,7 +207,7 @@ export default async function AdminPage() {
                       </Badge>
                     </td>
                     <td className="px-4 py-2 text-muted-foreground text-xs">
-                      {new Date(r.createdAt).toLocaleDateString("fr-FR", {
+                      {new Date(r.createdAt).toLocaleDateString("en-US", {
                         day: "2-digit",
                         month: "short",
                         year: "numeric",
@@ -223,18 +223,18 @@ export default async function AdminPage() {
 
       <Separator />
 
-      {/* Demandes récentes */}
+      {/* Recent requests */}
       <section className="space-y-3">
         <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
-          Demandes récentes
+          Recent requests
         </h2>
         <div className="border border-border rounded-lg overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-muted/50">
               <tr>
-                <th className="text-left px-4 py-2 font-medium">Homme</th>
-                <th className="text-left px-4 py-2 font-medium">Femme</th>
-                <th className="text-left px-4 py-2 font-medium">Statut</th>
+                <th className="text-left px-4 py-2 font-medium">Man</th>
+                <th className="text-left px-4 py-2 font-medium">Woman</th>
+                <th className="text-left px-4 py-2 font-medium">Status</th>
                 <th className="text-left px-4 py-2 font-medium">Date</th>
               </tr>
             </thead>
@@ -258,7 +258,7 @@ export default async function AdminPage() {
                     </Badge>
                   </td>
                   <td className="px-4 py-2 text-muted-foreground text-xs">
-                    {new Date(r.createdAt).toLocaleDateString("fr-FR", {
+                    {new Date(r.createdAt).toLocaleDateString("en-US", {
                       day: "2-digit",
                       month: "short",
                       year: "numeric",

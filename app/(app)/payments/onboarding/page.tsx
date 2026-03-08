@@ -11,18 +11,18 @@ import { CheckCircle2, ShieldCheck, CreditCard, UserCheck, Banknote, ArrowRight,
 const STEPS = [
   {
     icon: UserCheck,
-    title: "Créez votre compte Stripe",
-    desc: "Stripe vous demandera votre nom, email et numéro de téléphone. C'est rapide — moins de 2 minutes.",
+    title: "Create your Stripe account",
+    desc: "Stripe will ask for your name, email and phone number. Quick — under 2 minutes.",
   },
   {
     icon: CreditCard,
-    title: "Vérifiez votre identité",
-    desc: "Stripe est une plateforme financière réglementée. Une pièce d'identité (passeport, CNI) est requise par la loi pour recevoir des paiements.",
+    title: "Verify your identity",
+    desc: "Stripe is a regulated financial platform. A government-issued ID (passport, ID card) is required by law to receive payments.",
   },
   {
     icon: Banknote,
-    title: "Ajoutez votre RIB / IBAN",
-    desc: "Renseignez votre compte bancaire. Les virements arrivent automatiquement après chaque rendez-vous confirmé.",
+    title: "Add your bank account / IBAN",
+    desc: "Enter your bank account. Transfers arrive automatically after each confirmed date.",
   },
 ];
 
@@ -40,7 +40,7 @@ export default function OnboardingPage() {
   if (session?.user?.gender !== "woman") {
     return (
       <div className="max-w-md mx-auto">
-        <p className="text-muted-foreground">Cette page est réservée aux femmes.</p>
+        <p className="text-muted-foreground">This page is for women only.</p>
       </div>
     );
   }
@@ -53,20 +53,20 @@ export default function OnboardingPage() {
             <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">Compte configuré !</h1>
+            <h1 className="text-2xl font-bold">Account set up!</h1>
             <p className="mt-2 text-muted-foreground">
-              Votre compte Stripe Express est en cours de vérification par Stripe (généralement quelques minutes).
-              Une fois validé, vous pourrez accepter des demandes et recevoir vos dépôts directement sur votre compte bancaire.
+              Your Stripe Express account is being verified by Stripe (usually a few minutes).
+              Once approved, you can accept requests and receive deposits directly to your bank account.
             </p>
           </div>
         </div>
         <Card>
           <CardContent className="p-5 text-left space-y-2">
-            <p className="text-sm font-semibold">Ce qui se passe maintenant :</p>
+            <p className="text-sm font-semibold">What happens now:</p>
             {[
-              "Stripe vérifie votre identité (quelques minutes à quelques heures)",
-              "Une fois validé, vous recevrez 90% de chaque dépôt après un rendez-vous confirmé",
-              "Les virements sont automatiques — vous n'avez rien à faire",
+              "Stripe verifies your identity (a few minutes to a few hours)",
+              "Once approved, you will receive 90% of each deposit after a confirmed date",
+              "Transfers are automatic — no action needed from you",
             ].map((item) => (
               <div key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
                 <CheckCircle2 className="h-4 w-4 shrink-0 text-green-500 mt-0.5" />
@@ -76,7 +76,7 @@ export default function OnboardingPage() {
           </CardContent>
         </Card>
         <Button asChild className="w-full">
-          <Link href="/profile/edit">Retour à mon profil <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          <Link href="/profile/edit">Back to my profile <ArrowRight className="ml-2 h-4 w-4" /></Link>
         </Button>
       </div>
     );
@@ -86,9 +86,9 @@ export default function OnboardingPage() {
     <div className="max-w-lg mx-auto space-y-6 pb-10">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold">Recevoir mes dépôts</h1>
+        <h1 className="text-2xl font-bold">Receive my deposits</h1>
         <p className="mt-1 text-muted-foreground">
-          Pour recevoir les paiements des hommes qui vous contactent, vous devez connecter votre compte bancaire via <strong>Stripe</strong> — la plateforme de paiement utilisée par des millions d&apos;entreprises (Amazon, Shopify, Uber…).
+          To receive payments from men who contact you, you must connect your bank account via <strong>Stripe</strong> — the payment platform used by millions of businesses (Amazon, Shopify, Uber…).
         </p>
       </div>
 
@@ -98,9 +98,9 @@ export default function OnboardingPage() {
           <div className="flex items-start gap-3">
             <ShieldCheck className="h-5 w-5 shrink-0 text-primary mt-0.5" />
             <div>
-              <p className="font-semibold text-sm">Pourquoi Stripe ?</p>
+              <p className="font-semibold text-sm">Why Stripe?</p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Stripe gère les paiements de façon sécurisée et légale. Vos coordonnées bancaires ne sont jamais partagées avec NoPayNoDate ni avec les hommes de la plateforme. Stripe est certifié PCI-DSS (la norme de sécurité bancaire la plus élevée).
+                Stripe handles payments securely and legally. Your banking details are never shared with NoPayNoDate or any user. Stripe is PCI-DSS certified (the highest banking security standard).
               </p>
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function OnboardingPage() {
 
       {/* Les 3 étapes */}
       <div>
-        <p className="text-sm font-semibold text-foreground mb-3">Les 3 étapes de configuration (~5 min)</p>
+        <p className="text-sm font-semibold text-foreground mb-3">The 3 setup steps (~5 min)</p>
         <div className="space-y-3">
           {STEPS.map((step, i) => (
             <div key={i} className="flex items-start gap-4 rounded-xl border border-border/60 bg-muted/20 px-4 py-4">
@@ -128,13 +128,13 @@ export default function OnboardingPage() {
       {/* Ce qu'il vous faut */}
       <Card>
         <CardContent className="p-5">
-          <p className="text-sm font-semibold mb-2">Préparez ces informations :</p>
+          <p className="text-sm font-semibold mb-2">Prepare these details:</p>
           <ul className="space-y-1.5">
             {[
-              "Votre email",
-              "Votre numéro de téléphone",
-              "Une pièce d'identité (CNI, passeport ou permis de conduire)",
-              "Votre IBAN / RIB bancaire",
+              "Your email",
+              "Your phone number",
+              "A government-issued ID (national ID, passport, or driver's license)",
+              "Your IBAN / bank account",
             ].map((item) => (
               <li key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
                 <CheckCircle2 className="h-4 w-4 shrink-0 text-green-500" />
@@ -154,13 +154,13 @@ export default function OnboardingPage() {
           size="lg"
         >
           {createAccount.isPending
-            ? "Redirection vers Stripe..."
-            : "Connecter mon compte bancaire"}
+            ? "Redirecting to Stripe..."
+            : "Connect my bank account"}
           {!createAccount.isPending && <ArrowRight className="ml-2 h-4 w-4" />}
         </Button>
         <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
           <Lock className="h-3 w-3" />
-          Vous serez redirigée vers le site sécurisé de Stripe. NoPayNoDate ne voit jamais vos données bancaires.
+          You will be redirected to the secure Stripe website. NoPayNoDate never sees your banking data.
         </p>
       </div>
     </div>

@@ -70,7 +70,7 @@ export default function ChatPage() {
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {msgs?.length === 0 && (
           <p className="text-center text-muted-foreground text-sm mt-8">
-            Aucun message pour l&apos;instant. Commencez la conversation !
+            No messages yet. Start the conversation!
           </p>
         )}
         {msgs?.map((msg) => {
@@ -102,7 +102,7 @@ export default function ChatPage() {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Votre message..."
+          placeholder="Your message..."
           className="flex-1"
           disabled={sendMessage.isPending}
         />

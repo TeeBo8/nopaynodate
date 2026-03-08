@@ -33,19 +33,19 @@ export default async function AppLayout({
             <Button variant="ghost" size="sm" asChild>
               <Link href="/browse" className="gap-1.5">
                 <Search size={15} />
-                <span className="hidden sm:inline">Découvrir</span>
+                <span className="hidden sm:inline">Discover</span>
               </Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>
               <Link href="/requests" className="gap-1.5">
                 <Heart size={15} />
-                <span className="hidden sm:inline">Demandes</span>
+                <span className="hidden sm:inline">Requests</span>
               </Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>
               <Link href={`/profile/${session.user.id}`} className="gap-1.5">
                 <User size={15} />
-                <span className="hidden sm:inline">Profil</span>
+                <span className="hidden sm:inline">Profile</span>
               </Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>

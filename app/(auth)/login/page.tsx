@@ -59,7 +59,7 @@ export default function LoginPage() {
     });
 
     if (result.error) {
-      setError("Email ou mot de passe incorrect.");
+      setError("Incorrect email or password.");
       return;
     }
 
@@ -98,10 +98,10 @@ export default function LoginPage() {
           ♥
         </div>
         <h1 style={{ fontSize: "1.5rem", fontWeight: 700, margin: 0, color: "white" }}>
-          Bon retour !
+          Welcome back!
         </h1>
         <p style={{ fontSize: "0.875rem", color: "rgba(255,255,255,0.5)", marginTop: "0.375rem" }}>
-          Accédez à votre compte NoPayNoDate
+          Sign in to your NoPayNoDate account
         </p>
       </div>
 
@@ -128,7 +128,7 @@ export default function LoginPage() {
         }}
       >
         <GoogleIcon />
-        {googleLoading ? "Redirection..." : "Continuer avec Google"}
+        {googleLoading ? "Redirecting..." : "Continue with Google"}
       </button>
 
       {/* Divider */}
@@ -141,7 +141,7 @@ export default function LoginPage() {
         }}
       >
         <div style={{ flex: 1, height: "1px", background: "rgba(255,255,255,0.12)" }} />
-        <span style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.35)" }}>ou</span>
+        <span style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.35)" }}>or</span>
         <div style={{ flex: 1, height: "1px", background: "rgba(255,255,255,0.12)" }} />
       </div>
 
@@ -159,7 +159,7 @@ export default function LoginPage() {
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="vous@exemple.com"
+                    placeholder="you@example.com"
                     className="bg-white/10 border-white/15 text-white placeholder:text-white/30 focus-visible:border-pink-500 focus-visible:ring-pink-500/30"
                     {...field}
                   />
@@ -174,7 +174,7 @@ export default function LoginPage() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.85rem" }}>
-                  Mot de passe
+                  Password
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -201,7 +201,7 @@ export default function LoginPage() {
               fontWeight: 600,
             }}
           >
-            {form.formState.isSubmitting ? "Connexion..." : "Se connecter"}
+            {form.formState.isSubmitting ? "Signing in..." : "Sign in"}
           </Button>
         </form>
       </Form>
@@ -216,9 +216,9 @@ export default function LoginPage() {
           marginBottom: 0,
         }}
       >
-        Pas encore de compte ?{" "}
+        No account yet?{" "}
         <Link href="/register" style={{ color: "#e81e8c", textDecoration: "underline" }}>
-          Créer un compte
+          Create an account
         </Link>
       </p>
     </div>

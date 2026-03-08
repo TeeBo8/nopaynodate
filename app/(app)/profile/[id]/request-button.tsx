@@ -29,8 +29,8 @@ export function RequestButton({
     >
       <Heart size={16} />
       {sendRequest.isPending
-        ? "Création..."
-        : `Demander un rendez-vous — ${depositDisplay}`}
+        ? "Sending..."
+        : `Request a date — ${depositDisplay}`}
     </Button>
   );
 }

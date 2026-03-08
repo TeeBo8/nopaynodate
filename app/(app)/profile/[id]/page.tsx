@@ -94,11 +94,11 @@ export default async function PublicProfilePage({
         <div className="space-y-2">
           <div className="flex items-center gap-2 flex-wrap">
             <h1 className="text-2xl font-semibold">{user.name}</h1>
-            {age && <span className="text-muted-foreground">{age} ans</span>}
+            {age && <span className="text-muted-foreground">{age} y/o</span>}
             {user.isVerified && (
               <Badge variant="secondary" className="gap-1">
                 <ShieldCheck size={12} />
-                Vérifié
+                Verified
               </Badge>
             )}
             {isPremium && (
@@ -116,7 +116,7 @@ export default async function PublicProfilePage({
         {/* Deposit chip */}
         {user.gender === "woman" && (
           <div className="shrink-0 text-right">
-            <p className="text-xs text-muted-foreground">Dépôt requis</p>
+            <p className="text-xs text-muted-foreground">Deposit required</p>
             <p className="text-2xl font-bold">{depositDisplay}</p>
           </div>
         )}
@@ -134,17 +134,16 @@ export default async function PublicProfilePage({
       {/* CTA */}
       {isOwnProfile ? (
         <Button variant="outline" asChild>
-          <Link href="/profile/edit">Modifier mon profil</Link>
+          <Link href="/profile/edit">Edit my profile</Link>
         </Button>
       ) : canRequest ? (
         <div className="space-y-3">
           <div className="rounded-xl border border-border p-4 bg-muted/30 space-y-1">
-            <p className="font-medium text-sm">Comment ça fonctionne</p>
+            <p className="font-medium text-sm">How it works</p>
             <p className="text-xs text-muted-foreground">
-              Envoyez une demande de rendez-vous avec un dépôt de{" "}
-              <strong>{depositDisplay}</strong>. Si elle accepte, le chat est
-              débloqué. Après le rendez-vous, le dépôt lui est transféré (moins
-              10% de commission). Si elle refuse, vous êtes remboursé à 100%.
+              Send a date request with a deposit of{" "}
+              <strong>{depositDisplay}</strong>. If she accepts, the chat is unlocked. After the date, the deposit
+              is transferred to her (minus 10% commission). If she declines, you are 100% refunded.
             </p>
           </div>
           <div className="flex items-center justify-between">

@@ -13,16 +13,16 @@ export function LandingCta() {
 
       <div className="mx-auto max-w-3xl text-center">
         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-          Prête à rencontrer quelqu&apos;un qui mérite vraiment votre temps ?
+          Ready to meet someone who truly deserves your time?
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
-          Inscription gratuite en 2 minutes. Vous fixez votre prix, vous choisissez qui vous contacte.
-          Aucune carte bancaire requise pour commencer.
+          Free sign-up in 2 minutes. You set your price, you choose who contacts you.
+          No credit card required to get started.
         </p>
         <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <Button size="lg" className="h-12 gap-2 px-10 text-base" asChild>
             <Link href="/register">
-              Créer mon profil gratuitement
+              Create my profile for free
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
@@ -31,10 +31,10 @@ export function LandingCta() {
           </Button>
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
-          <span>✓ Inscription 100% gratuite</span>
-          <span>✓ Aucune carte requise</span>
-          <span>✓ Profils vérifiés</span>
-          <span>✓ Paiements via Stripe</span>
+          <span>✓ 100% free sign-up</span>
+          <span>✓ No credit card required</span>
+          <span>✓ Verified profiles</span>
+          <span>✓ Payments via Stripe</span>
         </div>
       </div>
     </section>

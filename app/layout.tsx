@@ -11,27 +11,27 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   metadataBase: new URL("https://nopaynodate.com"),
   title: {
-    default: "NoPayNoDate — Des rencontres sérieuses. Garanties.",
+    default: "NoPayNoDate — Serious Dating. Guaranteed.",
     template: "%s | NoPayNoDate",
   },
   description:
-    "Fini le ghosting. Les hommes versent un dépôt sécurisé pour contacter une femme. Remboursé à 100% si elle refuse. Chaque échange vaut quelque chose.",
-  keywords: ["rencontres", "dating", "sérieux", "premium", "ghosting", "dépôt", "Stripe"],
+    "No more ghosting. Men pay a secure deposit to contact a woman. 100% refunded if she declines. Every interaction is worth something.",
+  keywords: ["dating", "serious", "premium", "ghosting", "deposit", "Stripe"],
   authors: [{ name: "NoPayNoDate" }],
   openGraph: {
     type: "website",
     siteName: "NoPayNoDate",
-    title: "NoPayNoDate — Des rencontres sérieuses. Garanties.",
+    title: "NoPayNoDate — Serious Dating. Guaranteed.",
     description:
-      "Fini le ghosting. Les hommes versent un dépôt sécurisé. Remboursé à 100% si elle refuse.",
+      "No more ghosting. Men pay a secure deposit. 100% refunded if she declines.",
     url: "https://nopaynodate.com",
-    locale: "fr_FR",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "NoPayNoDate — Des rencontres sérieuses. Garanties.",
+    title: "NoPayNoDate — Serious Dating. Guaranteed.",
     description:
-      "Fini le ghosting. Les hommes versent un dépôt sécurisé. Remboursé à 100% si elle refuse.",
+      "No more ghosting. Men pay a secure deposit. 100% refunded if she declines.",
   },
   icons: {
     icon: [{ url: "/logo.svg", type: "image/svg+xml" }],

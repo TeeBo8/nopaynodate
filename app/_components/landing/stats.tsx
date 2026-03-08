@@ -1,8 +1,8 @@
 const stats = [
-  { value: "20–200$", label: "Dépôt fixé par la femme, avant chaque date" },
-  { value: "100%", label: "Remboursé automatiquement si elle dit non" },
-  { value: "10%", label: "Commission prélevée par la plateforme sur le dépôt" },
-  { value: "0$", label: "Pour s'inscrire et explorer les profils" },
+  { value: "20–200$", label: "Deposit set by the woman, before each date" },
+  { value: "100%", label: "Automatically refunded if she says no" },
+  { value: "10%", label: "Platform commission on the deposit" },
+  { value: "0$", label: "To sign up and browse profiles" },
 ];
 
 export function LandingStats() {

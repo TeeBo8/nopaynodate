@@ -49,23 +49,23 @@ function PremiumSection() {
 
       {justSubscribed && (
         <p className="text-sm text-green-600 bg-green-50 border border-green-200 rounded-md px-3 py-2">
-          Bienvenue dans le club Premium !
+          Welcome to the Premium club!
         </p>
       )}
 
       {status?.isPremium ? (
         <>
           <p className="text-sm text-muted-foreground">
-            Votre abonnement est actif jusqu&apos;au{" "}
+            Your subscription is active until&apos;au{" "}
             <span className="font-medium text-foreground">
               {status.premiumUntil
-                ? new Date(status.premiumUntil).toLocaleDateString("fr-FR")
+                ? new Date(status.premiumUntil).toLocaleDateString("en-US")
                 : "—"}
             </span>
           </p>
           <ul className="text-sm text-muted-foreground space-y-1">
-            <li className="flex items-center gap-1.5"><Star size={13} className="text-yellow-500" /> Badge Premium visible sur votre profil</li>
-            <li className="flex items-center gap-1.5"><Star size={13} className="text-yellow-500" /> Profil mis en avant dans la recherche</li>
+            <li className="flex items-center gap-1.5"><Star size={13} className="text-yellow-500" /> Premium badge visible on your profile</li>
+            <li className="flex items-center gap-1.5"><Star size={13} className="text-yellow-500" /> Profile boosted in search results</li>
           </ul>
           <Button
             variant="outline"
@@ -73,17 +73,17 @@ function PremiumSection() {
             onClick={() => createPortal.mutate()}
             disabled={createPortal.isPending}
           >
-            {createPortal.isPending ? "Chargement..." : "Gérer mon abonnement"}
+            {createPortal.isPending ? "Loading..." : "Manage subscription"}
           </Button>
         </>
       ) : (
         <>
           <p className="text-sm text-muted-foreground">
-            Passez Premium pour booster votre visibilité et afficher un badge exclusif.
+            Go Premium to boost your visibility and display an exclusive badge.
           </p>
           <ul className="text-sm text-muted-foreground space-y-1">
-            <li className="flex items-center gap-1.5"><Star size={13} className="text-yellow-500" /> Badge Premium visible sur votre profil</li>
-            <li className="flex items-center gap-1.5"><Star size={13} className="text-yellow-500" /> Profil mis en avant dans la recherche</li>
+            <li className="flex items-center gap-1.5"><Star size={13} className="text-yellow-500" /> Premium badge visible on your profile</li>
+            <li className="flex items-center gap-1.5"><Star size={13} className="text-yellow-500" /> Profile boosted in search results</li>
           </ul>
           <Button
             onClick={() => createCheckout.mutate()}
@@ -91,7 +91,7 @@ function PremiumSection() {
             className="gap-2"
           >
             <Crown size={15} />
-            {createCheckout.isPending ? "Chargement..." : "Passer Premium — 19,99$/mois"}
+            {createCheckout.isPending ? "Loading..." : "Go Premium — 9.99/month"}
           </Button>
         </>
       )}
@@ -107,12 +107,12 @@ export default function SettingsPage() {
 
   const deleteAccount = api.users.deleteAccount.useMutation({
     onSuccess: async () => {
-      toast.success("Compte supprimé.");
+      toast.success("Account deleted.");
       await signOut();
       router.push("/");
     },
     onError: () => {
-      toast.error("Erreur lors de la suppression. Réessayez.");
+      toast.error("Deletion error. Please try again.");
       setDeleting(false);
     },
   });
@@ -124,16 +124,16 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-md mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">Paramètres</h1>
+      <h1 className="text-2xl font-bold">Settings</h1>
 
       <Suspense fallback={<div className="border border-border rounded-lg p-4 h-32 animate-pulse bg-muted/30" />}>
         <PremiumSection />
       </Suspense>
 
       <div className="border border-border rounded-lg p-4 space-y-3">
-        <h2 className="font-medium">Compte</h2>
+        <h2 className="font-medium">Account</h2>
         <Button variant="outline" onClick={handleSignOut}>
-          Se déconnecter
+          Sign out
         </Button>
       </div>
 
@@ -144,7 +144,7 @@ export default function SettingsPage() {
             <h2 className="font-medium">Administration</h2>
           </div>
           <Link href="/admin">
-            <Button variant="outline" size="sm">Accéder au panel admin</Button>
+            <Button variant="outline" size="sm">Access admin panel</Button>
           </Link>
         </div>
       )}
@@ -152,9 +152,9 @@ export default function SettingsPage() {
       <div className="rounded-lg border border-border p-4 space-y-1">
         <h2 className="font-medium text-sm">Support</h2>
         <p className="text-sm text-muted-foreground">
-          Un problème ou une question ?{" "}
+          A problem or question?{" "}
           <a href="mailto:contact@teebostudio.fr" className="underline underline-offset-4 hover:text-foreground transition-colors">
-            Contactez-nous
+            Contact us
           </a>
         </p>
       </div>
@@ -162,11 +162,11 @@ export default function SettingsPage() {
       <div className="border border-destructive/30 rounded-lg p-4 space-y-3">
         <div className="flex items-center gap-2">
           <Trash2 size={16} className="text-destructive" />
-          <h2 className="font-medium text-destructive">Zone dangereuse</h2>
+          <h2 className="font-medium text-destructive">Danger zone</h2>
         </div>
         <p className="text-sm text-muted-foreground">
-          La suppression de votre compte est irréversible. Toutes vos données,
-          photos et conversations seront définitivement effacées.
+          Deleting your account is irreversible. All your data,
+          photos and conversations will be permanently erased.
         </p>
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -176,15 +176,14 @@ export default function SettingsPage() {
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Supprimer votre compte ?</AlertDialogTitle>
+              <AlertDialogTitle>Delete your account?</AlertDialogTitle>
               <AlertDialogDescription>
-                Cette action est irréversible. Votre profil, vos photos,
-                vos conversations et votre abonnement seront supprimés
-                définitivement.
+                This action is irreversible. Your profile, photos,
+                conversations and subscription will be permanently deleted.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 onClick={() => {
@@ -192,7 +191,7 @@ export default function SettingsPage() {
                   deleteAccount.mutate();
                 }}
               >
-                Oui, supprimer mon compte
+                Yes, delete my account
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

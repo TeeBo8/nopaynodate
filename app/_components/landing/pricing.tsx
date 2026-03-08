@@ -5,19 +5,19 @@ import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
 
 const freeFeatures = [
-  "Profil complet avec photos",
-  "Accès au browse",
-  "Recevoir des demandes (femmes)",
-  "Envoyer des demandes avec dépôt (hommes)",
-  "Chat après acceptation",
+  "Full profile with photos",
+  "Access to browse",
+  "Receive requests (women)",
+  "Send requests with deposit (men)",
+  "Chat after acceptance",
 ];
 
 const premiumFeatures = [
-  "Tout du plan gratuit",
-  "Profil mis en avant dans le browse",
-  "Badge premium visible",
-  "Accès prioritaire aux nouveaux profils",
-  "Support prioritaire",
+  "Everything in the free plan",
+  "Boosted profile in browse",
+  "Visible premium badge",
+  "Priority access to new profiles",
+  "Priority support",
 ];
 
 export function LandingPricing() {
@@ -26,10 +26,10 @@ export function LandingPricing() {
       <div className="mx-auto max-w-4xl">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Tarifs simples et transparents
+            Simple, transparent pricing
           </h2>
           <p className="mt-4 text-muted-foreground text-lg">
-            Gratuit pour commencer, premium pour se démarquer.
+            Free to start, premium to stand out.
           </p>
         </div>
 
@@ -39,10 +39,10 @@ export function LandingPricing() {
             <CardHeader className="p-6 pb-0">
               <div className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Gratuit</div>
               <div className="mt-2 flex items-baseline gap-1">
-                <span className="text-4xl font-bold">0$</span>
+                <span className="text-4xl font-bold">$0</span>
                 <span className="text-muted-foreground">/mois</span>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">Pour commencer et explorer.</p>
+              <p className="mt-2 text-sm text-muted-foreground">To start and explore.</p>
             </CardHeader>
             <CardContent className="p-6">
               <ul className="space-y-3">
@@ -54,7 +54,7 @@ export function LandingPricing() {
                 ))}
               </ul>
               <Button variant="outline" className="mt-6 w-full" asChild>
-                <Link href="/register">Commencer gratuitement</Link>
+                <Link href="/register">Get started for free</Link>
               </Button>
             </CardContent>
           </Card>
@@ -62,15 +62,15 @@ export function LandingPricing() {
           {/* Premium */}
           <Card className="border-primary/40 relative overflow-hidden">
             <div className="absolute right-4 top-4">
-              <Badge>Populaire</Badge>
+              <Badge>Popular</Badge>
             </div>
             <CardHeader className="p-6 pb-0">
               <div className="text-sm font-semibold text-primary uppercase tracking-wide">Premium</div>
               <div className="mt-2 flex items-baseline gap-1">
-                <span className="text-4xl font-bold">19,99$</span>
+                <span className="text-4xl font-bold">$19.99</span>
                 <span className="text-muted-foreground">/mois</span>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">Pour maximiser vos chances.</p>
+              <p className="mt-2 text-sm text-muted-foreground">To maximize your chances.</p>
             </CardHeader>
             <CardContent className="p-6">
               <ul className="space-y-3">
@@ -82,7 +82,7 @@ export function LandingPricing() {
                 ))}
               </ul>
               <Button className="mt-6 w-full" asChild>
-                <Link href="/register">Passer premium</Link>
+                <Link href="/register">Go premium</Link>
               </Button>
             </CardContent>
           </Card>
@@ -90,16 +90,16 @@ export function LandingPricing() {
 
         <div className="mt-8 rounded-xl border border-border/60 bg-muted/30 px-6 py-4 text-sm text-muted-foreground space-y-1.5">
           <p>
-            <span className="font-semibold text-foreground">Dépôts (hommes) :</span>{" "}
-            20–200$ fixé par la femme, versé avant chaque contact. 100% remboursé si elle refuse.
+            <span className="font-semibold text-foreground">Deposits (men):</span>{" "}
+            $20–200 set by the woman, paid before each contact. 100% refunded if she declines.
           </p>
           <p>
-            <span className="font-semibold text-foreground">Commission plateforme :</span>{" "}
-            10% prélevés sur le dépôt lors du transfert à la femme après la date confirmée.
+            <span className="font-semibold text-foreground">Platform commission:</span>{" "}
+            10% taken from the deposit when transferred to the woman after a confirmed date.
           </p>
           <p>
-            <span className="font-semibold text-foreground">Paiements via Stripe :</span>{" "}
-            Les femmes doivent connecter un compte Stripe Express pour recevoir leurs dépôts (gratuit, configuration en quelques minutes).
+            <span className="font-semibold text-foreground">Payments via Stripe:</span>{" "}
+            Women must connect a Stripe Express account to receive their deposits (free, setup in minutes).
           </p>
         </div>
       </div>
