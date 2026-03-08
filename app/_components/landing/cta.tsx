@@ -27,7 +27,7 @@ export function LandingCta() {
             </Link>
           </Button>
           <Button size="lg" variant="outline" className="h-12 px-8 text-base" asChild>
-            <Link href="/login">J&apos;ai déjà un compte</Link>
+            <Link href="/login">I already have an account</Link>
           </Button>
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">

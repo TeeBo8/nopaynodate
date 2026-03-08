@@ -4,9 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, ShieldCheck, MapPin, Heart } from "lucide-react";
 
 const mockProfiles = [
-  { initials: "S", name: "Sofia", age: 27, city: "Paris", deposit: 80, color: "bg-rose-400" },
-  { initials: "L", name: "Laura", age: 31, city: "Lyon", deposit: 50, color: "bg-violet-400" },
-  { initials: "C", name: "Camille", age: 25, city: "Bordeaux", deposit: 120, color: "bg-amber-400" },
+  { initials: "S", name: "Sofia", age: 27, city: "New York", deposit: 80, color: "bg-rose-400" },
+  { initials: "L", name: "Laura", age: 31, city: "Los Angeles", deposit: 50, color: "bg-violet-400" },
+  { initials: "C", name: "Camille", age: 25, city: "Chicago", deposit: 120, color: "bg-amber-400" },
 ];
 
 export function LandingHero() {
@@ -44,7 +44,7 @@ export function LandingHero() {
           </Link>
         </Button>
         <Button size="lg" variant="outline" className="h-12 px-8 text-base" asChild>
-          <Link href="/login">J&apos;ai déjà un compte</Link>
+          <Link href="/login">I already have an account</Link>
         </Button>
       </div>
 

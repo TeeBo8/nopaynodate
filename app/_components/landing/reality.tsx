@@ -52,7 +52,7 @@ export function LandingReality() {
             </span>
           </div>
           <blockquote className="text-xl font-semibold leading-relaxed sm:text-2xl">
-            &ldquo;Ce qu&apos;un homme est prêt à payer pour te voir dit tout sur ce qu&apos;il recherche vraiment.&rdquo;
+            &ldquo;What a man is willing to pay to meet you says everything about what he&apos;s truly looking for.&rdquo;
           </blockquote>
           <p className="mt-4 text-sm text-muted-foreground">
             NoPayNoDate turns this question into a concrete mechanism — before the first message.

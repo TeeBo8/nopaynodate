@@ -253,7 +253,7 @@ export default function ProfileEditPage() {
                     <FormItem>
                       <FormLabel>City</FormLabel>
                       <FormControl>
-                        <Input placeholder="Paris, Lyon, NYC…" {...field} />
+                        <Input placeholder="New York, LA, Chicago…" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
