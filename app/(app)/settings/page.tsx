@@ -42,7 +42,7 @@ function PremiumSection() {
         <h2 className="font-medium">Premium</h2>
         {status?.isPremium && (
           <Badge variant="secondary" className="text-yellow-600 bg-yellow-50 border-yellow-200">
-            Actif
+            Active
           </Badge>
         )}
       </div>
@@ -56,7 +56,7 @@ function PremiumSection() {
       {status?.isPremium ? (
         <>
           <p className="text-sm text-muted-foreground">
-            Your subscription is active until&apos;au{" "}
+            Your subscription is active until{" "}
             <span className="font-medium text-foreground">
               {status.premiumUntil
                 ? new Date(status.premiumUntil).toLocaleDateString("en-US")
@@ -91,7 +91,7 @@ function PremiumSection() {
             className="gap-2"
           >
             <Crown size={15} />
-            {createCheckout.isPending ? "Loading..." : "Go Premium — 9.99/month"}
+            {createCheckout.isPending ? "Loading..." : "Go Premium — $19.99/month"}
           </Button>
         </>
       )}
@@ -171,7 +171,7 @@ export default function SettingsPage() {
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="destructive" size="sm" disabled={deleting}>
-              Supprimer mon compte
+              Delete my account
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
