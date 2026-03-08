@@ -32,6 +32,14 @@ const step1Schema = z.object({
   name: z.string().min(2, "Minimum 2 caractères"),
   email: z.string().email("Email invalide"),
   password: z.string().min(8, "Minimum 8 caractères"),
+  birthdate: z.string().refine((val) => {
+    if (!val) return false;
+    const birth = new Date(val);
+    const today = new Date();
+    const age = today.getFullYear() - birth.getFullYear() -
+      (today < new Date(today.getFullYear(), birth.getMonth(), birth.getDate()) ? 1 : 0);
+    return age >= 18;
+  }, "Vous devez avoir 18 ans ou plus pour vous inscrire"),
 });
 
 type Step1Values = z.infer<typeof step1Schema>;
@@ -46,7 +54,7 @@ export default function RegisterPage() {
 
   const form = useForm<Step1Values>({
     resolver: zodResolver(step1Schema),
-    defaultValues: { name: "", email: "", password: "" },
+    defaultValues: { name: "", email: "", password: "", birthdate: "" },
   });
 
   const handleStep1 = (values: Step1Values) => {
@@ -64,6 +72,7 @@ export default function RegisterPage() {
       email: step1Data.email,
       password: step1Data.password,
       gender: selectedGender,
+      birthdate: step1Data.birthdate,
     });
 
     setLoading(false);
@@ -129,6 +138,27 @@ export default function RegisterPage() {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="birthdate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date de naissance</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        max={new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().split("T")[0]}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <p className="text-xs text-muted-foreground">
+                En créant un compte, vous confirmez avoir 18 ans ou plus et acceptez nos{" "}
+                <span className="underline cursor-pointer">Conditions d&apos;utilisation</span>.
+              </p>
               <Button type="submit" className="w-full">
                 Continuer
               </Button>
