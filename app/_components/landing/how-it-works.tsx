@@ -1,57 +1,57 @@
 import { CreditCard, MessageSquare, Calendar, Wallet, UserCheck, Heart, Landmark } from "lucide-react";
 
-const stepsHomme = [
+const stepsMan = [
   {
     icon: UserCheck,
     step: "1",
-    title: "Créez votre profil",
-    desc: "Inscription en 2 minutes. Ajoutez vos photos, votre bio, votre ville.",
+    title: "Create your profile",
+    desc: "Sign up in 2 minutes. Add your photos, bio, and city.",
   },
   {
     icon: CreditCard,
     step: "2",
-    title: "Versez le dépôt",
-    desc: "Chaque femme fixe son propre montant (20–200$). Versez-le pour débloquer le chat. 100% remboursé si elle refuse.",
+    title: "Pay the deposit",
+    desc: "Each woman sets her own amount ($20–200). Pay it to unlock the chat. 100% refunded if she declines.",
   },
   {
     icon: MessageSquare,
     step: "3",
-    title: "Discutez vraiment",
-    desc: "Le chat est ouvert dès qu'elle accepte. Plus de ghosting — votre dépôt prouve votre sérieux.",
+    title: "Actually talk",
+    desc: "The chat opens as soon as she accepts. No more ghosting — your deposit proves your commitment.",
   },
 ];
 
-const stepsFemme = [
+const stepsWoman = [
   {
     icon: UserCheck,
     step: "1",
-    title: "Créez votre profil",
-    desc: "Inscription gratuite en 2 minutes. Ajoutez vos photos, votre bio, votre ville.",
+    title: "Create your profile",
+    desc: "Free sign-up in 2 minutes. Add your photos, bio, and city.",
   },
   {
     icon: Landmark,
     step: "2",
-    title: "Connectez votre compte bancaire",
-    desc: "Un compte Stripe Express est requis pour recevoir vos dépôts. Configuration rapide, sécurisée, directement depuis l'app.",
+    title: "Connect your bank account",
+    desc: "A Stripe Express account is required to receive your deposits. Quick, secure setup directly from the app.",
     highlight: true,
   },
   {
     icon: Wallet,
     step: "3",
-    title: "Fixez votre prix",
-    desc: "Vous décidez du montant du dépôt (20–200$). Plus il est élevé, plus vous filtrez les profils peu sérieux.",
+    title: "Set your price",
+    desc: "You decide the deposit amount ($20–200). The higher it is, the more you filter out unserious profiles.",
   },
   {
     icon: Heart,
     step: "4",
-    title: "Choisissez librement",
-    desc: "Acceptez ou refusez chaque demande. En cas de refus, le dépôt est remboursé automatiquement à l'homme.",
+    title: "Choose freely",
+    desc: "Accept or decline each request. If declined, the deposit is automatically refunded to the man.",
   },
   {
     icon: Calendar,
     step: "5",
-    title: "Confirmez la date & recevez",
-    desc: "Après la date, confirmez dans l'app. Le dépôt (moins 10% de commission plateforme) est viré sur votre compte.",
+    title: "Confirm the date & receive",
+    desc: "After the date, confirm in the app. The deposit (minus 10% platform commission) is transferred to your account.",
   },
 ];
 
@@ -61,10 +61,10 @@ export function LandingHowItWorks() {
       <div className="mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Comment ça marche
+            How it works
           </h2>
           <p className="mt-4 text-muted-foreground text-lg">
-            Un système simple, juste pour les deux parties.
+            A simple, fair system for both sides.
           </p>
         </div>
 
@@ -73,18 +73,18 @@ export function LandingHowItWorks() {
           <div>
             <div className="mb-8 flex items-center gap-3">
               <span className="rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold text-primary">
-                Pour les hommes
+                For men
               </span>
             </div>
             <div className="space-y-8">
-              {stepsHomme.map((step) => (
+              {stepsMan.map((step) => (
                 <div key={step.step} className="flex gap-4">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-primary/20 bg-primary/5">
                     <step.icon className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-muted-foreground">ÉTAPE {step.step}</span>
+                      <span className="text-xs font-bold text-muted-foreground">STEP {step.step}</span>
                     </div>
                     <h3 className="mt-1 font-semibold">{step.title}</h3>
                     <p className="mt-1 text-sm text-muted-foreground">{step.desc}</p>
@@ -98,11 +98,11 @@ export function LandingHowItWorks() {
           <div>
             <div className="mb-8 flex items-center gap-3">
               <span className="rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold text-primary">
-                Pour les femmes
+                For women
               </span>
             </div>
             <div className="space-y-8">
-              {stepsFemme.map((step) => (
+              {stepsWoman.map((step) => (
                 <div
                   key={step.step}
                   className={`flex gap-4 ${"highlight" in step && step.highlight ? "rounded-xl border border-primary/30 bg-primary/5 p-4 -mx-4" : ""}`}
@@ -112,7 +112,7 @@ export function LandingHowItWorks() {
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-muted-foreground">ÉTAPE {step.step}</span>
+                      <span className="text-xs font-bold text-muted-foreground">STEP {step.step}</span>
                       {"highlight" in step && step.highlight && (
                         <span className="rounded-full bg-primary/15 px-2 py-0.5 text-xs font-semibold text-primary">
                           Requis

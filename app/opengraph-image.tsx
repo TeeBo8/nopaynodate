@@ -83,7 +83,7 @@ export default function OGImage() {
             textAlign: "center",
           }}
         >
-          Des rencontres sérieuses. Garanties.
+          Serious Dating. Guaranteed.
         </p>
 
         {/* Description */}
@@ -97,8 +97,8 @@ export default function OGImage() {
             lineHeight: 1.5,
           }}
         >
-          Fini le ghosting — les hommes versent un dépôt sécurisé via Stripe.
-          Remboursé à 100% si elle refuse.
+          No more ghosting — men pay a secure deposit via Stripe.
+          100% refunded if she declines.
         </p>
 
         {/* Bottom badges */}
@@ -109,7 +109,7 @@ export default function OGImage() {
             marginTop: 44,
           }}
         >
-          {["🔒 Stripe sécurisé", "✅ Remboursé si refus", "👑 Profils Premium"].map(
+          {["🔒 Secure Stripe", "✅ Refunded if declined", "👑 Premium Profiles"].map(
             (badge) => (
               <div
                 key={badge}

@@ -24,27 +24,27 @@ export function DepotRecuHommeEmail({ manName, womanName, amount, chatUrl }: Pro
   return (
     <Html>
       <Head />
-      <Preview>Votre dépôt de {dollars}$ a été confirmé — {womanName} a reçu votre demande</Preview>
+      <Preview>Your deposit of {dollars}$ has been confirmed — {womanName} received your request</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>Dépôt confirmé ✓</Heading>
-          <Text style={text}>Bonjour {manName},</Text>
+          <Heading style={h1}>Deposit confirmed ✓</Heading>
+          <Text style={text}>Hi {manName},</Text>
           <Text style={text}>
-            Votre dépôt de <strong>${dollars}</strong> pour contacter{" "}
-            <strong>{womanName}</strong> a bien été reçu.
+            Your deposit of <strong>${dollars}</strong> to contact{" "}
+            <strong>{womanName}</strong> has been received.
           </Text>
           <Text style={text}>
-            Elle a été notifiée et peut maintenant accepter ou refuser votre demande.
-            Vous serez informé par email dès qu&apos;elle répond.
+            She has been notified and can now accept or decline your request.
+            You will be notified by email as soon as she responds.
           </Text>
           <Section style={btnContainer}>
             <Button style={btn} href={chatUrl}>
-              Voir ma demande
+              View my request
             </Button>
           </Section>
           <Hr style={hr} />
           <Text style={footer}>
-            Si votre demande est refusée, votre dépôt est intégralement remboursé.
+            If your request is declined, your deposit is fully refunded.
           </Text>
         </Container>
       </Body>

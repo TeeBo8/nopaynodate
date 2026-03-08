@@ -23,27 +23,27 @@ export function VirementRecuFemmeEmail({ womanName, netAmount, dashboardUrl }: P
   return (
     <Html>
       <Head />
-      <Preview>Virement de {net}$ reçu sur votre compte Stripe</Preview>
+      <Preview>Transfer of {net}$ received to your Stripe account</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>Virement reçu</Heading>
-          <Text style={text}>Bonjour {womanName},</Text>
+          <Heading style={h1}>Transfer received</Heading>
+          <Text style={text}>Hi {womanName},</Text>
           <Text style={text}>
-            La date a été confirmée par les deux parties. Un virement de{" "}
-            <strong>${net}</strong> a été initié vers votre compte Stripe.
+            The date has been confirmed by both parties. A transfer of{" "}
+            <strong>${net}</strong> has been initiated to your Stripe account.
           </Text>
           <Text style={text}>
-            Le délai de versement dépend de Stripe Express (généralement 2 jours ouvrés).
-            Vous pouvez suivre le statut directement dans votre dashboard Stripe.
+            The transfer timeline depends on Stripe Express (usually 2 business days).
+            You can track the status directly in your Stripe dashboard.
           </Text>
           <Section style={btnContainer}>
             <Button style={btn} href={dashboardUrl}>
-              Voir mon tableau de bord
+              View my dashboard
             </Button>
           </Section>
           <Hr style={hr} />
           <Text style={footer}>
-            Merci d&apos;utiliser NoPayNoDate — à bientôt pour une prochaine rencontre !
+            Thank you for using NoPayNoDate — see you soon for your next date!
           </Text>
         </Container>
       </Body>

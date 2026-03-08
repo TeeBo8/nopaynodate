@@ -4,9 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, ShieldCheck, MapPin, Heart } from "lucide-react";
 
 const mockProfiles = [
-  { initials: "S", name: "Sofia", age: 27, city: "Paris", deposit: 80, color: "bg-rose-400" },
-  { initials: "L", name: "Laura", age: 31, city: "Lyon", deposit: 50, color: "bg-violet-400" },
-  { initials: "C", name: "Camille", age: 25, city: "Bordeaux", deposit: 120, color: "bg-amber-400" },
+  { initials: "S", name: "Sofia", age: 27, city: "New York", deposit: 80, color: "bg-rose-400" },
+  { initials: "L", name: "Laura", age: 31, city: "Los Angeles", deposit: 50, color: "bg-violet-400" },
+  { initials: "C", name: "Camille", age: 25, city: "Chicago", deposit: 120, color: "bg-amber-400" },
 ];
 
 export function LandingHero() {
@@ -20,36 +20,36 @@ export function LandingHero() {
 
       <Badge variant="secondary" className="mb-6 gap-1.5 px-4 py-1.5 text-sm">
         <ShieldCheck className="h-3.5 w-3.5" />
-        Dépôts sécurisés via Stripe — remboursés si refus
+        Secure deposits via Stripe — refunded if declined
       </Badge>
 
       <h1 className="mx-auto max-w-4xl text-5xl font-bold leading-tight tracking-tight sm:text-6xl lg:text-7xl">
-        Des rencontres sérieuses.{" "}
-        <span className="text-primary">Garanties.</span>
+        Serious Dating.{" "}
+        <span className="text-primary">Guaranteed.</span>
       </h1>
 
       <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-        Les femmes dépensent en moyenne{" "}
-        <strong className="text-foreground">2 381$/an</strong> pour se préparer
-        à des dates avec des inconnus non investis. Sur NoPayNoDate, chaque
-        homme verse un dépôt avant de vous contacter. Vous acceptez ou refusez
-        — libre à vous.
+        Women spend on average{" "}
+        <strong className="text-foreground">$2,381/year</strong> preparing
+        for dates with uncommitted strangers. On NoPayNoDate, every
+        man pays a deposit before contacting you. You accept or decline
+        — entirely your choice.
       </p>
 
       <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
         <Button size="lg" className="h-12 gap-2 px-8 text-base" asChild>
           <Link href="/register">
-            Trouver une vraie connexion
+            Find a real connection
             <ArrowRight className="h-4 w-4" />
           </Link>
         </Button>
         <Button size="lg" variant="outline" className="h-12 px-8 text-base" asChild>
-          <Link href="/login">J&apos;ai déjà un compte</Link>
+          <Link href="/login">I already have an account</Link>
         </Button>
       </div>
 
       <p className="mt-6 text-sm text-muted-foreground">
-        Inscription gratuite · Aucune carte bancaire requise
+        Free sign-up · No credit card required
       </p>
 
       {/* Mockup — aperçu de profils */}
@@ -78,7 +78,7 @@ export function LandingHero() {
           </div>
         ))}
         <div className="flex items-center gap-2 rounded-2xl border border-dashed border-border/60 px-4 py-3 text-xs text-muted-foreground">
-          + des profils près de chez vous
+          + profiles near you
         </div>
       </div>
     </section>

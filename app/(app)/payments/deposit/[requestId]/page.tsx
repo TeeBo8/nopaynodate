@@ -42,7 +42,7 @@ function CheckoutForm() {
     });
 
     if (stripeError) {
-      setError(stripeError.message ?? "Erreur de paiement");
+      setError(stripeError.message ?? "Payment error");
       setLoading(false);
     }
   };
@@ -52,7 +52,7 @@ function CheckoutForm() {
       <PaymentElement />
       {error && <p className="text-sm text-destructive">{error}</p>}
       <Button type="submit" disabled={!stripe || loading} className="w-full">
-        {loading ? "Traitement..." : "Payer le dépôt"}
+        {loading ? "Processing..." : "Pay deposit"}
       </Button>
     </form>
   );
@@ -85,17 +85,17 @@ export default function DepositPage() {
   return (
     <div className="max-w-md mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Payer le dépôt</h1>
+        <h1 className="text-2xl font-bold">Pay deposit</h1>
         <p className="text-muted-foreground mt-1">
-          Ce dépôt sera intégralement remboursé si votre demande est rejetée.
+          This deposit will be fully refunded if your request is rejected.
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Paiement sécurisé</CardTitle>
+          <CardTitle className="text-base">Secure payment</CardTitle>
           <CardDescription>
-            Vos données de carte sont protégées par Stripe.
+            Your card details are protected by Stripe.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -110,7 +110,7 @@ export default function DepositPage() {
               <CheckoutForm />
             </Elements>
           ) : (
-            <p className="text-muted-foreground text-sm">Chargement...</p>
+            <p className="text-muted-foreground text-sm">Loading...</p>
           )}
         </CardContent>
       </Card>

@@ -66,7 +66,7 @@ export function ProfileCard({
       {/* Top row: deposit + photo count */}
       <div className="absolute top-3 left-3 right-3 flex items-start justify-between">
         <div className="bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full border border-white/20">
-          Dépôt {depositDisplay}
+          Deposit {depositDisplay}
         </div>
         {photos.length > 1 && (
           <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full">

@@ -23,10 +23,10 @@ import { api } from "@/lib/trpc-react";
 import { toast } from "sonner";
 
 const REASONS = [
-  { value: "spam", label: "Spam ou arnaque" },
-  { value: "fake_profile", label: "Faux profil" },
-  { value: "inappropriate", label: "Contenu inapproprié" },
-  { value: "other", label: "Autre" },
+  { value: "spam", label: "Spam or scam" },
+  { value: "fake_profile", label: "Fake profile" },
+  { value: "inappropriate", label: "Inappropriate content" },
+  { value: "other", label: "Other" },
 ] as const;
 
 export function ReportButton({ reportedUserId }: { reportedUserId: string }) {
@@ -35,7 +35,7 @@ export function ReportButton({ reportedUserId }: { reportedUserId: string }) {
 
   const report = api.users.reportUser.useMutation({
     onSuccess: () => {
-      toast.success("Signalement envoyé. Merci !");
+      toast.success("Report submitted. Thank you!");
       setOpen(false);
       setReason("");
     },
@@ -49,19 +49,19 @@ export function ReportButton({ reportedUserId }: { reportedUserId: string }) {
       <DialogTrigger asChild>
         <Button variant="ghost" size="sm" className="text-muted-foreground gap-1.5">
           <Flag size={14} />
-          Signaler
+          Report
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>Signaler ce profil</DialogTitle>
+          <DialogTitle>Report ce profil</DialogTitle>
           <DialogDescription>
-            Votre signalement sera examiné par notre équipe.
+            Your report will be reviewed by our team.
           </DialogDescription>
         </DialogHeader>
         <Select value={reason} onValueChange={setReason}>
           <SelectTrigger>
-            <SelectValue placeholder="Choisir une raison..." />
+            <SelectValue placeholder="Choose a reason..." />
           </SelectTrigger>
           <SelectContent>
             {REASONS.map((r) => (
@@ -73,7 +73,7 @@ export function ReportButton({ reportedUserId }: { reportedUserId: string }) {
         </Select>
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
-            Annuler
+            Cancel
           </Button>
           <Button
             variant="destructive"
@@ -85,7 +85,7 @@ export function ReportButton({ reportedUserId }: { reportedUserId: string }) {
               })
             }
           >
-            {report.isPending ? "Envoi..." : "Envoyer le signalement"}
+            {report.isPending ? "Sending..." : "Submit report"}
           </Button>
         </DialogFooter>
       </DialogContent>

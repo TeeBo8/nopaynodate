@@ -56,7 +56,7 @@ export async function POST(req: Request) {
         await Promise.all([
           sendEmail({
             to: request.requester.email,
-            subject: `Dépôt confirmé — votre demande à ${request.target.name} est en attente`,
+            subject: `Deposit confirmed — your request to ${request.target.name} is pending`,
             react: DepotRecuHommeEmail({
               manName: request.requester.name,
               womanName: request.target.name,

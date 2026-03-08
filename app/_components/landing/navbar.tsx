@@ -15,10 +15,10 @@ export function LandingNavbar() {
           <div className="flex items-center gap-3">
             <ThemeToggle />
             <Button variant="ghost" asChild>
-              <Link href="/login">Se connecter</Link>
+              <Link href="/login">Sign in</Link>
             </Button>
             <Button asChild>
-              <Link href="/register">Commencer</Link>
+              <Link href="/register">Get started</Link>
             </Button>
           </div>
         </div>

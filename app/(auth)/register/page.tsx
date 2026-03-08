@@ -27,11 +27,10 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-// Étape 1 — Credentials
 const step1Schema = z.object({
-  name: z.string().min(2, "Minimum 2 caractères"),
-  email: z.string().email("Email invalide"),
-  password: z.string().min(8, "Minimum 8 caractères"),
+  name: z.string().min(2, "Minimum 2 characters"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(8, "Minimum 8 characters"),
   birthdate: z.string().refine((val) => {
     if (!val) return false;
     const birth = new Date(val);
@@ -39,7 +38,7 @@ const step1Schema = z.object({
     const age = today.getFullYear() - birth.getFullYear() -
       (today < new Date(today.getFullYear(), birth.getMonth(), birth.getDate()) ? 1 : 0);
     return age >= 18;
-  }, "Vous devez avoir 18 ans ou plus pour vous inscrire"),
+  }, "You must be 18 or older to register"),
 });
 
 type Step1Values = z.infer<typeof step1Schema>;
@@ -78,7 +77,7 @@ export default function RegisterPage() {
     setLoading(false);
 
     if (result.error) {
-      setError(result.error.message ?? "Erreur lors de la création du compte.");
+      setError(result.error.message ?? "Error creating account.");
       setStep(1);
       return;
     }
@@ -89,9 +88,9 @@ export default function RegisterPage() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Créer un compte</CardTitle>
+        <CardTitle className="text-2xl">Create an account</CardTitle>
         <CardDescription>
-          {step === 1 ? "Étape 1 sur 2 — Vos informations" : "Étape 2 sur 2 — Qui êtes-vous ?"}
+          {step === 1 ? "Step 1 of 2 — Your information" : "Step 2 of 2 — Who are you?"}
         </CardDescription>
       </CardHeader>
 
@@ -104,9 +103,9 @@ export default function RegisterPage() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Prénom</FormLabel>
+                    <FormLabel>First name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Votre prénom" {...field} />
+                      <Input placeholder="Your first name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -119,7 +118,7 @@ export default function RegisterPage() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="vous@exemple.com" {...field} />
+                      <Input type="email" placeholder="you@example.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -130,9 +129,9 @@ export default function RegisterPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Mot de passe</FormLabel>
+                    <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Minimum 8 caractères" {...field} />
+                      <Input type="password" placeholder="Minimum 8 characters" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -143,7 +142,7 @@ export default function RegisterPage() {
                 name="birthdate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Date de naissance</FormLabel>
+                    <FormLabel>Date of birth</FormLabel>
                     <FormControl>
                       <Input
                         type="date"
@@ -156,18 +155,18 @@ export default function RegisterPage() {
                 )}
               />
               <p className="text-xs text-muted-foreground">
-                En créant un compte, vous confirmez avoir 18 ans ou plus et acceptez nos{" "}
-                <span className="underline cursor-pointer">Conditions d&apos;utilisation</span>.
+                By creating an account, you confirm you are 18 or older and agree to our{" "}
+                <span className="underline cursor-pointer">Terms of Service</span>.
               </p>
               <Button type="submit" className="w-full">
-                Continuer
+                Continue
               </Button>
             </form>
           </Form>
         ) : (
           <div className="space-y-6">
             <p className="text-sm text-muted-foreground text-center">
-              Cette information détermine votre rôle sur la plateforme.
+              This determines your role on the platform.
             </p>
             <div className="grid grid-cols-2 gap-4">
               <button
@@ -182,9 +181,9 @@ export default function RegisterPage() {
               >
                 <span className="text-4xl">👩</span>
                 <div className="text-center">
-                  <p className="font-semibold">Femme</p>
+                  <p className="font-semibold">Woman</p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Vous fixez le montant du dépôt
+                    You set the deposit amount
                   </p>
                 </div>
               </button>
@@ -200,9 +199,9 @@ export default function RegisterPage() {
               >
                 <span className="text-4xl">👨</span>
                 <div className="text-center">
-                  <p className="font-semibold">Homme</p>
+                  <p className="font-semibold">Man</p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Vous payez un dépôt pour obtenir un rendez-vous
+                    You pay a deposit to get a date
                   </p>
                 </div>
               </button>
@@ -213,7 +212,7 @@ export default function RegisterPage() {
               className="w-full"
               disabled={!selectedGender || loading}
             >
-              {loading ? "Création du compte..." : "Créer mon compte"}
+              {loading ? "Creating account..." : "Create my account"}
             </Button>
             <Button
               variant="ghost"
@@ -221,7 +220,7 @@ export default function RegisterPage() {
               onClick={() => setStep(1)}
               disabled={loading}
             >
-              Retour
+              Back
             </Button>
           </div>
         )}
@@ -230,9 +229,9 @@ export default function RegisterPage() {
       {step === 1 && (
         <CardFooter className="justify-center">
           <p className="text-sm text-muted-foreground">
-            Déjà un compte ?{" "}
+            Already have an account?{" "}
             <Link href="/login" className="text-foreground underline underline-offset-4">
-              Se connecter
+              Sign in
             </Link>
           </p>
         </CardFooter>
