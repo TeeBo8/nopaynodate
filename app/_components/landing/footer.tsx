@@ -9,7 +9,7 @@ export function LandingFooter() {
         <div className="flex gap-6 text-sm text-muted-foreground">
           <span className="cursor-pointer hover:text-foreground transition-colors">Confidentialité</span>
           <span className="cursor-pointer hover:text-foreground transition-colors">CGU</span>
-          <span className="cursor-pointer hover:text-foreground transition-colors">Contact</span>
+          <a href="mailto:admin@example.com" className="hover:text-foreground transition-colors">Contact</a>
         </div>
       </div>
     </footer>

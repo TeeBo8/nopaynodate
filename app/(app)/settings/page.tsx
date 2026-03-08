@@ -149,6 +149,16 @@ export default function SettingsPage() {
         </div>
       )}
 
+      <div className="rounded-lg border border-border p-4 space-y-1">
+        <h2 className="font-medium text-sm">Support</h2>
+        <p className="text-sm text-muted-foreground">
+          Un problème ou une question ?{" "}
+          <a href="mailto:admin@example.com" className="underline underline-offset-4 hover:text-foreground transition-colors">
+            Contactez-nous
+          </a>
+        </p>
+      </div>
+
       <div className="border border-destructive/30 rounded-lg p-4 space-y-3">
         <div className="flex items-center gap-2">
           <Trash2 size={16} className="text-destructive" />
