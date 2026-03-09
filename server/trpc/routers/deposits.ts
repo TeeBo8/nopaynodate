@@ -115,6 +115,16 @@ export const depositsRouter = createTRPCRouter({
   getByRequestId: protectedProcedure
     .input(z.object({ dateRequestId: z.string() }))
     .query(async ({ ctx, input }) => {
+      const request = await ctx.db.query.dateRequests.findFirst({
+        where: eq(dateRequests.id, input.dateRequestId),
+      });
+      if (
+        !request ||
+        (request.requesterId !== ctx.session.user.id &&
+          request.targetId !== ctx.session.user.id)
+      ) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
       return ctx.db.query.deposits.findFirst({
         where: eq(deposits.dateRequestId, input.dateRequestId),
       });

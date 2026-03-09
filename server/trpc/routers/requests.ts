@@ -23,6 +23,13 @@ export const requestsRouter = createTRPCRouter({
         });
       }
 
+      const targetUser = await ctx.db.query.users.findFirst({
+        where: eq(users.id, input.targetId),
+      });
+      if (!targetUser || targetUser.gender !== "woman") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Cible invalide" });
+      }
+
       const targetProfile = await ctx.db.query.profiles.findFirst({
         where: eq(profiles.userId, input.targetId),
       });

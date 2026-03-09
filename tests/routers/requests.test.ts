@@ -71,7 +71,9 @@ describe("requestsRouter.send", () => {
   });
 
   it("returns existing request if an active one already exists", async () => {
-    db.query.users.findFirst.mockResolvedValue({ id: MAN_ID, gender: "man" });
+    db.query.users.findFirst
+      .mockResolvedValueOnce({ id: MAN_ID, gender: "man" })     // requester
+      .mockResolvedValueOnce({ id: WOMAN_ID, gender: "woman" }); // target
     db.query.profiles.findFirst.mockResolvedValue({ userId: WOMAN_ID });
     db.query.dateRequests.findFirst.mockResolvedValue({ id: "existing-req" });
 
@@ -83,7 +85,9 @@ describe("requestsRouter.send", () => {
   });
 
   it("creates a new request in the happy path", async () => {
-    db.query.users.findFirst.mockResolvedValue({ id: MAN_ID, gender: "man" });
+    db.query.users.findFirst
+      .mockResolvedValueOnce({ id: MAN_ID, gender: "man" })     // requester
+      .mockResolvedValueOnce({ id: WOMAN_ID, gender: "woman" }); // target
     db.query.profiles.findFirst.mockResolvedValue({ userId: WOMAN_ID });
     db.query.dateRequests.findFirst.mockResolvedValue(null);
 
