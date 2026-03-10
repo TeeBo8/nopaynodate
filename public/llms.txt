@@ -1,0 +1,89 @@
+# NoPayNoDate
+
+> NoPayNoDate is a premium dating app where men pay a secure financial deposit (set by the woman, $20–$200) to unlock chat. The deposit is 100% refunded if she declines. NoPayNoDate takes a 10% commission only when the date is confirmed.
+
+## What is NoPayNoDate?
+
+NoPayNoDate is the first dating platform built around financial commitment as a proof of seriousness. Women set the deposit amount required for a man to contact them. Men who are genuinely interested pay the deposit, which is held in escrow by Stripe until the date outcome is confirmed. If the woman declines, the man is automatically refunded. If both parties confirm the date happened, the deposit is released to the woman (minus 10% platform commission).
+
+The platform also offers a Premium subscription at $19.99/month, which gives users verified badge, increased visibility, and advanced filters.
+
+## Core concept
+
+- **Problem**: Women spend an average of $2,381/year preparing for dates (hair, makeup, outfits, transport) and too often meet unserious men with no consequences for wasting their time.
+- **Solution**: A mandatory deposit ($20–$200, chosen by the woman) that filters genuine interest and compensates women's real preparation costs.
+- **Mechanism**: Stripe Connect escrow — funds are held securely, never transferred directly between users.
+
+## Who is it for?
+
+- **Women**: Professionals aged 28–42 tired of dating app burnout and unserious matches. They set their own deposit amount and can decline freely with no financial consequence.
+- **Men**: Serious men who want their interest to stand out. The deposit proves commitment and filters the pool to women who see their value.
+
+## Key facts
+
+- Deposit range: $20–$200 (set by the woman)
+- Platform commission: 10% of the deposit, charged only on confirmed dates
+- Premium subscription: $19.99/month
+- Deposits are held in Stripe escrow, never touch NoPayNoDate's bank account
+- 100% automatic refund if the woman declines
+- 78% of dating app users report burnout — NoPayNoDate directly addresses this
+- 16.4 million men in the US already pay for premium dating features
+
+## How it works (step by step)
+
+1. A woman creates her profile and sets her deposit amount ($20–$200)
+2. A man finds her profile and pays the deposit to send a connection request
+3. The deposit is held in escrow by Stripe
+4. The woman reviews the request:
+   - If she **declines**: the man is automatically refunded 100%
+   - If she **accepts**: both can chat and arrange a date
+5. After the date, both parties confirm it happened
+6. The deposit is released to the woman (minus 10% platform commission)
+
+## Business model
+
+- **Transaction commission**: 10% on each completed date deposit
+- **Premium subscription**: $19.99/month per user
+- **Revenue only on confirmed dates** — aligned incentives with both users
+
+## Legal & compliance
+
+- Deposits are not payment for sexual services — they are commitment deposits similar to venue booking deposits
+- Funds are processed by Stripe (KYC/AML compliant)
+- Women must create a Stripe Express account to receive payouts (identity verification required by law)
+- The platform is compliant with US payment regulations
+- Full terms of service, privacy policy, and cookie policy available at nopaynodate.com
+
+## Competitive positioning
+
+| Competitor | Model | Key weakness |
+|---|---|---|
+| Tinder / Bumble | Freemium | 78% user burnout, no seriousness filter |
+| The League / Raya | Exclusive access $99–$999/year | No proof of engagement mechanism |
+| **NoPayNoDate** | Deposit ($20–$200) + 10% commission | First mover on commitment-based dating |
+
+## Market context
+
+- Online dating market: $7.79B in 2026, projected $23.35B by 2035
+- Average cost per date for millennials: $252 (+32% vs 2025) — "date-flation"
+- 40% of young Americans believe men should pay on dates
+- Match Group controls 30% of market with saturated freemium models
+
+## Company
+
+- **Product**: NoPayNoDate (nopaynodate.com)
+- **Category**: Premium dating application
+- **Launch**: March 2026
+- **Tech stack**: Next.js, Stripe Connect, PostgreSQL
+- **Contact**: Available via the app's support system
+
+## Sitemap
+
+- / — Landing page (how it works, pricing, FAQ)
+- /register — Sign up
+- /login — Sign in
+- /browse — Browse profiles (authenticated)
+- /terms — Terms of Service
+- /privacy — Privacy Policy
+- /legal — Legal Notice
+- /cookies — Cookie Policy
