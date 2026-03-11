@@ -85,14 +85,14 @@ export default function LoginPage() {
           style={{
             width: "56px",
             height: "56px",
-            background: "linear-gradient(135deg, #e81e8c, #c0157a)",
+            background: "linear-gradient(135deg, #00c9a0, #009478)",
             borderRadius: "14px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             fontSize: "28px",
             margin: "0 auto 1rem",
-            boxShadow: "0 0 24px rgba(232,30,140,0.4)",
+            boxShadow: "0 0 24px rgba(0,201,160,0.4)",
           }}
         >
           ♥
@@ -160,7 +160,7 @@ export default function LoginPage() {
                   <Input
                     type="email"
                     placeholder="you@example.com"
-                    className="bg-white/10 border-white/15 text-white placeholder:text-white/30 focus-visible:border-pink-500 focus-visible:ring-pink-500/30"
+                    className="bg-white/10 border-white/15 text-white placeholder:text-white/30 focus-visible:border-cyan-400 focus-visible:ring-cyan-400/30"
                     {...field}
                   />
                 </FormControl>
@@ -180,7 +180,7 @@ export default function LoginPage() {
                   <Input
                     type="password"
                     placeholder="••••••••"
-                    className="bg-white/10 border-white/15 text-white placeholder:text-white/30 focus-visible:border-pink-500 focus-visible:ring-pink-500/30"
+                    className="bg-white/10 border-white/15 text-white placeholder:text-white/30 focus-visible:border-cyan-400 focus-visible:ring-cyan-400/30"
                     {...field}
                   />
                 </FormControl>
@@ -196,9 +196,10 @@ export default function LoginPage() {
             className="w-full"
             disabled={form.formState.isSubmitting}
             style={{
-              background: "linear-gradient(135deg, #e81e8c, #c0157a)",
+              background: "linear-gradient(135deg, #00c9a0, #009478)",
               border: "none",
               fontWeight: 600,
+              color: "#0a1a14",
             }}
           >
             {form.formState.isSubmitting ? "Signing in..." : "Sign in"}
@@ -217,7 +218,7 @@ export default function LoginPage() {
         }}
       >
         No account yet?{" "}
-        <Link href="/register" style={{ color: "#e81e8c", textDecoration: "underline" }}>
+        <Link href="/register" style={{ color: "#00c9a0", textDecoration: "underline" }}>
           Create an account
         </Link>
       </p>

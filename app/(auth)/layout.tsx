@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { auth } from "@/server/auth";
@@ -30,14 +31,41 @@ export default async function AuthLayout({
       style={{
         minHeight: "100vh",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(135deg, #0c0c1a 0%, #1a0828 50%, #0c0c1a 100%)",
+        background: "linear-gradient(135deg, #080c14 0%, #081820 50%, #080c14 100%)",
         position: "relative",
         overflow: "hidden",
         padding: "1rem",
+        paddingTop: "5rem",
       }}
     >
+      {/* Logo — back to home */}
+      <Link
+        href="/"
+        style={{
+          position: "absolute",
+          top: "1.5rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          color: "white",
+          textDecoration: "none",
+          fontWeight: 700,
+          fontSize: "1.1rem",
+          zIndex: 20,
+          opacity: 0.9,
+          whiteSpace: "nowrap",
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.svg" alt="" width={28} height={28} />
+        NoPayNoDate
+      </Link>
+
       {/* Floating hearts */}
       {HEARTS.map((h, i) => (
         <div
@@ -48,7 +76,7 @@ export default async function AuthLayout({
             bottom: "-60px",
             left: h.left,
             fontSize: HEART_SIZES[i],
-            color: "#e81e8c",
+            color: "oklch(0.8903 0.1739 171.2690)",
             animation: `float-up ${h.duration} ${h.delay} linear infinite`,
             pointerEvents: "none",
             userSelect: "none",
@@ -69,7 +97,7 @@ export default async function AuthLayout({
           transform: "translate(-50%, -50%)",
           width: "500px",
           height: "280px",
-          background: "radial-gradient(ellipse, rgba(232,30,140,0.12) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse, rgba(125,240,204,0.12) 0%, transparent 70%)",
           borderRadius: "50%",
           pointerEvents: "none",
         }}
