@@ -11,9 +11,9 @@ export function LandingNavbar() {
       <div className="flex w-full max-w-2xl items-center justify-between gap-4 rounded-full border border-border/50 bg-background/80 px-5 py-3 shadow-lg backdrop-blur-md">
 
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
+        <Link href="/" className="flex shrink-0 items-center gap-2 transition-opacity hover:opacity-80">
           <Image src="/logo.svg" alt="NoPayNoDate" width={26} height={26} />
-          <span className="text-base font-bold tracking-tight">NoPayNoDate</span>
+          <span className="hidden text-base font-bold tracking-tight sm:inline">NoPayNoDate</span>
         </Link>
 
         {/* Nav links — hidden on small screens */}
@@ -24,12 +24,12 @@ export function LandingNavbar() {
         </nav>
 
         {/* Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <ThemeToggle />
-          <Button variant="ghost" size="sm" asChild>
+          <Button variant="ghost" size="sm" className="hidden sm:inline-flex" asChild>
             <Link href="/login">Sign in</Link>
           </Button>
-          <Button size="sm" className="rounded-full px-5" asChild>
+          <Button size="sm" className="rounded-full px-4" asChild>
             <Link href="/register">Get started</Link>
           </Button>
         </div>
