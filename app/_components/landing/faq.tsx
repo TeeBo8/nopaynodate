@@ -1,9 +1,7 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+"use client";
+
+import { useState } from "react";
+import { Plus, Minus } from "lucide-react";
 
 const faqs = [
   {
@@ -37,34 +35,56 @@ const faqs = [
 ];
 
 export function LandingFaq() {
-  return (
-    <section id="faq" className="py-24 px-4">
-      <div className="mx-auto max-w-3xl">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Frequently asked questions
-          </h2>
-          <p className="mt-4 text-muted-foreground text-lg">
-            Everything you want to know before getting started.
-          </p>
-        </div>
+  const [open, setOpen] = useState<number | null>(null);
 
-        <Accordion type="single" collapsible className="space-y-2">
-          {faqs.map((faq, i) => (
-            <AccordionItem
-              key={i}
-              value={`item-${i}`}
-              className="rounded-xl border border-border/60 px-6 data-[state=open]:border-primary/30"
-            >
-              <AccordionTrigger className="text-left font-semibold hover:no-underline py-5">
-                {faq.q}
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground leading-relaxed pb-5">
-                {faq.a}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+  return (
+    <section id="faq" className="py-28 px-4">
+      <div className="mx-auto max-w-5xl">
+
+        {/* 2-column layout: title left, items right */}
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[280px_1fr] lg:gap-20">
+
+          {/* Left — sticky title */}
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-primary">FAQ</p>
+            <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
+              Answers.
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Everything you want to know before getting started.
+            </p>
+          </div>
+
+          {/* Right — accordion items */}
+          <div className="divide-y divide-border/50">
+            {faqs.map((faq, i) => (
+              <div key={i} className="group">
+                <button
+                  className="flex w-full items-center justify-between gap-6 py-6 text-left transition-colors hover:text-primary"
+                  onClick={() => setOpen(open === i ? null : i)}
+                  aria-expanded={open === i}
+                >
+                  <span className="text-base font-semibold leading-snug sm:text-lg">
+                    {faq.q}
+                  </span>
+                  <span className="shrink-0 text-muted-foreground transition-colors group-hover:text-primary">
+                    {open === i
+                      ? <Minus className="h-4 w-4" />
+                      : <Plus className="h-4 w-4" />
+                    }
+                  </span>
+                </button>
+
+                {open === i && (
+                  <p className="pb-6 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                    {faq.a}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+
+        </div>
       </div>
     </section>
   );
