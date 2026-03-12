@@ -176,6 +176,11 @@
 
 /* ── Hero section — floating hearts reuse float-up keyframe below ── */
 
+@keyframes bob {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
 @keyframes float-up {
   0% {
     transform: translateY(0) rotate(-8deg) scale(1);
