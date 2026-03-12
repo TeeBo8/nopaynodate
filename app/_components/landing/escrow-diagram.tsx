@@ -1,107 +1,138 @@
-import { ArrowRight, ArrowDown, Lock, RotateCcw, Banknote } from "lucide-react";
+"use client";
 
-export function LandingEscrowDiagram() {
-  return (
-    <section className="py-20 px-4">
-      <div className="mx-auto max-w-4xl">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            How does the deposit work?
-          </h2>
-          <p className="mt-3 text-muted-foreground">
-            Money never passes directly between the two people.
-          </p>
+import { useRef, useState, useEffect } from "react";
+import { CreditCard, ShieldCheck, Heart, Banknote, RotateCcw } from "lucide-react";
+
+const scenes = [
+  {
+    step: "01",
+    headline: "He pays a deposit.",
+    sub: "From $20 to $200 — the amount you set. No payment, no message. Ever.",
+    visual: (
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
+          <CreditCard className="h-9 w-9 text-primary" />
         </div>
-
-        {/* Desktop flow */}
-        <div className="hidden sm:flex items-center justify-center gap-3">
-          {/* Homme */}
-          <div className="flex flex-col items-center gap-2 rounded-xl border border-border/60 bg-background p-5 w-40 text-center">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
-              <span className="text-lg">👨</span>
-            </div>
-            <div className="font-semibold text-sm">The man</div>
-            <div className="text-xs text-muted-foreground">pays the deposit</div>
-            <div className="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">e.g. $100</div>
-          </div>
-
-          <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground" />
-
-          {/* Escrow */}
-          <div className="flex flex-col items-center gap-2 rounded-xl border-2 border-primary/40 bg-primary/5 p-5 w-44 text-center">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/15">
-              <Lock className="h-5 w-5 text-primary" />
-            </div>
-            <div className="font-semibold text-sm">Stripe Escrow</div>
-            <div className="text-xs text-muted-foreground">funds locked<br />securely</div>
-            <div className="text-xs font-semibold text-primary">Awaiting decision</div>
-          </div>
-
-          <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground" />
-
-          {/* Outcomes */}
-          <div className="flex flex-col gap-3">
-            {/* Accepté */}
-            <div className="flex items-center gap-3 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-4">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50">
-                <Banknote className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-              </div>
-              <div>
-                <div className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">She accepts</div>
-                <div className="text-xs text-muted-foreground">$90 transferred to the woman</div>
-                <div className="text-xs text-muted-foreground">$10 platform commission</div>
-              </div>
-            </div>
-            {/* Refusé */}
-            <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/30 p-4">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted">
-                <RotateCcw className="h-4 w-4 text-muted-foreground" />
-              </div>
-              <div>
-                <div className="text-xs font-semibold">She declines</div>
-                <div className="text-xs text-muted-foreground">100% refunded to the man</div>
-                <div className="text-xs text-muted-foreground">Automatic · Immediate</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile flow (vertical) */}
-        <div className="flex sm:hidden flex-col items-center gap-3">
-          <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-background p-4 w-full">
-            <span className="text-2xl">👨</span>
-            <div>
-              <div className="font-semibold text-sm">The man pays $100</div>
-              <div className="text-xs text-muted-foreground">Secure payment via Stripe</div>
-            </div>
-          </div>
-
-          <ArrowDown className="h-5 w-5 text-muted-foreground" />
-
-          <div className="flex items-center gap-3 rounded-xl border-2 border-primary/40 bg-primary/5 p-4 w-full">
-            <Lock className="h-6 w-6 text-primary" />
-            <div>
-              <div className="font-semibold text-sm">Escrow Stripe</div>
-              <div className="text-xs text-muted-foreground">Funds locked — awaiting decision</div>
-            </div>
-          </div>
-
-          <ArrowDown className="h-5 w-5 text-muted-foreground" />
-
-          <div className="grid grid-cols-2 gap-3 w-full">
-            <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-3 text-center">
-              <Banknote className="h-5 w-5 text-emerald-600 dark:text-emerald-400 mx-auto mb-1" />
-              <div className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">She accepts</div>
-              <div className="text-xs text-muted-foreground mt-1">$90 transferred</div>
-            </div>
-            <div className="rounded-xl border border-border/60 bg-muted/30 p-3 text-center">
-              <RotateCcw className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
-              <div className="text-xs font-semibold">She declines</div>
-              <div className="text-xs text-muted-foreground mt-1">100% refunded</div>
-            </div>
-          </div>
+        <div className="rounded-full bg-primary/15 px-6 py-2 text-xl font-bold text-primary">
+          $100 secured
         </div>
       </div>
-    </section>
+    ),
+  },
+  {
+    step: "02",
+    headline: "Stripe holds it securely.",
+    sub: "The money sits in escrow. Not with him. Not with you. With Stripe — until you decide.",
+    visual: (
+      <div className="relative flex h-24 w-24 items-center justify-center">
+        <div className="absolute inset-0 rounded-full bg-primary/10 blur-2xl" />
+        <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-primary/10 ring-1 ring-primary/25">
+          <ShieldCheck className="h-12 w-12 text-primary" />
+        </div>
+      </div>
+    ),
+  },
+  {
+    step: "03",
+    headline: "You decide.",
+    sub: "Accept or decline — entirely your choice. No pressure, no obligation, no explanation needed.",
+    visual: (
+      <div className="flex gap-4">
+        <div className="flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-6 py-3 text-sm font-semibold text-green-500">
+          <Heart className="h-4 w-4" /> Accept
+        </div>
+        <div className="flex items-center gap-2 rounded-full border border-border/50 bg-muted/30 px-6 py-3 text-sm font-semibold text-muted-foreground">
+          Decline
+        </div>
+      </div>
+    ),
+  },
+  {
+    step: "04",
+    headline: "Either way, it's fair.",
+    sub: "She accepts → deposit transferred. She declines → man refunded 100%. The system protects everyone.",
+    visual: (
+      <div className="flex gap-4">
+        <div className="rounded-xl border border-green-500/20 bg-green-500/8 px-6 py-4 text-center">
+          <Banknote className="mx-auto mb-2 h-6 w-6 text-green-500" />
+          <div className="text-sm font-semibold text-green-500">She accepts</div>
+          <div className="mt-1 text-xs text-muted-foreground">$90 transferred</div>
+        </div>
+        <div className="rounded-xl border border-border/40 bg-muted/20 px-6 py-4 text-center">
+          <RotateCcw className="mx-auto mb-2 h-6 w-6 text-muted-foreground" />
+          <div className="text-sm font-semibold">She declines</div>
+          <div className="mt-1 text-xs text-muted-foreground">100% refunded</div>
+        </div>
+      </div>
+    ),
+  },
+];
+
+export function LandingEscrowDiagram() {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const el = wrapperRef.current;
+      if (!el) return;
+      const { top, height } = el.getBoundingClientRect();
+      const scrollable = height - window.innerHeight;
+      if (scrollable <= 0) return;
+      const progress = Math.max(0, Math.min(1, -top / scrollable));
+      setCurrent(Math.min(scenes.length - 1, Math.floor(progress * scenes.length)));
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <div ref={wrapperRef} style={{ height: `${(scenes.length + 1) * 100}vh` }}>
+      <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden px-4">
+
+        <p className="mb-10 text-xs font-semibold uppercase tracking-widest text-primary">
+          How the deposit works
+        </p>
+
+        {/* Scenes */}
+        <div className="relative flex min-h-[380px] w-full max-w-2xl items-center justify-center">
+          {scenes.map((scene, i) => (
+            <div
+              key={i}
+              className={`flex flex-col items-center gap-6 text-center transition-all duration-700 ease-out ${
+                i === current
+                  ? "relative opacity-100 translate-y-0"
+                  : `absolute inset-0 pointer-events-none opacity-0 ${
+                      i < current ? "-translate-y-10" : "translate-y-10"
+                    }`
+              }`}
+            >
+              <span className="text-xs font-bold tracking-[0.25em] text-muted-foreground/40">
+                {scene.step}
+              </span>
+              {scene.visual}
+              <h2 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+                {scene.headline}
+              </h2>
+              <p className="max-w-lg text-lg text-muted-foreground">{scene.sub}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Progress indicator */}
+        <div className="absolute bottom-10 flex items-center gap-2">
+          {scenes.map((_, i) => (
+            <div
+              key={i}
+              className={`h-1 rounded-full transition-all duration-500 ${
+                i === current ? "w-8 bg-primary" : "w-2 bg-border"
+              }`}
+            />
+          ))}
+        </div>
+
+      </div>
+    </div>
   );
 }

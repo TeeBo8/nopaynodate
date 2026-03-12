@@ -1,145 +1,183 @@
-import type { LucideIcon } from "lucide-react";
-import { CreditCard, MessageSquare, Calendar, Wallet, UserCheck, Heart, Landmark } from "lucide-react";
+"use client";
 
-type Step = {
-  icon: LucideIcon;
-  step: string;
-  title: string;
-  desc: string;
-  highlight?: boolean;
-};
+import { useRef, useState, useEffect } from "react";
+import { UserCheck, CreditCard, ShieldCheck, Heart, MessageSquare, Sparkles } from "lucide-react";
 
-const stepsMan = [
+const scenes = [
   {
-    icon: UserCheck,
     step: "01",
-    title: "Create your profile",
-    desc: "Sign up in 2 minutes. Add your photos, bio, and city.",
+    who: null,
+    headline: "Sign up in 2 minutes.",
+    sub: "Free for everyone. No credit card required. Just your photos, bio, and city.",
+    visual: (
+      <div className="flex gap-3">
+        <div className="flex h-16 w-16 flex-col items-center justify-center gap-1 rounded-2xl border border-border/50 bg-card text-2xl">
+          👨
+        </div>
+        <div className="flex h-16 w-16 flex-col items-center justify-center gap-1 rounded-2xl border border-border/50 bg-card text-2xl">
+          👩
+        </div>
+      </div>
+    ),
   },
   {
-    icon: CreditCard,
     step: "02",
-    title: "Pay the deposit",
-    desc: "Each woman sets her own amount ($20–200). Pay it to unlock the chat. 100% refunded if she declines.",
+    who: "For women",
+    headline: "You set your price.",
+    sub: "Pick your deposit amount — from $20 to $200. Higher means fewer, more serious requests.",
+    visual: (
+      <div className="flex flex-col items-center gap-3">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
+          <span className="text-3xl">👩</span>
+        </div>
+        <div className="flex items-baseline gap-1">
+          <span className="text-4xl font-bold text-primary">$80</span>
+          <span className="text-sm text-muted-foreground">/ deposit</span>
+        </div>
+      </div>
+    ),
   },
   {
-    icon: MessageSquare,
     step: "03",
-    title: "Actually talk",
-    desc: "The chat opens as soon as she accepts. No more ghosting — your deposit proves your commitment.",
-  },
-];
-
-const stepsWoman = [
-  {
-    icon: UserCheck,
-    step: "01",
-    title: "Create your profile",
-    desc: "Free sign-up in 2 minutes. Add your photos, bio, and city.",
-  },
-  {
-    icon: Landmark,
-    step: "02",
-    title: "Connect your bank account",
-    desc: "A Stripe Express account is required to receive your deposits. Quick, secure setup directly from the app.",
-    highlight: true,
+    who: "For men",
+    headline: "He pays to connect.",
+    sub: "Find someone interesting, pay her deposit to send a request. His commitment is real — in dollars.",
+    visual: (
+      <div className="flex flex-col items-center gap-3">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
+          <span className="text-3xl">👨</span>
+        </div>
+        <div className="flex items-center gap-2 rounded-full bg-primary/15 px-5 py-2 text-sm font-semibold text-primary">
+          <CreditCard className="h-4 w-4" />
+          $80 deposit paid
+        </div>
+      </div>
+    ),
   },
   {
-    icon: Wallet,
-    step: "03",
-    title: "Set your price",
-    desc: "You decide the deposit amount ($20–200). The higher it is, the more you filter out unserious profiles.",
-  },
-  {
-    icon: Heart,
     step: "04",
-    title: "Choose freely",
-    desc: "Accept or decline each request. If declined, the deposit is automatically refunded to the man.",
+    who: null,
+    headline: "Stripe holds the funds.",
+    sub: "Nobody touches the money. Stripe keeps it in escrow until she makes her decision.",
+    visual: (
+      <div className="relative flex h-24 w-24 items-center justify-center">
+        <div className="absolute inset-0 rounded-full bg-primary/8 blur-2xl" />
+        <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-primary/10 ring-1 ring-primary/20">
+          <ShieldCheck className="h-12 w-12 text-primary" />
+        </div>
+      </div>
+    ),
   },
   {
-    icon: Calendar,
     step: "05",
-    title: "Confirm the date & receive",
-    desc: "After the date, confirm in the app. The deposit (minus 10% commission) is transferred to your account.",
+    who: "For women",
+    headline: "You accept or decline.",
+    sub: "Her inbox, her rules. Accept and start a real conversation. Decline and the man is fully refunded.",
+    visual: (
+      <div className="flex gap-4">
+        <div className="flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-6 py-3 text-sm font-semibold text-green-500">
+          <Heart className="h-4 w-4" /> Accept
+        </div>
+        <div className="flex items-center gap-2 rounded-full border border-border/50 bg-muted/30 px-6 py-3 text-sm font-semibold text-muted-foreground">
+          Decline
+        </div>
+      </div>
+    ),
+  },
+  {
+    step: "06",
+    who: null,
+    headline: "A real connection.",
+    sub: "Chat opens. Date planned. Deposit transferred after confirmation. Zero ghosting. Zero waste.",
+    visual: (
+      <div className="flex flex-col items-center gap-3">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
+          <MessageSquare className="h-8 w-8 text-primary" />
+        </div>
+        <div className="max-w-[240px] rounded-xl border border-border/50 bg-card px-4 py-3 text-sm">
+          <span className="font-semibold text-primary">Sofia</span>
+          <span className="text-muted-foreground"> · just now</span>
+          <p className="mt-1">&ldquo;I&apos;m free Friday evening 🙂&rdquo;</p>
+        </div>
+      </div>
+    ),
   },
 ];
 
-function StepList({ steps }: { steps: Step[] }) {
+export function LandingHowItWorks() {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const el = wrapperRef.current;
+      if (!el) return;
+      const { top, height } = el.getBoundingClientRect();
+      const scrollable = height - window.innerHeight;
+      if (scrollable <= 0) return;
+      const progress = Math.max(0, Math.min(1, -top / scrollable));
+      setCurrent(Math.min(scenes.length - 1, Math.floor(progress * scenes.length)));
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="relative">
-      {/* Vertical connecting line */}
-      <div className="absolute left-5 top-10 bottom-10 w-px bg-border/60" aria-hidden="true" />
+    <div id="how-it-works" ref={wrapperRef} style={{ height: `${(scenes.length + 1) * 100}vh` }}>
+      <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden bg-muted/20 px-4">
 
-      <div className="space-y-0">
-        {steps.map((step, i) => (
-          <div
-            key={step.step}
-            className={`relative flex gap-6 pb-10 last:pb-0 ${
-              "highlight" in step && step.highlight
-                ? "rounded-xl border border-primary/25 bg-primary/5 p-5 -ml-5 pl-5"
-                : ""
-            }`}
-          >
-            {/* Step circle — sits on the line */}
-            <div className={`relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 ${
-              "highlight" in step && step.highlight
-                ? "border-primary bg-primary/15"
-                : "border-border bg-background"
-            }`}>
-              <step.icon className={`h-4 w-4 ${"highlight" in step && step.highlight ? "text-primary" : "text-muted-foreground"}`} />
-            </div>
+        <p className="mb-10 text-xs font-semibold uppercase tracking-widest text-primary">
+          How it works
+        </p>
 
-            <div className="pt-1">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold tabular-nums text-muted-foreground/60">{step.step}</span>
-                {"highlight" in step && step.highlight && (
-                  <span className="rounded-full bg-primary/15 px-2 py-0.5 text-xs font-semibold text-primary">
-                    Required
+        {/* Scenes */}
+        <div className="relative flex min-h-[400px] w-full max-w-2xl items-center justify-center">
+          {scenes.map((scene, i) => (
+            <div
+              key={i}
+              className={`flex flex-col items-center gap-6 text-center transition-all duration-700 ease-out ${
+                i === current
+                  ? "relative opacity-100 translate-y-0"
+                  : `absolute inset-0 pointer-events-none opacity-0 ${
+                      i < current ? "-translate-y-10" : "translate-y-10"
+                    }`
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-bold tracking-[0.25em] text-muted-foreground/40">
+                  {scene.step}
+                </span>
+                {scene.who && (
+                  <span className="rounded-full border border-border/50 bg-background px-3 py-0.5 text-xs font-semibold text-muted-foreground">
+                    {scene.who}
                   </span>
                 )}
               </div>
-              <h3 className="mt-0.5 font-semibold">{step.title}</h3>
-              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
+
+              {scene.visual}
+
+              <h2 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+                {scene.headline}
+              </h2>
+              <p className="max-w-lg text-lg text-muted-foreground">{scene.sub}</p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* Progress indicator */}
+        <div className="absolute bottom-10 flex items-center gap-2">
+          {scenes.map((_, i) => (
+            <div
+              key={i}
+              className={`h-1 rounded-full transition-all duration-500 ${
+                i === current ? "w-8 bg-primary" : "w-2 bg-border"
+              }`}
+            />
+          ))}
+        </div>
+
       </div>
     </div>
-  );
-}
-
-export function LandingHowItWorks() {
-  return (
-    <section id="how-it-works" className="bg-muted/20 py-28 px-4">
-      <div className="mx-auto max-w-6xl">
-
-        <div className="mb-16 text-center">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-primary">How it works</p>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            A simple, fair system<br className="hidden sm:block" /> for both sides.
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
-
-          {/* For men */}
-          <div>
-            <div className="mb-10 inline-flex items-center gap-2 rounded-full border border-border/50 bg-background px-4 py-2 text-sm font-semibold">
-              <span>👨</span> For men
-            </div>
-            <StepList steps={stepsMan} />
-          </div>
-
-          {/* For women */}
-          <div>
-            <div className="mb-10 inline-flex items-center gap-2 rounded-full border border-border/50 bg-background px-4 py-2 text-sm font-semibold">
-              <span>👩</span> For women
-            </div>
-            <StepList steps={stepsWoman} />
-          </div>
-
-        </div>
-      </div>
-    </section>
   );
 }
