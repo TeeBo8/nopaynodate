@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { eq, asc, or } from "drizzle-orm";
+import { eq, asc } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../index";
-import { messages, dateRequests, deposits } from "@/server/db/schema";
+import { messages, dateRequests } from "@/server/db/schema";
 import { pusherServer } from "@/server/pusher/server";
 import { generateId } from "@/lib/utils";
 

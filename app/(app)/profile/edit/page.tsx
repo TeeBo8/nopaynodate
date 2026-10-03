@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { api } from "@/lib/trpc-react";
@@ -73,7 +73,8 @@ export default function ProfileEditPage() {
     },
   });
 
-  const depositAmount = form.watch("depositAmount") ?? 50;
+  const watched = useWatch({ control: form.control });
+  const depositAmount = watched.depositAmount ?? 50;
 
   const onSubmit = async (values: ProfileFormValues) => {
     setSaved(false);
@@ -98,9 +99,9 @@ export default function ProfileEditPage() {
   // Calcul du taux de complétion du profil
   const completionItems = [
     { label: "Profile photo", done: photos.length > 0 },
-    { label: "First name", done: !!form.watch("name") },
-    { label: "City", done: !!form.watch("city") },
-    { label: "Bio", done: (form.watch("bio")?.length ?? 0) > 10 },
+    { label: "First name", done: !!watched.name },
+    { label: "City", done: !!watched.city },
+    { label: "Bio", done: (watched.bio?.length ?? 0) > 10 },
     ...(isWoman ? [
       { label: "Deposit amount", done: true },
       { label: "Stripe Express account", done: hasStripeAccount },

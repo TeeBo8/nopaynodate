@@ -10,13 +10,6 @@ import { Send } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
-interface PusherMessage {
-  id: string;
-  senderId: string;
-  content: string;
-  createdAt: string;
-}
-
 export default function ChatPage() {
   const { requestId } = useParams<{ requestId: string }>();
   const { data: session } = useSession();
@@ -35,7 +28,7 @@ export default function ChatPage() {
   // Pusher : écouter les nouveaux messages en temps réel
   useEffect(() => {
     const channel = pusherClient.subscribe(`private-chat-${requestId}`);
-    channel.bind("new-message", (_data: PusherMessage) => {
+    channel.bind("new-message", () => {
       refetch();
     });
     return () => {
