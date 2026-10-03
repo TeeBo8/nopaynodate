@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { signOut, useSession } from "@/lib/auth-client";
+import { signOut } from "@/lib/auth-client";
 import { api } from "@/lib/trpc-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,7 +23,6 @@ import { Suspense } from "react";
 import { toast } from "sonner";
 
 function PremiumSection() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const justSubscribed = searchParams.get("premium") === "success";
 
@@ -102,8 +101,7 @@ function PremiumSection() {
 export default function SettingsPage() {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
-  const { data: session } = useSession();
-  const isAdmin = session?.user?.email === "admin@example.com";
+  const { data: isAdmin } = api.users.isAdmin.useQuery();
 
   const deleteAccount = api.users.deleteAccount.useMutation({
     onSuccess: async () => {

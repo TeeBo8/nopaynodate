@@ -15,6 +15,11 @@ export const usersRouter = createTRPCRouter({
     return user[0] ?? null;
   }),
 
+  isAdmin: protectedProcedure.query(({ ctx }) => {
+    const adminEmail = process.env.ADMIN_EMAIL;
+    return !!adminEmail && ctx.session.user.email === adminEmail;
+  }),
+
   updateProfile: protectedProcedure
     .input(
       z.object({
