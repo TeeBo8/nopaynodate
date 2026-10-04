@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import { isDemo } from "@/lib/demo";
 
 export function LandingStickyCta() {
   const [visible, setVisible] = useState(false);
@@ -28,7 +29,7 @@ export function LandingStickyCta() {
         </div>
         <Button size="sm" className="shrink-0 gap-1.5" asChild>
           <Link href="/register">
-            Get started
+            {isDemo ? "Enter the demo" : "Get started"}
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </Button>

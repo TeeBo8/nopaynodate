@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import { Suspense } from "react";
 import { auth } from "@/server/auth";
+import { isDemo } from "@/lib/demo";
+import { DemoEnterCard } from "@/components/demo-enter-card";
 
 const HEARTS = [
   { left: "4%",  delay: "0s",    duration: "9s"   },
@@ -104,7 +107,13 @@ export default async function AuthLayout({
       />
 
       <div style={{ position: "relative", zIndex: 10, width: "100%", display: "flex", justifyContent: "center" }}>
-        {children}
+        {isDemo ? (
+          <Suspense>
+            <DemoEnterCard />
+          </Suspense>
+        ) : (
+          children
+        )}
       </div>
     </div>
   );

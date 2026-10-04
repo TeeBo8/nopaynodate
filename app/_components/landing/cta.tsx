@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { isDemo } from "@/lib/demo";
 
 export function LandingCta() {
   return (
@@ -22,13 +23,15 @@ export function LandingCta() {
         <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <Button size="lg" className="h-12 gap-2 px-10 text-base" asChild>
             <Link href="/register">
-              Create my profile for free
+              {isDemo ? "Enter the demo" : "Create my profile for free"}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
-          <Button size="lg" variant="outline" className="h-12 px-8 text-base" asChild>
-            <Link href="/login">I already have an account</Link>
-          </Button>
+          {!isDemo && (
+            <Button size="lg" variant="outline" className="h-12 px-8 text-base" asChild>
+              <Link href="/login">I already have an account</Link>
+            </Button>
+          )}
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
           <span>✓ 100% free sign-up</span>

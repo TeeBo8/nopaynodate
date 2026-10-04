@@ -213,7 +213,7 @@ export function BrowseClient({ results, gender }: { results: Profile[]; gender: 
               bio={user.bio}
               birthdate={user.birthdate}
               photos={profile.photos ?? []}
-              depositAmount={profile.depositAmount}
+              depositAmount={gender === "man" ? profile.depositAmount : undefined}
               isVerified={user.isVerified}
               isPremium={user.premiumUntil ? new Date(user.premiumUntil) > new Date() : false}
             />

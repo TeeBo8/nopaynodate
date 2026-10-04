@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { isDemo } from "@/lib/demo";
 
 export function LandingNavbar() {
   return (
@@ -26,11 +27,13 @@ export function LandingNavbar() {
         {/* Actions */}
         <div className="flex items-center gap-1.5">
           <ThemeToggle />
-          <Button variant="ghost" size="sm" className="hidden sm:inline-flex" asChild>
-            <Link href="/login">Sign in</Link>
-          </Button>
+          {!isDemo && (
+            <Button variant="ghost" size="sm" className="hidden sm:inline-flex" asChild>
+              <Link href="/login">Sign in</Link>
+            </Button>
+          )}
           <Button size="sm" className="rounded-full px-4" asChild>
-            <Link href="/register">Get started</Link>
+            <Link href="/register">{isDemo ? "Enter the demo" : "Get started"}</Link>
           </Button>
         </div>
       </div>

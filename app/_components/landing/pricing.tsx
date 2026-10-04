@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
+import { isDemo } from "@/lib/demo";
 
 const freeFeatures = [
   "Full profile with photos",
@@ -54,7 +55,7 @@ export function LandingPricing() {
                 ))}
               </ul>
               <Button variant="outline" className="mt-6 w-full" asChild>
-                <Link href="/register">Get started for free</Link>
+                <Link href="/register">{isDemo ? "Enter the demo" : "Get started for free"}</Link>
               </Button>
             </CardContent>
           </Card>
@@ -82,7 +83,7 @@ export function LandingPricing() {
                 ))}
               </ul>
               <Button className="mt-6 w-full" asChild>
-                <Link href="/register">Go premium</Link>
+                <Link href="/register">{isDemo ? "Try it in the demo" : "Go premium"}</Link>
               </Button>
             </CardContent>
           </Card>
