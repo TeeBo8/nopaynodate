@@ -45,6 +45,10 @@ export const users = pgTable("users", {
   isStripeVerified: boolean("is_stripe_verified").notNull().default(false),
   isVerified: boolean("is_verified").notNull().default(false),
   premiumUntil: timestamp("premium_until"),
+  // Démo : identifiant du bac à sable d'un visiteur (null pour le décor et les vrais comptes)
+  demoSandboxId: text("demo_sandbox_id"),
+  // Démo : profil de décor, en lecture seule
+  isSeed: boolean("is_seed").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
