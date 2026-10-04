@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSession } from "@/lib/auth-client";
@@ -49,6 +50,20 @@ export default function RequestsPage() {
   const confirmDate = api.requests.confirm.useMutation({
     onSuccess: () => refetch(),
   });
+
+  // Retour du formulaire Stripe : l'adresse contient l'identifiant du paiement.
+  // On le fait vérifier par le serveur, sans attendre le webhook.
+  const syncPayment = api.deposits.syncPayment.useMutation({
+    onSuccess: () => refetch(),
+  });
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const paymentIntentId = params.get("payment_intent");
+    if (!paymentIntentId) return;
+    window.history.replaceState(null, "", "/requests");
+    if (params.get("redirect_status") === "succeeded") syncPayment.mutate({ paymentIntentId });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="max-w-2xl mx-auto space-y-4">

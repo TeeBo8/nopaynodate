@@ -44,6 +44,7 @@ export const usersRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      if (ctx.isDemo) throw new TRPCError({ code: "FORBIDDEN", message: "Disabled in the demo" });
       if (input.reportedUserId === ctx.session.user.id) {
         throw new TRPCError({ code: "BAD_REQUEST", message: "Impossible de se signaler soi-même" });
       }
@@ -70,6 +71,8 @@ export const usersRouter = createTRPCRouter({
     }),
 
   deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {
+    // Démo : les comptes sont supprimés par le nettoyage automatique
+    if (ctx.isDemo) throw new TRPCError({ code: "FORBIDDEN", message: "Disabled in the demo" });
     const userId = ctx.session.user.id;
 
     // Annuler l'abonnement Stripe si actif

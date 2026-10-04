@@ -31,6 +31,18 @@ export const requestsRouter = createTRPCRouter({
         throw new TRPCError({ code: "FORBIDDEN", message: "Cible invalide" });
       }
 
+      // Démo : une demande ne peut viser que la femme du même bac à sable.
+      // Les profils de décor n'ont personne derrière eux pour répondre.
+      if (
+        ctx.isDemo &&
+        (!requester.demoSandboxId || targetUser.demoSandboxId !== requester.demoSandboxId)
+      ) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "In the demo, send your request to Léa: she is the account you can switch to.",
+        });
+      }
+
       const targetProfile = await ctx.db.query.profiles.findFirst({
         where: eq(profiles.userId, input.targetId),
       });
@@ -191,57 +203,66 @@ export const requestsRouter = createTRPCRouter({
         ? { requesterConfirmed: true as const, updatedAt: new Date() }
         : { targetConfirmed: true as const, updatedAt: new Date() };
 
+      // Si l'autre a déjà confirmé → libérer les fonds.
+      // Le versement Stripe part AVANT toute écriture en base : s'il échoue, rien n'est
+      // enregistré et la confirmation peut être relancée (avant, la demande restait bloquée).
+      const bothConfirmed = isRequester ? request.targetConfirmed : request.requesterConfirmed;
+      const deposit = bothConfirmed ? request.deposit : null;
+      const targetUser = deposit
+        ? await ctx.db.query.users.findFirst({ where: eq(users.id, request.targetId) })
+        : null;
+
+      let released = false;
+      let stripeTransferId: string | null = null;
+      if (deposit && ctx.isDemo) {
+        // Démo : aucun compte Connect réel, le versement est simulé
+        released = true;
+      } else if (deposit && targetUser?.stripeAccountId && deposit.stripePaymentIntentId) {
+        const pi = await stripe.paymentIntents.retrieve(deposit.stripePaymentIntentId);
+        const chargeId =
+          typeof pi.latest_charge === "string" ? pi.latest_charge : pi.latest_charge?.id;
+        if (chargeId) {
+          const transfer = await stripe.transfers.create(
+            {
+              amount: deposit.netAmount,
+              currency: "usd",
+              destination: targetUser.stripeAccountId,
+              source_transaction: chargeId,
+            },
+            // Une relance après une erreur en base ne crée pas un second versement
+            { idempotencyKey: `release-${deposit.id}` }
+          );
+          released = true;
+          stripeTransferId = transfer.id;
+        }
+      }
+
       await ctx.db
         .update(dateRequests)
         .set(updateData)
         .where(eq(dateRequests.id, input.requestId));
 
-      // Si les deux ont confirmé → libérer les fonds
-      const bothConfirmed = isRequester ? request.targetConfirmed : request.requesterConfirmed;
-      if (bothConfirmed && request.deposit) {
-        const targetUser = await ctx.db.query.users.findFirst({
-          where: eq(users.id, request.targetId),
-        });
-        if (targetUser?.stripeAccountId && request.deposit.stripePaymentIntentId) {
-          const pi = await stripe.paymentIntents.retrieve(
-            request.deposit.stripePaymentIntentId
-          );
-          const chargeId =
-            typeof pi.latest_charge === "string"
-              ? pi.latest_charge
-              : pi.latest_charge?.id;
-          if (chargeId) {
-            const transfer = await stripe.transfers.create({
-              amount: request.deposit.netAmount,
-              currency: "usd",
-              destination: targetUser.stripeAccountId,
-              source_transaction: chargeId,
-            });
-            await ctx.db
-              .update(deposits)
-              .set({
-                status: "released",
-                stripeTransferId: transfer.id,
-                releasedAt: new Date(),
-              })
-              .where(eq(deposits.id, request.deposit.id));
-            await ctx.db
-              .update(dateRequests)
-              .set({ status: "completed", updatedAt: new Date() })
-              .where(eq(dateRequests.id, request.id));
+      if (released && deposit) {
+        await ctx.db
+          .update(deposits)
+          .set({ status: "released", stripeTransferId, releasedAt: new Date() })
+          .where(eq(deposits.id, deposit.id));
+        await ctx.db
+          .update(dateRequests)
+          .set({ status: "completed", updatedAt: new Date() })
+          .where(eq(dateRequests.id, request.id));
 
-            // Email femme : virement reçu
-            const appUrl = siteUrl;
-            await sendEmail({
-              to: targetUser.email,
-              subject: `Virement de $${(request.deposit.netAmount / 100).toFixed(2)} reçu`,
-              react: VirementRecuFemmeEmail({
-                womanName: targetUser.name,
-                netAmount: request.deposit.netAmount,
-                dashboardUrl: `${appUrl}/dashboard`,
-              }),
-            });
-          }
+        // Email femme : virement reçu
+        if (targetUser) {
+          await sendEmail({
+            to: targetUser.email,
+            subject: `Virement de $${(deposit.netAmount / 100).toFixed(2)} reçu`,
+            react: VirementRecuFemmeEmail({
+              womanName: targetUser.name,
+              netAmount: deposit.netAmount,
+              dashboardUrl: `${siteUrl}/dashboard`,
+            }),
+          });
         }
       }
 

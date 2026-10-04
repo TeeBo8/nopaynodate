@@ -5,6 +5,7 @@ import { createTRPCRouter, protectedProcedure } from "../index";
 import { messages, dateRequests } from "@/server/db/schema";
 import { pusherServer } from "@/server/pusher/server";
 import { generateId } from "@/lib/utils";
+import { DEMO_MAX_MESSAGES_PER_CHAT } from "@/lib/demo";
 
 export const messagesRouter = createTRPCRouter({
   list: protectedProcedure
@@ -56,6 +57,19 @@ export const messagesRouter = createTRPCRouter({
           code: "FORBIDDEN",
           message: "Le chat n'est pas encore débloqué",
         });
+      }
+
+      if (ctx.isDemo) {
+        const sent = await ctx.db.query.messages.findMany({
+          where: eq(messages.dateRequestId, input.requestId),
+          columns: { id: true },
+        });
+        if (sent.length >= DEMO_MAX_MESSAGES_PER_CHAT) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: `The demo is limited to ${DEMO_MAX_MESSAGES_PER_CHAT} messages per chat.`,
+          });
+        }
       }
 
       const id = generateId();

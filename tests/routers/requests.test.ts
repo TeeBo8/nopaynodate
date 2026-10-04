@@ -298,7 +298,8 @@ describe("requestsRouter.confirm", () => {
         amount: 4500,
         currency: "usd",
         destination: "acct_test",
-      })
+      }),
+      { idempotencyKey: `release-${DEPOSIT_ID}` }
     );
     // 3 updates: requesterConfirmed, deposit → released, request → completed
     expect(db.update).toHaveBeenCalledTimes(3);

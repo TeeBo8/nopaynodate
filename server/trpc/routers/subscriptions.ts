@@ -7,6 +7,7 @@ import { siteUrl } from "@/lib/site";
 
 export const subscriptionsRouter = createTRPCRouter({
   createCheckoutSession: protectedProcedure.mutation(async ({ ctx }) => {
+    if (ctx.isDemo) throw new TRPCError({ code: "FORBIDDEN", message: "Disabled in the demo" });
     const user = await ctx.db.query.users.findFirst({
       where: eq(users.id, ctx.session.user.id),
     });
@@ -54,6 +55,7 @@ export const subscriptionsRouter = createTRPCRouter({
   }),
 
   createPortalSession: protectedProcedure.mutation(async ({ ctx }) => {
+    if (ctx.isDemo) throw new TRPCError({ code: "FORBIDDEN", message: "Disabled in the demo" });
     const user = await ctx.db.query.users.findFirst({
       where: eq(users.id, ctx.session.user.id),
     });

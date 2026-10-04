@@ -21,6 +21,7 @@ import { Crown, Star, Trash2, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { toast } from "sonner";
+import { isDemo } from "@/lib/demo";
 
 function PremiumSection() {
   const searchParams = useSearchParams();
@@ -124,9 +125,22 @@ export default function SettingsPage() {
     <div className="max-w-md mx-auto space-y-6">
       <h1 className="text-2xl font-bold">Settings</h1>
 
-      <Suspense fallback={<div className="border border-border rounded-lg p-4 h-32 animate-pulse bg-muted/30" />}>
-        <PremiumSection />
-      </Suspense>
+      {isDemo ? (
+        <div className="border border-border rounded-lg p-4 space-y-2">
+          <div className="flex items-center gap-2">
+            <Crown size={18} className="text-yellow-500" />
+            <h2 className="font-medium">Premium</h2>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            The Premium subscription (Stripe Billing) is switched off in the demo. Premium profiles
+            in Discover show what the badge and the boost look like.
+          </p>
+        </div>
+      ) : (
+        <Suspense fallback={<div className="border border-border rounded-lg p-4 h-32 animate-pulse bg-muted/30" />}>
+          <PremiumSection />
+        </Suspense>
+      )}
 
       <div className="border border-border rounded-lg p-4 space-y-3">
         <h2 className="font-medium">Account</h2>
@@ -157,7 +171,13 @@ export default function SettingsPage() {
         </p>
       </div>
 
-      <div className="border border-destructive/30 rounded-lg p-4 space-y-3">
+      {isDemo && (
+        <p className="text-sm text-muted-foreground">
+          Your two demo accounts are deleted automatically after 24 hours.
+        </p>
+      )}
+
+      <div hidden={isDemo} className="border border-destructive/30 rounded-lg p-4 space-y-3">
         <div className="flex items-center gap-2">
           <Trash2 size={16} className="text-destructive" />
           <h2 className="font-medium text-destructive">Danger zone</h2>

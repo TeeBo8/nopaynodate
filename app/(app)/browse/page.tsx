@@ -5,6 +5,8 @@ import { db } from "@/server/db";
 import { profiles, users } from "@/server/db/schema";
 import { eq, ne, and, desc, sql } from "drizzle-orm";
 import { BrowseClient } from "@/components/browse-client";
+import { isDemo } from "@/lib/demo";
+import { visibleInDemo } from "@/server/demo/visibility";
 
 export const dynamic = "force-dynamic";
 
@@ -13,13 +15,14 @@ export default async function BrowsePage() {
   if (!session) redirect("/login");
 
   const currentUser = await db
-    .select({ gender: users.gender })
+    .select({ gender: users.gender, sandboxId: users.demoSandboxId })
     .from(users)
     .where(eq(users.id, session.user.id))
     .limit(1);
 
   const myGender = currentUser[0]?.gender;
   const targetGender = myGender === "man" ? "woman" : "man";
+  const sandboxId = currentUser[0]?.sandboxId ?? null;
 
   const results = await db
     .select({
@@ -33,6 +36,7 @@ export default async function BrowsePage() {
         isVerified: users.isVerified,
         premiumUntil: users.premiumUntil,
       },
+      sandboxId: users.demoSandboxId,
     })
     .from(profiles)
     .innerJoin(users, eq(profiles.userId, users.id))
@@ -40,7 +44,8 @@ export default async function BrowsePage() {
       and(
         eq(profiles.isActive, true),
         eq(users.gender, targetGender),
-        ne(users.id, session.user.id)
+        ne(users.id, session.user.id),
+        isDemo ? visibleInDemo(sandboxId) : undefined
       )
     )
     .orderBy(
@@ -49,5 +54,10 @@ export default async function BrowsePage() {
     )
     .limit(60);
 
-  return <BrowseClient results={results} gender={myGender ?? null} />;
+  // Démo : l'autre compte du visiteur est épinglé en tête de liste.
+  // L'identifiant de bac à sable ne part pas vers le navigateur.
+  const pinnedUserId = results.find((r) => r.sandboxId !== null)?.user.id ?? null;
+  const cards = results.map(({ profile, user }) => ({ profile, user }));
+
+  return <BrowseClient results={cards} gender={myGender ?? null} pinnedUserId={pinnedUserId} />;
 }

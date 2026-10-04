@@ -8,6 +8,7 @@ import { sendEmail } from "@/server/emails";
 import { DepotRecuHommeEmail } from "@/server/emails/templates/depot-recu-homme";
 import { DepotRecuFemmeEmail } from "@/server/emails/templates/depot-recu-femme";
 import { siteUrl } from "@/lib/site";
+import { markDepositHeld } from "@/server/deposits/mark-held";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -34,15 +35,7 @@ export async function POST(req: Request) {
       const { dateRequestId } = pi.metadata;
       if (!dateRequestId) break;
 
-      await db
-        .update(deposits)
-        .set({ status: "held", heldAt: new Date() })
-        .where(eq(deposits.stripePaymentIntentId, pi.id));
-
-      await db
-        .update(dateRequests)
-        .set({ status: "paid", updatedAt: new Date() })
-        .where(eq(dateRequests.id, dateRequestId));
+      await markDepositHeld(db, pi.id, dateRequestId);
 
       // Emails : confirmation homme + notification femme
       const deposit = await db.query.deposits.findFirst({
