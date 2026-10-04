@@ -13,7 +13,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
     api.createClient({
       links: [
         httpBatchLink({
-          url: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/api/trpc`,
+          // URL relative : les appels partent vers le domaine qui sert la page (prod, preview, local)
+          url: "/api/trpc",
           transformer: superjson,
         }),
       ],
