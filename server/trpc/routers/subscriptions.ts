@@ -1,10 +1,8 @@
-import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../index";
-import { users, subscriptions } from "@/server/db/schema";
+import { users } from "@/server/db/schema";
 import { stripe } from "@/server/stripe/client";
-import { generateId } from "@/lib/utils";
 
 export const subscriptionsRouter = createTRPCRouter({
   createCheckoutSession: protectedProcedure.mutation(async ({ ctx }) => {
