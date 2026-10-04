@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/server/db";
 import * as schema from "@/server/db/schema";
 import { trustedOrigins } from "@/lib/site";
+import { isDemo } from "@/lib/demo";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -18,12 +19,15 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: false,
   },
-  socialProviders: {
-    google: {
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    },
-  },
+  // En démo, la seule porte d'entrée est /api/demo/enter : pas de connexion Google
+  socialProviders: isDemo
+    ? {}
+    : {
+        google: {
+          clientId: process.env.GOOGLE_CLIENT_ID as string,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+        },
+      },
   session: {
     cookieCache: {
       enabled: true,

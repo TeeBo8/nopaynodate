@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ShieldCheck, MapPin, Heart, MessageCircle } from "lucide-react";
+import { isDemo } from "@/lib/demo";
 
 /* ── Floating hearts ── */
 const HEARTS = [
@@ -184,16 +185,18 @@ export function LandingHero() {
             asChild
           >
             <Link href="/register">
-              Start for free
+              {isDemo ? "Enter the demo" : "Start for free"}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
-          <Button size="lg" variant="outline" className="h-12 px-8 text-base" asChild>
-            <Link href="/login">I already have an account</Link>
-          </Button>
+          {!isDemo && (
+            <Button size="lg" variant="outline" className="h-12 px-8 text-base" asChild>
+              <Link href="/login">I already have an account</Link>
+            </Button>
+          )}
         </div>
 
-        <p className="text-sm text-muted-foreground">Free sign-up · No credit card required</p>
+        <p className="text-sm text-muted-foreground">{isDemo ? "No sign-up · Stripe test mode, no real money" : "Free sign-up · No credit card required"}</p>
 
         {/* Stats */}
         <div className="flex items-center gap-8 pt-2">

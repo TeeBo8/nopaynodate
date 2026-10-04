@@ -1,13 +1,18 @@
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
+import { isDemo } from "@/lib/demo";
 
 const NAV = [
   {
     title: "Platform",
     links: [
       { label: "Browse profiles", href: "/browse" },
-      { label: "Create account", href: "/register" },
-      { label: "Sign in", href: "/login" },
+      ...(isDemo
+        ? [{ label: "Enter the demo", href: "/register" }]
+        : [
+            { label: "Create account", href: "/register" },
+            { label: "Sign in", href: "/login" },
+          ]),
       { label: "Go Premium", href: "/settings" },
     ],
   },

@@ -9,7 +9,7 @@ interface ProfileCardProps {
   bio?: string | null;
   birthdate?: string | null;
   photos: string[];
-  depositAmount: number; // centimes
+  depositAmount?: number; // centimes ; absent sur les profils masculins (seules les femmes fixent un dépôt)
   isVerified: boolean;
   isPremium: boolean;
 }
@@ -36,7 +36,7 @@ export function ProfileCard({
 }: ProfileCardProps) {
   const age = getAge(birthdate);
   const mainPhoto = photos[0];
-  const depositDisplay = `$${Math.round(depositAmount / 100)}`;
+  const depositDisplay = depositAmount ? `$${Math.round(depositAmount / 100)}` : null;
 
   return (
     <Link
@@ -65,13 +65,17 @@ export function ProfileCard({
 
       {/* Top row: deposit + photo count */}
       <div className="absolute top-3 left-3 right-3 flex items-start justify-between">
-        <div className="bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full border border-white/20">
-          Deposit {depositDisplay}
-        </div>
+        {depositDisplay ? (
+          <div className="bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full border border-white/20 whitespace-nowrap">
+            Deposit {depositDisplay}
+          </div>
+        ) : (
+          <span />
+        )}
         <div className="flex items-center gap-1.5">
           {isPremium && (
             <div className="bg-amber-400 text-amber-950 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">
-              ✦ Premium
+              ✦<span className="hidden sm:inline"> Premium</span>
             </div>
           )}
           {photos.length > 1 && (
