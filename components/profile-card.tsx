@@ -68,22 +68,20 @@ export function ProfileCard({
         <div className="bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full border border-white/20">
           Deposit {depositDisplay}
         </div>
-        {photos.length > 1 && (
-          <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full">
-            <Images size={11} />
-            {photos.length}
-          </div>
-        )}
-      </div>
-
-      {/* Premium label */}
-      {isPremium && (
-        <div className="absolute top-3 left-1/2 -translate-x-1/2">
-          <div className="bg-amber-400 text-amber-950 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide">
-            ✦ Premium
-          </div>
+        <div className="flex items-center gap-1.5">
+          {isPremium && (
+            <div className="bg-amber-400 text-amber-950 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">
+              ✦ Premium
+            </div>
+          )}
+          {photos.length > 1 && (
+            <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full">
+              <Images size={11} />
+              {photos.length}
+            </div>
+          )}
         </div>
-      )}
+      </div>
 
       {/* Bottom overlay: name, age, city */}
       <div className="absolute bottom-0 left-0 right-0 p-4 space-y-1">

@@ -79,7 +79,8 @@ export function BrowseClient({ results, gender }: { results: Profile[]; gender: 
 
   const hasActiveFilters = search !== "" || depositFilter !== 0 || sort !== "premium";
 
-  const label = gender === "man" ? "woman" : "profile";
+  const plural = filtered.length > 1;
+  const label = gender === "man" ? (plural ? "women" : "woman") : plural ? "profiles" : "profile";
 
   return (
     <div className="space-y-5">
@@ -89,7 +90,7 @@ export function BrowseClient({ results, gender }: { results: Profile[]; gender: 
           <h1 className="text-2xl font-semibold">Discover</h1>
           <p className="text-muted-foreground text-sm mt-0.5">
             {filtered.length > 0
-              ? `${filtered.length} ${label}${filtered.length > 1 ? "s" : ""} available`
+              ? `${filtered.length} ${label} available`
               : "No results"}
           </p>
         </div>
