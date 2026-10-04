@@ -48,7 +48,7 @@ export default function LoginPage() {
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
-    await signIn.social({ provider: "google", callbackURL: "/dashboard" });
+    await signIn.social({ provider: "google", callbackURL: "/browse" });
   };
 
   const onSubmit = async (values: LoginFormValues) => {
@@ -63,7 +63,7 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/dashboard");
+    router.push("/browse");
   };
 
   return (

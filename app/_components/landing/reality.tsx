@@ -1,18 +1,18 @@
 const marketStats = [
   {
-    value: "$2,381",
-    label: "spent per year by women preparing for dates",
-    source: "BMO Real Financial Progress Index, 2026",
+    value: "$2,300+",
+    label: "spent on dates by the average American over the past year",
+    source: "BMO Real Financial Progress Index, February 2026",
   },
   {
     value: "78%",
-    label: "of dating app users report burnout from meaningless interactions",
-    source: "Business of Apps",
+    label: "of dating app users say they feel burnt out by the apps",
+    source: "Forbes Health / OnePoll survey, 2024",
   },
   {
     value: "40%",
-    label: "of Americans believe men should pay — yet rarely do",
-    source: "NY Post / Gen Z & Millennial Survey",
+    label: "of Gen Z adults say men should cover the bill on dates",
+    source: "Institute for Family Studies / YouGov, 2025",
   },
 ];
 

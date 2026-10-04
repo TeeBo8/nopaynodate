@@ -260,7 +260,7 @@ export const requestsRouter = createTRPCRouter({
             react: VirementRecuFemmeEmail({
               womanName: targetUser.name,
               netAmount: deposit.netAmount,
-              dashboardUrl: `${siteUrl}/dashboard`,
+              dashboardUrl: `${siteUrl}/requests`,
             }),
           });
         }
