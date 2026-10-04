@@ -36,7 +36,7 @@ export function LandingCta() {
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
           {(isDemo
-            ? ["No sign-up", "Stripe test mode", "Fictional profiles", "Accounts deleted after 24 hours"]
+            ? ["No sign-up", "Stripe test mode", "Fictional profiles", "Accounts deleted within 48 hours"]
             : ["Free sign-up", "No credit card required", "Payments via Stripe"]
           ).map((item) => (
             <span key={item}>✓ {item}</span>

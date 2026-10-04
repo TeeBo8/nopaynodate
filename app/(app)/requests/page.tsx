@@ -39,7 +39,7 @@ export default function RequestsPage() {
   const isWoman = session?.user?.gender === "woman";
 
   const { data: me } = api.users.me.useQuery();
-  const hasStripeAccount = !!me?.stripeAccountId;
+  const hasStripeAccount = !!me?.hasStripeAccount;
 
   const router = useRouter();
   const { data: requests, refetch: refetchRequests } = api.requests.myRequests.useQuery();
@@ -106,7 +106,8 @@ export default function RequestsPage() {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const otherUser = isWoman ? (req as any).requester : (req as any).target;
             const photo = otherUser?.profile?.photos?.[0];
-            const depositAmount = otherUser?.profile?.depositAmount;
+            const depositAmount =
+              req.deposit?.amount ?? (isWoman ? undefined : otherUser?.profile?.depositAmount);
             const status = STATUS_LABELS[req.status] ?? {
               label: req.status,
               variant: "outline" as const,
@@ -171,9 +172,10 @@ export default function RequestsPage() {
                       </Button>
                     )}
 
-                    {/* Femme : accepter / rejeter si paid */}
-                    {isWoman && req.status === "paid" && (
+                    {/* Femme : accepter si paid ; refuser tant que le rendez-vous n'est pas confirmé */}
+                    {isWoman && ["paid", "accepted"].includes(req.status) && (
                       <>
+                        {req.status === "paid" && (
                         <Button
                           size="sm"
                           onClick={() =>
@@ -184,6 +186,7 @@ export default function RequestsPage() {
                         >
                           Accept
                         </Button>
+                        )}
                         <Button
                           size="sm"
                           variant="destructive"
@@ -206,12 +209,12 @@ export default function RequestsPage() {
                         ? req.requesterConfirmed
                         : req.targetConfirmed;
 
-                      if (hasConfirmed) {
+                      // Si les deux ont confirmé mais que le versement n'est pas parti, le bouton
+                      // reste affiché pour relancer
+                      if (hasConfirmed && !otherConfirmed) {
                         return (
                           <p className="text-xs text-muted-foreground">
-                            {otherConfirmed
-                              ? "Both confirmed ✓"
-                              : "Confirmation sent, waiting for the other side"}
+                            Confirmation sent, waiting for the other side
                           </p>
                         );
                       }

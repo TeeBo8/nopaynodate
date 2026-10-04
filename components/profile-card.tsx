@@ -6,7 +6,6 @@ interface ProfileCardProps {
   userId: string;
   name: string;
   city?: string | null;
-  bio?: string | null;
   birthdate?: string | null;
   photos: string[];
   depositAmount?: number; // centimes ; absent sur les profils masculins (seules les femmes fixent un dépôt)

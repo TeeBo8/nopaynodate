@@ -55,7 +55,7 @@ export default async function BrowsePage() {
     .limit(60);
 
   // Démo : l'autre compte du visiteur est épinglé en tête de liste.
-  // L'identifiant de bac à sable ne part pas vers le navigateur.
+  // L'identifiant de bac à sable des autres profils ne part pas vers le navigateur.
   const pinnedUserId = results.find((r) => r.sandboxId !== null)?.user.id ?? null;
   const cards = results.map(({ profile, user }) => ({ profile, user }));
 

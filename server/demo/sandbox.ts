@@ -1,5 +1,6 @@
 import { createHmac } from "node:crypto";
 import { and, eq, gt, isNotNull, lt, ne, count, countDistinct } from "drizzle-orm";
+import { getIp } from "better-auth/api";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { users, profiles, sessions } from "@/server/db/schema";
@@ -7,6 +8,7 @@ import { generateId } from "@/lib/utils";
 import {
   DEMO_EMAIL_DOMAIN,
   DEMO_MAX_ACTIVE_SANDBOXES,
+  DEMO_MAX_SANDBOXES_PER_IP_PER_DAY,
   DEMO_MAX_SANDBOXES_PER_IP_PER_HOUR,
   DEMO_PERSONAS,
   DEMO_SANDBOX_TTL_HOURS,
@@ -29,26 +31,39 @@ export async function isDemoFull(): Promise<boolean> {
   return (row?.n ?? 0) >= DEMO_MAX_ACTIVE_SANDBOXES * 2;
 }
 
-// Limite par adresse IP : nombre de bacs à sable ouverts depuis cette adresse sur la dernière heure.
-// L'adresse est celle que Better Auth enregistre sur chaque session (en-tête x-forwarded-for).
-// Sans adresse lisible, la limite ne s'applique pas : le plafond global reste le filet de sécurité.
-export async function isIpOverLimit(headers: Headers): Promise<boolean> {
-  const ip = headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  if (!ip) return false;
-
-  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+// Nombre de bacs à sable ouverts depuis une adresse IP depuis une date donnée.
+// L'adresse est lue par Better Auth sur chaque session ; `getIp` applique la même
+// normalisation (IPv6 ramenée à son sous-réseau) pour que la comparaison tombe juste.
+async function countSandboxesFromIp(ip: string, since: Date): Promise<number> {
   const [row] = await db
     .select({ n: countDistinct(users.demoSandboxId) })
     .from(sessions)
     .innerJoin(users, eq(sessions.userId, users.id))
     .where(
-      and(
-        eq(sessions.ipAddress, ip),
-        gt(sessions.createdAt, oneHourAgo),
-        isNotNull(users.demoSandboxId)
-      )
+      and(eq(sessions.ipAddress, ip), gt(sessions.createdAt, since), isNotNull(users.demoSandboxId))
     );
-  return (row?.n ?? 0) >= DEMO_MAX_SANDBOXES_PER_IP_PER_HOUR;
+  return row?.n ?? 0;
+}
+
+// Limite par adresse IP, sur une heure et sur un jour.
+// Sans adresse lisible, la limite ne s'applique pas : le plafond global reste le filet de sécurité.
+export async function isIpOverLimit(headers: Headers): Promise<boolean> {
+  const ip = getIp(headers, auth.options);
+  if (!ip) return false;
+
+  const hour = 60 * 60 * 1000;
+  const [lastHour, lastDay] = await Promise.all([
+    countSandboxesFromIp(ip, new Date(Date.now() - hour)),
+    countSandboxesFromIp(ip, new Date(Date.now() - 24 * hour)),
+  ]);
+  return (
+    lastHour >= DEMO_MAX_SANDBOXES_PER_IP_PER_HOUR || lastDay >= DEMO_MAX_SANDBOXES_PER_IP_PER_DAY
+  );
+}
+
+// Ferme les sessions d'un compte (au changement de rôle, pour ne pas en accumuler)
+export async function revokeSessions(userId: string): Promise<void> {
+  await db.delete(sessions).where(eq(sessions.userId, userId));
 }
 
 // Supprime les bacs à sable expirés. Les suppressions en cascade emportent sessions, profils,

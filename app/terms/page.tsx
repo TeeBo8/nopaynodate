@@ -25,7 +25,7 @@ export default function TermsPage() {
 
         <section>
           <h2 className="text-lg font-semibold text-foreground mb-2">3. Deposits & Refunds</h2>
-          <p>Deposits are held in escrow and fully refunded if a request is declined. If a date is confirmed by both parties, the deposit (minus the platform commission) is transferred to the woman&apos;s Stripe Express account within 2 business days.</p>
+          <p>Deposits are held in escrow and fully refunded if a request is declined. If a date is confirmed by both parties, the deposit (minus the platform commission) is transferred to the woman&apos;s Stripe Express account. Payout timing then depends on Stripe.</p>
         </section>
 
         <section>

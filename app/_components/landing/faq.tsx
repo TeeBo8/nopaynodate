@@ -30,7 +30,7 @@ const faqs = [
   },
   {
     q: "Are the profiles real?",
-    a: "No. This site is a technical demo: the profiles in Discover are fictional, with illustrated avatars. Nobody can sign up. Each visitor gets two throwaway accounts, one on each side of the flow, and they are deleted after 24 hours.",
+    a: "No. This site is a technical demo: the profiles in Discover are fictional, with illustrated avatars. Nobody can sign up. Each visitor gets two throwaway accounts, one on each side of the flow, and they are deleted within 48 hours.",
   },
 ];
 

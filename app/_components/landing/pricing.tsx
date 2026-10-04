@@ -77,7 +77,7 @@ export function LandingPricing() {
                 ))}
               </ul>
               <Button className="mt-6 w-full" asChild>
-                <Link href="/register">{isDemo ? "Try it in the demo" : "Go premium"}</Link>
+                <Link href="/register">{isDemo ? "See Premium profiles in the demo" : "Go premium"}</Link>
               </Button>
             </CardContent>
           </Card>

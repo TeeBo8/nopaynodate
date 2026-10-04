@@ -144,10 +144,25 @@ describe("requestsRouter.accept", () => {
     );
   });
 
+  it("throws PRECONDITION_FAILED if the Stripe account exists but is not verified", async () => {
+    db.query.dateRequests.findFirst.mockResolvedValue({ ...baseRequest, status: "paid" });
+    db.query.users.findFirst.mockResolvedValue({
+      id: WOMAN_ID,
+      stripeAccountId: "acct_test",
+      isStripeVerified: false,
+    });
+    const caller = createCaller(makeCtx(WOMAN_ID, db));
+
+    await expect(caller.accept({ requestId: REQUEST_ID })).rejects.toThrow(
+      expect.objectContaining({ code: "PRECONDITION_FAILED" })
+    );
+    expect(db.update).not.toHaveBeenCalled();
+  });
+
   it("sets request to accepted and sends email in the happy path", async () => {
     db.query.dateRequests.findFirst.mockResolvedValue(baseRequest);
     db.query.users.findFirst
-      .mockResolvedValueOnce({ id: WOMAN_ID, stripeAccountId: "acct_test" }) // currentUser check
+      .mockResolvedValueOnce({ id: WOMAN_ID, stripeAccountId: "acct_test", isStripeVerified: true }) // currentUser check
       .mockResolvedValueOnce({ id: MAN_ID, email: "man@test.com", name: "John" }) // requester for email
       .mockResolvedValueOnce({ id: WOMAN_ID, email: "woman@test.com", name: "Jane" }); // target for email
 

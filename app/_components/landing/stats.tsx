@@ -1,8 +1,10 @@
+import { isDemo } from "@/lib/demo";
+
 const stats = [
   { value: "$20–200", label: "Deposit set by the woman" },
   { value: "100%", label: "Refunded if she declines" },
   { value: "10%", label: "Platform commission only on confirmed dates" },
-  { value: "$0", label: "To sign up and browse" },
+  { value: "$0", label: isDemo ? "To try the demo: no real money" : "To sign up and browse" },
 ];
 
 export function LandingStats() {

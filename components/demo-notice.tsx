@@ -14,7 +14,7 @@ export function DemoNotice() {
         </a>
         . It is not a real dating service: the profiles are fictional, payments run in Stripe test
         mode and no real money moves. Nobody can sign up; each visitor gets two throwaway accounts
-        that are deleted after 24 hours. The text below describes how the product would work.
+        that are deleted within 48 hours. The text below describes how the product would work.
       </p>
     </div>
   );

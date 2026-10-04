@@ -32,7 +32,7 @@ export const messagesRouter = createTRPCRouter({
 
       return ctx.db.query.messages.findMany({
         where: eq(messages.dateRequestId, input.requestId),
-        with: { sender: true },
+        with: { sender: { columns: { id: true, name: true } } },
         orderBy: [asc(messages.createdAt)],
       });
     }),
@@ -59,18 +59,19 @@ export const messagesRouter = createTRPCRouter({
         });
       }
 
-      if (ctx.isDemo) {
-        const sent = await ctx.db.query.messages.findMany({
-          where: eq(messages.dateRequestId, input.requestId),
-          columns: { id: true },
-        });
-        if (sent.length >= DEMO_MAX_MESSAGES_PER_CHAT) {
-          throw new TRPCError({
-            code: "FORBIDDEN",
-            message: `The demo is limited to ${DEMO_MAX_MESSAGES_PER_CHAT} messages per chat.`,
-          });
-        }
-      }
+      const countMessages = async () =>
+        (
+          await ctx.db.query.messages.findMany({
+            where: eq(messages.dateRequestId, input.requestId),
+            columns: { id: true },
+          })
+        ).length;
+      const capReached = new TRPCError({
+        code: "FORBIDDEN",
+        message: `The demo is limited to ${DEMO_MAX_MESSAGES_PER_CHAT} messages per chat.`,
+      });
+
+      if (ctx.isDemo && (await countMessages()) >= DEMO_MAX_MESSAGES_PER_CHAT) throw capReached;
 
       const id = generateId();
       await ctx.db.insert(messages).values({
@@ -80,13 +81,25 @@ export const messagesRouter = createTRPCRouter({
         content: input.content,
       });
 
-      // Déclencher l'événement temps réel
-      await pusherServer.trigger(`private-chat-${input.requestId}`, "new-message", {
-        id,
-        senderId: ctx.session.user.id,
-        content: input.content,
-        createdAt: new Date().toISOString(),
-      });
+      // Des envois simultanés passent tous le premier contrôle : on recompte après l'insertion
+      // et on retire le message en trop
+      if (ctx.isDemo && (await countMessages()) > DEMO_MAX_MESSAGES_PER_CHAT) {
+        await ctx.db.delete(messages).where(eq(messages.id, id));
+        throw capReached;
+      }
+
+      // Déclencher l'événement temps réel. Le message est déjà enregistré : une panne de Pusher
+      // ne doit pas faire échouer l'envoi (l'autre le verra au prochain chargement).
+      try {
+        await pusherServer.trigger(`private-chat-${input.requestId}`, "new-message", {
+          id,
+          senderId: ctx.session.user.id,
+          content: input.content,
+          createdAt: new Date().toISOString(),
+        });
+      } catch (err) {
+        console.error("[Pusher] Erreur d'envoi temps réel:", err);
+      }
 
       return { id };
     }),

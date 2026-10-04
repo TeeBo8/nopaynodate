@@ -156,7 +156,10 @@ export default function RegisterPage() {
               />
               <p className="text-xs text-muted-foreground">
                 By creating an account, you confirm you are 18 or older and agree to our{" "}
-                <span className="underline cursor-pointer">Terms of Service</span>.
+                <Link href="/terms" className="underline">
+                  Terms of Service
+                </Link>
+                .
               </p>
               <Button type="submit" className="w-full">
                 Continue

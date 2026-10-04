@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { eq } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../index";
 import { profiles } from "@/server/db/schema";
 import { generateId } from "@/lib/utils";
@@ -27,13 +28,16 @@ export const profilesRouter = createTRPCRouter({
   upsert: protectedProcedure
     .input(
       z.object({
-        photos: z.array(z.string().refine(isUploadedPhoto, "Invalid photo")).max(6).optional(),
-        depositAmount: z.number().min(2000).max(20000).optional(), // 20$ - 200$
+        photos: z.array(z.string()).max(6).optional(),
+        depositAmount: z.number().int().min(2000).max(20000).optional(), // centimes : 20$ - 200$
       })
     )
     .mutation(async ({ ctx, input: rawInput }) => {
       // Démo : pas d'upload, les photos (avatars illustrés) ne sont pas modifiables
-      const input = ctx.isDemo ? { depositAmount: rawInput.depositAmount } : rawInput;
+      const input: typeof rawInput = ctx.isDemo ? { depositAmount: rawInput.depositAmount } : rawInput;
+      if (input.photos && !input.photos.every(isUploadedPhoto)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid photo" });
+      }
 
       const existing = await ctx.db
         .select()

@@ -6,7 +6,9 @@ export const isDemo =
 // Un bac à sable = la paire de comptes éphémères d'un visiteur
 export const DEMO_SANDBOX_TTL_HOURS = 24;
 export const DEMO_MAX_ACTIVE_SANDBOXES = 200;
-export const DEMO_MAX_SANDBOXES_PER_IP_PER_HOUR = 5;
+export const DEMO_MAX_SANDBOXES_PER_IP_PER_HOUR = 3;
+export const DEMO_MAX_SANDBOXES_PER_IP_PER_DAY = 8;
+export const DEMO_MAX_REQUESTS_PER_ACCOUNT = 20;
 export const DEMO_MAX_MESSAGES_PER_CHAT = 50;
 
 // Domaine réservé (RFC 2606) : aucune adresse de démo ne peut recevoir d'email

@@ -12,7 +12,12 @@ const STEPS = [
 
 // Remplace les pages de connexion et d'inscription en mode démo
 export function DemoEnterCard() {
-  const isFull = useSearchParams().get("full") === "1";
+  const params = useSearchParams();
+  const notice = params.get("limit")
+    ? "You have opened several demo sessions recently. Please try again later."
+    : params.get("full")
+      ? "The demo is full right now. Please try again later."
+      : null;
   const [loading, setLoading] = useState(false);
 
   return (
@@ -78,10 +83,8 @@ export function DemoEnterCard() {
         ))}
       </ol>
 
-      {isFull && (
-        <p style={{ fontSize: "0.85rem", color: "#ff6b9d", margin: "0 0 1rem" }}>
-          The demo is full right now. Please try again in a few minutes.
-        </p>
+      {notice && (
+        <p style={{ fontSize: "0.85rem", color: "#ff6b9d", margin: "0 0 1rem" }}>{notice}</p>
       )}
 
       <form action="/api/demo/enter" method="post" onSubmit={() => setLoading(true)}>
@@ -107,7 +110,7 @@ export function DemoEnterCard() {
       </form>
 
       <p style={{ textAlign: "center", fontSize: "0.8rem", color: "rgba(255,255,255,0.4)", margin: "1.25rem 0 0" }}>
-        Stripe test mode · card {DEMO_TEST_CARD} · your accounts are deleted after 24 hours
+        Stripe test mode · card {DEMO_TEST_CARD} · your accounts are deleted within 48 hours
       </p>
     </div>
   );

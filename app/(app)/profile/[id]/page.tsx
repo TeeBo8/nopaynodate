@@ -155,7 +155,7 @@ export default async function PublicProfilePage({
             <p className="font-medium text-sm">How it works</p>
             <p className="text-xs text-muted-foreground">
               Send a date request with a deposit of{" "}
-              <strong>{depositDisplay}</strong>. If she accepts, the chat is unlocked. After the date, the deposit
+              <strong>{depositDisplay}</strong>. The chat opens as soon as the deposit is held. Once you both confirm the date, the deposit
               is transferred to her (minus 10% commission). If she declines, you are 100% refunded.
             </p>
           </div>
