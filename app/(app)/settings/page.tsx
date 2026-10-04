@@ -183,8 +183,8 @@ export default function SettingsPage() {
           <h2 className="font-medium text-destructive">Danger zone</h2>
         </div>
         <p className="text-sm text-muted-foreground">
-          Deleting your account is irreversible. Your profile and
-          conversations will be permanently deleted.
+          Deleting your account is irreversible. Your profile, photos
+          and conversations will be permanently deleted.
         </p>
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -196,8 +196,8 @@ export default function SettingsPage() {
             <AlertDialogHeader>
               <AlertDialogTitle>Delete your account?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action is irreversible. Your profile, conversations
-                and subscription will be permanently deleted.
+                This action is irreversible. Your profile, photos,
+                conversations and subscription will be permanently deleted.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { eq, and, or, inArray } from "drizzle-orm";
 import { createTRPCRouter, protectedProcedure } from "../index";
-import { users, reports, subscriptions, dateRequests } from "@/server/db/schema";
+import { users, reports, subscriptions, dateRequests, profiles } from "@/server/db/schema";
 import { stripe } from "@/server/stripe/client";
 import { TRPCError } from "@trpc/server";
+import { deleteUploadedPhotos } from "@/server/uploadthing-api";
 
 // Date au format AAAA-MM-JJ, réelle, pour une personne de 18 à 120 ans
 function isAdultBirthdate(value: string): boolean {
@@ -138,7 +139,20 @@ export const usersRouter = createTRPCRouter({
       }
     }
 
+    const [profile] = await ctx.db
+      .select({ photos: profiles.photos })
+      .from(profiles)
+      .where(eq(profiles.userId, userId))
+      .limit(1);
+
     // Supprimer l'utilisateur (cascade supprime tout le reste)
     await ctx.db.delete(users).where(eq(users.id, userId));
+
+    // Puis ses photos chez l'hébergeur. Un échec ici ne doit pas annuler la suppression du compte.
+    try {
+      await deleteUploadedPhotos(profile?.photos ?? []);
+    } catch (err) {
+      console.error("[Uploadthing] Erreur de suppression des photos:", err);
+    }
   }),
 });

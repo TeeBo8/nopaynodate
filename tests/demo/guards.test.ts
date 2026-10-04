@@ -17,6 +17,7 @@ vi.mock("@/server/emails", () => ({ sendEmail: vi.fn() }));
 vi.mock("@/server/auth", () => ({ auth: { api: { getSession: vi.fn() } } }));
 vi.mock("@/server/db", () => ({ db: {} }));
 vi.mock("@/server/pusher/server", () => ({ pusherServer: { trigger: vi.fn() } }));
+vi.mock("@/server/uploadthing-api", () => ({ deleteUploadedPhotos: vi.fn() }));
 
 import { requestsRouter } from "@/server/trpc/routers/requests";
 import { depositsRouter } from "@/server/trpc/routers/deposits";
@@ -27,6 +28,7 @@ import { subscriptionsRouter } from "@/server/trpc/routers/subscriptions";
 import { createCallerFactory } from "@/server/trpc/index";
 import { stripe } from "@/server/stripe/client";
 import { pusherServer } from "@/server/pusher/server";
+import { deleteUploadedPhotos } from "@/server/uploadthing-api";
 import { DEMO_MAX_MESSAGES_PER_CHAT, DEMO_MAX_REQUESTS_PER_ACCOUNT } from "@/lib/demo";
 import { createMockDb, type MockDb } from "../utils/mock-db";
 
@@ -252,6 +254,22 @@ describe("hors démo : règles du compte", () => {
     expect((db as any).delete).not.toHaveBeenCalled();
   });
 
+  it("supprime aussi les photos chez l'hébergeur", async () => {
+    db.query.dateRequests.findFirst.mockResolvedValue(null);
+    const photos = ["https://utfs.io/f/abc", "https://app.ufs.sh/f/def"];
+    const limit = vi.fn().mockResolvedValueOnce([]).mockResolvedValueOnce([{ photos }]);
+    const selectWhere = vi.fn().mockReturnValue({ limit });
+    (db as any).select = vi.fn().mockReturnValue({ from: vi.fn().mockReturnValue({ where: selectWhere }) });
+    const deleteWhere = vi.fn().mockResolvedValue([]);
+    (db as any).delete = vi.fn().mockReturnValue({ where: deleteWhere });
+
+    const caller = createCallerFactory(usersRouter)(makeCtx(WOMAN_ID, db, false));
+    await caller.deleteAccount();
+
+    expect((db as any).delete).toHaveBeenCalledTimes(1);
+    expect(deleteUploadedPhotos).toHaveBeenCalledWith(photos);
+  });
+
   it("refuse une date de naissance invalide ou d'un mineur", async () => {
     const caller = createCallerFactory(usersRouter)(makeCtx(MAN_ID, db, false));
     const bad = expect.objectContaining({ code: "BAD_REQUEST" });
@@ -295,6 +313,25 @@ describe("démo : plafond de messages par conversation", () => {
   it("laisse passer sous le plafond", async () => {
     await expect(withMessages(DEMO_MAX_MESSAGES_PER_CHAT - 1)).resolves.toHaveProperty("id");
     expect(pusherServer.trigger).toHaveBeenCalledTimes(1);
+  });
+
+  it("retire le message en trop quand des envois simultanés dépassent le plafond", async () => {
+    db.query.dateRequests.findFirst.mockResolvedValue(openChat);
+    const ids = (n: number) => Array.from({ length: n }, (_, i) => ({ id: `m${i}` }));
+    (db.query as any).messages = {
+      findMany: vi
+        .fn()
+        .mockResolvedValueOnce(ids(DEMO_MAX_MESSAGES_PER_CHAT - 1)) // avant l'insertion : sous le plafond
+        .mockResolvedValueOnce(ids(DEMO_MAX_MESSAGES_PER_CHAT + 1)), // après : un autre envoi est passé
+    };
+    const where = vi.fn().mockResolvedValue([]);
+    (db as any).delete = vi.fn().mockReturnValue({ where });
+
+    const caller = createCallerFactory(messagesRouter)(makeCtx(MAN_ID, db, true));
+    await expect(caller.send({ requestId: "req-1", content: "hello" })).rejects.toThrow(forbidden);
+
+    expect((db as any).delete).toHaveBeenCalledTimes(1);
+    expect(pusherServer.trigger).not.toHaveBeenCalled();
   });
 
   it("refuse une fois le plafond atteint", async () => {

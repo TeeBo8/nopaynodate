@@ -119,8 +119,6 @@ export const dateRequests = pgTable("date_requests", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   status: requestStatusEnum("status").notNull().default("pending"),
-  scheduledAt: timestamp("scheduled_at"),
-  message: text("message"),
   requesterConfirmed: boolean("requester_confirmed").notNull().default(false),
   targetConfirmed: boolean("target_confirmed").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
