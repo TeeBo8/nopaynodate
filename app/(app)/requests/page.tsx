@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
 import { api } from "@/lib/trpc-react";
 import { Button } from "@/components/ui/button";
@@ -40,7 +41,13 @@ export default function RequestsPage() {
   const { data: me } = api.users.me.useQuery();
   const hasStripeAccount = !!me?.stripeAccountId;
 
-  const { data: requests, refetch } = api.requests.myRequests.useQuery();
+  const router = useRouter();
+  const { data: requests, refetch: refetchRequests } = api.requests.myRequests.useQuery();
+  // Après chaque action : recharger la liste, et la pastille du menu (calculée côté serveur)
+  const refetch = () => {
+    void refetchRequests();
+    router.refresh();
+  };
   const acceptRequest = api.requests.accept.useMutation({
     onSuccess: () => refetch(),
   });
