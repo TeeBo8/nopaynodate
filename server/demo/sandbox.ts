@@ -16,7 +16,7 @@ import {
 // Rien n'est stocké, et personne ne peut le recalculer sans BETTER_AUTH_SECRET.
 function demoPassword(email: string): string {
   const secret = process.env.BETTER_AUTH_SECRET;
-  if (!secret) throw new Error("BETTER_AUTH_SECRET manquant");
+  if (!secret) throw new Error("BETTER_AUTH_SECRET is missing");
   return createHmac("sha256", secret).update(email).digest("hex");
 }
 
@@ -128,6 +128,6 @@ export async function signInDemoUser(email: string, headers: Headers): Promise<s
     headers,
     asResponse: true,
   });
-  if (!response.ok) throw new Error(`Connexion de démo refusée (${response.status})`);
+  if (!response.ok) throw new Error(`Demo sign-in refused (${response.status})`);
   return response.headers.getSetCookie();
 }

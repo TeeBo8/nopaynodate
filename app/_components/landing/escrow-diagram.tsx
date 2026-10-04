@@ -58,7 +58,7 @@ const steps = [
   {
     step: "04",
     headline: "Either way, it's fair.",
-    sub: "She accepts → deposit transferred. She declines → man refunded 100%. Everyone is protected.",
+    sub: "Date confirmed by both → deposit transferred. She declines → man refunded 100%.",
     visual: (
       <div className="flex gap-2">
         <div className="rounded-lg border border-green-500/20 bg-green-500/8 px-3 py-2 text-center">

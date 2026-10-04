@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DemoNotice } from "@/components/demo-notice";
 
 export const metadata = {
   title: "Legal Notice — NoPayNoDate",
@@ -9,6 +10,7 @@ export default function LegalPage() {
     <main className="mx-auto max-w-3xl px-4 py-20">
       <h1 className="text-3xl font-bold mb-2">Legal Notice</h1>
       <p className="text-sm text-muted-foreground mb-10">Last updated: March 2026</p>
+      <DemoNotice />
 
       <div className="space-y-8 text-sm text-muted-foreground">
         <section>

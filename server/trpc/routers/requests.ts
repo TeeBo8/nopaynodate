@@ -20,7 +20,7 @@ export const requestsRouter = createTRPCRouter({
       if (requester?.gender !== "man") {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Seuls les hommes peuvent envoyer des demandes",
+          message: "Only men can send requests",
         });
       }
 
@@ -28,7 +28,7 @@ export const requestsRouter = createTRPCRouter({
         where: eq(users.id, input.targetId),
       });
       if (!targetUser || targetUser.gender !== "woman") {
-        throw new TRPCError({ code: "FORBIDDEN", message: "Cible invalide" });
+        throw new TRPCError({ code: "FORBIDDEN", message: "Invalid target" });
       }
 
       // Démo : une demande ne peut viser que la femme du même bac à sable.
@@ -47,7 +47,7 @@ export const requestsRouter = createTRPCRouter({
         where: eq(profiles.userId, input.targetId),
       });
       if (!targetProfile) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Profil introuvable" });
+        throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
       }
 
       // Renvoyer la demande existante si déjà active
@@ -110,7 +110,7 @@ export const requestsRouter = createTRPCRouter({
       if (request.status !== "paid") {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Le dépôt n'a pas encore été reçu",
+          message: "The deposit has not been received yet",
         });
       }
 
@@ -121,7 +121,7 @@ export const requestsRouter = createTRPCRouter({
       if (!currentUser?.stripeAccountId) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
-          message: "Vous devez configurer votre compte Stripe Express avant d'accepter une demande.",
+          message: "You need to set up your Stripe Express account before accepting a request.",
         });
       }
 
@@ -141,7 +141,7 @@ export const requestsRouter = createTRPCRouter({
         const appUrl = siteUrl;
         await sendEmail({
           to: requesterUser.email,
-          subject: `${targetUser.name} a accepté votre demande — le chat est ouvert !`,
+          subject: `${targetUser.name} accepted your request`,
           react: MatchAccepteHommeEmail({
             manName: requesterUser.name,
             womanName: targetUser.name,
@@ -256,7 +256,7 @@ export const requestsRouter = createTRPCRouter({
         if (targetUser) {
           await sendEmail({
             to: targetUser.email,
-            subject: `Virement de $${(deposit.netAmount / 100).toFixed(2)} reçu`,
+            subject: `Transfer of $${(deposit.netAmount / 100).toFixed(2)} received`,
             react: VirementRecuFemmeEmail({
               womanName: targetUser.name,
               netAmount: deposit.netAmount,

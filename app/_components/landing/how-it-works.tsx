@@ -50,7 +50,7 @@ const steps = [
     step: "03",
     who: "For men",
     headline: "He pays to connect.",
-    sub: "Find someone interesting, pay her deposit to send a request. His commitment is real — in dollars.",
+    sub: "Find someone interesting, pay her deposit to send a request. The chat opens as soon as the deposit is held.",
     visual: (
       <div className="flex flex-col items-center gap-2">
         <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
@@ -81,7 +81,7 @@ const steps = [
     step: "05",
     who: "For women",
     headline: "You accept or decline.",
-    sub: "Her inbox, her rules. Accept and start a real conversation. Decline and the man is fully refunded.",
+    sub: "Her inbox, her rules. Accept and plan the date. Decline and the man is fully refunded.",
     visual: (
       <div className="flex gap-2">
         <div className="flex items-center gap-1.5 rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2 text-xs font-semibold text-green-500">
@@ -97,7 +97,7 @@ const steps = [
     step: "06",
     who: null,
     headline: "A real connection.",
-    sub: "Chat opens. Date planned. Deposit transferred after confirmation. Zero ghosting. Zero waste.",
+    sub: "Date planned, then confirmed by both. The deposit is transferred to her, minus the 10% commission.",
     visual: (
       <div className="flex flex-col items-center gap-2">
         <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">

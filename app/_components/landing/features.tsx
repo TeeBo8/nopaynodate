@@ -10,8 +10,8 @@ const features = [
   },
   {
     icon: ShieldCheck,
-    title: "100% secure",
-    desc: "Payments via Stripe. Funds in escrow. Automatic refund if declined.",
+    title: "Secured by Stripe",
+    desc: "Payments via Stripe. Funds held until she decides. Automatic refund if declined.",
     span: "",
     size: "small",
   },
@@ -24,8 +24,8 @@ const features = [
   },
   {
     icon: Lock,
-    title: "Verified profiles only",
-    desc: "Every profile goes through manual validation. No fake accounts, no unclear intentions — the deposit mechanism naturally filters the rest.",
+    title: "No payment, no message",
+    desc: "The private chat only opens once the deposit is held. Messages arrive in real time, and the conversation stays between the two of you.",
     span: "lg:col-span-2",
     size: "large",
   },

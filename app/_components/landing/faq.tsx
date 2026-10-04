@@ -5,8 +5,8 @@ import { Plus, Minus } from "lucide-react";
 
 const faqs = [
   {
-    q: "Is this legal? Is it not prostitution?",
-    a: "Completely legal, and absolutely not prostitution. The deposit is not a payment for a sexual encounter — it is a proof of commitment, exactly like a booking deposit. It compensates the real costs women incur for each date (hair, outfit, transport…). No act is purchased, no intimate service is included. The model is similar to a security deposit: if the date happens, the deposit is transferred; if declined, it is refunded. The content of the date remains entirely free.",
+    q: "Is the deposit a payment for the date itself?",
+    a: "No. The deposit is not a payment for an encounter — it is a proof of commitment, exactly like a booking deposit. It compensates the real costs women incur for each date (hair, outfit, transport…). No act is purchased, no intimate service is included. The model is similar to a security deposit: if the date happens, the deposit is transferred; if declined, it is refunded. The content of the date remains entirely free. This site is a technical demo, and nothing here is legal advice.",
   },
   {
     q: "What is escrow? How does it work in practice?",
@@ -17,8 +17,8 @@ const faqs = [
     a: "To receive bank transfers, Stripe requires legal identity verification — this is a regulatory requirement (KYC), not our choice. Creating a Stripe Express account is free, takes about 5 minutes, and lets you receive your deposits directly to your bank account. Stripe is the world leader in online payments, used by Amazon, Shopify and millions of businesses.",
   },
   {
-    q: "What happens if the date doesn't go well or is cancelled?",
-    a: "If the date is cancelled before it happens, the deposit is refunded to the man. If the date took place but one party disputes it, our team reviews the situation. The deposit remains in escrow during this period. We handle each dispute manually to ensure fairness for both sides.",
+    q: "What happens if the date doesn't happen?",
+    a: "The woman can decline at any point before the date is confirmed, and the man is refunded in full. The deposit is only released once both of you confirm that the date took place. There is no dispute process in this version: until both sides confirm, the money stays held.",
   },
   {
     q: "Are deposits really refunded if I say no?",
@@ -26,11 +26,11 @@ const faqs = [
   },
   {
     q: "How much is the platform commission?",
-    a: "NoPayNoDate takes 10% of each deposit transferred to the woman, only when the date is confirmed. If the woman declines, no commission is charged. For example: for a $100 deposit, the woman receives $90 and the platform keeps $10. This commission funds maintenance, security, and support.",
+    a: "NoPayNoDate takes 10% of each deposit transferred to the woman, only when the date is confirmed. If the woman declines, no commission is charged. For example: for a $100 deposit, the woman receives $90 and the platform keeps $10.",
   },
   {
-    q: "How do I know profiles are real?",
-    a: "Every profile goes through manual validation before becoming visible. Photo uploads, bio, and profile information are reviewed. Suspicious accounts are removed. Moreover, the deposit mechanism itself naturally filters out unserious profiles: nobody pays $20–200 for a fake profile.",
+    q: "Are the profiles real?",
+    a: "No. This site is a technical demo: the profiles in Discover are fictional, with illustrated avatars. Nobody can sign up. Each visitor gets two throwaway accounts, one on each side of the flow, and they are deleted after 24 hours.",
   },
 ];
 

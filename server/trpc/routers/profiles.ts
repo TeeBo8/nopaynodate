@@ -27,7 +27,7 @@ export const profilesRouter = createTRPCRouter({
   upsert: protectedProcedure
     .input(
       z.object({
-        photos: z.array(z.string().refine(isUploadedPhoto, "Photo invalide")).max(6).optional(),
+        photos: z.array(z.string().refine(isUploadedPhoto, "Invalid photo")).max(6).optional(),
         depositAmount: z.number().min(2000).max(20000).optional(), // 20$ - 200$
       })
     )

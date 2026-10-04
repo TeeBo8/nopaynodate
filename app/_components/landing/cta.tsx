@@ -17,8 +17,9 @@ export function LandingCta() {
           Ready to meet someone who truly deserves your time?
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
-          Free sign-up in 2 minutes. You set your price, you choose who contacts you.
-          No credit card required to get started.
+          {isDemo
+            ? "One click, two throwaway accounts: play both sides of the flow. Stripe test mode, no real money."
+            : "Free sign-up in 2 minutes. You set your price, you choose who contacts you. No credit card required to get started."}
         </p>
         <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <Button size="lg" className="h-12 gap-2 px-10 text-base" asChild>
@@ -34,10 +35,12 @@ export function LandingCta() {
           )}
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
-          <span>✓ 100% free sign-up</span>
-          <span>✓ No credit card required</span>
-          <span>✓ Verified profiles</span>
-          <span>✓ Payments via Stripe</span>
+          {(isDemo
+            ? ["No sign-up", "Stripe test mode", "Fictional profiles", "Accounts deleted after 24 hours"]
+            : ["Free sign-up", "No credit card required", "Payments via Stripe"]
+          ).map((item) => (
+            <span key={item}>✓ {item}</span>
+          ))}
         </div>
       </div>
     </section>
