@@ -33,6 +33,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { X, Plus, CheckCircle2, AlertCircle, Camera, Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { isDemo } from "@/lib/demo";
 
 const profileSchema = z.object({
   name: z.string().min(2, "Minimum 2 characters"),
@@ -164,7 +165,9 @@ export default function ProfileEditPage() {
             <CardTitle className="text-base">Photos</CardTitle>
           </div>
           <CardDescription>
-            Add up to&apos;à 6 photos · Max 8 MB par photo · Formats : JPG, PNG, WEBP
+            {isDemo
+              ? "Photo upload is disabled in the demo. Your account uses an illustrated avatar."
+              : "Add up to 6 photos · Max 8 MB per photo · Formats: JPG, PNG, WEBP"}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -184,6 +187,7 @@ export default function ProfileEditPage() {
                 )}
                 <button
                   type="button"
+                  hidden={isDemo}
                   onClick={() => removePhoto(url)}
                   className="absolute top-1.5 right-1.5 bg-black/60 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
                 >
@@ -191,7 +195,7 @@ export default function ProfileEditPage() {
                 </button>
               </div>
             ))}
-            {photos.length < 6 && (
+            {!isDemo && photos.length < 6 && (
               <UploadButton
                 endpoint="profilePhoto"
                 onClientUploadComplete={(res) => {

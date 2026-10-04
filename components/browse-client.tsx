@@ -41,7 +41,15 @@ const SORT_OPTIONS = [
 
 type SortValue = (typeof SORT_OPTIONS)[number]["value"];
 
-export function BrowseClient({ results, gender }: { results: Profile[]; gender: "man" | "woman" | null }) {
+export function BrowseClient({
+  results,
+  gender,
+  pinnedUserId = null,
+}: {
+  results: Profile[];
+  gender: "man" | "woman" | null;
+  pinnedUserId?: string | null; // démo : l'autre compte du visiteur, toujours en tête
+}) {
   const [search, setSearch] = useState("");
   const [depositFilter, setDepositFilter] = useState(0);
   const [sort, setSort] = useState<SortValue>("premium");
@@ -60,6 +68,9 @@ export function BrowseClient({ results, gender }: { results: Profile[]; gender: 
     });
 
     list = [...list].sort((a, b) => {
+      if (pinnedUserId && (a.user.id === pinnedUserId) !== (b.user.id === pinnedUserId)) {
+        return a.user.id === pinnedUserId ? -1 : 1;
+      }
       if (sort === "premium") {
         const aPrem = a.user.premiumUntil ? new Date(a.user.premiumUntil) > new Date() : false;
         const bPrem = b.user.premiumUntil ? new Date(b.user.premiumUntil) > new Date() : false;
@@ -75,7 +86,7 @@ export function BrowseClient({ results, gender }: { results: Profile[]; gender: 
     });
 
     return list;
-  }, [results, search, depositFilter, sort]);
+  }, [results, search, depositFilter, sort, pinnedUserId]);
 
   const hasActiveFilters = search !== "" || depositFilter !== 0 || sort !== "premium";
 
@@ -216,6 +227,7 @@ export function BrowseClient({ results, gender }: { results: Profile[]; gender: 
               depositAmount={gender === "man" ? profile.depositAmount : undefined}
               isVerified={user.isVerified}
               isPremium={user.premiumUntil ? new Date(user.premiumUntil) > new Date() : false}
+              isDemoPartner={user.id === pinnedUserId}
             />
           ))}
         </div>

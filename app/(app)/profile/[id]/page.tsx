@@ -4,7 +4,7 @@ import Image from "next/image";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { profiles, users } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -12,6 +12,8 @@ import Link from "next/link";
 import { MapPin, ShieldCheck } from "lucide-react";
 import { RequestButton } from "./request-button";
 import { ReportButton } from "./report-button";
+import { isDemo } from "@/lib/demo";
+import { getSandboxId, visibleInDemo } from "@/server/demo/visibility";
 
 function getAge(birthdate: string | null | undefined): number | null {
   if (!birthdate) return null;
@@ -32,6 +34,8 @@ export default async function PublicProfilePage({
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return null;
 
+  const sandboxId = isDemo ? await getSandboxId(session.user.id) : null;
+
   const result = await db
     .select({
       profile: profiles,
@@ -44,11 +48,12 @@ export default async function PublicProfilePage({
         gender: users.gender,
         isVerified: users.isVerified,
         premiumUntil: users.premiumUntil,
+        isSeed: users.isSeed,
       },
     })
     .from(profiles)
     .innerJoin(users, eq(profiles.userId, users.id))
-    .where(eq(users.id, id))
+    .where(and(eq(users.id, id), isDemo ? visibleInDemo(sandboxId) : undefined))
     .limit(1);
 
   if (!result[0]) notFound();
@@ -136,6 +141,14 @@ export default async function PublicProfilePage({
         <Button variant="outline" asChild>
           <Link href="/profile/edit">Edit my profile</Link>
         </Button>
+      ) : canRequest && isDemo && user.isSeed ? (
+        <div className="rounded-xl border border-border p-4 bg-muted/30 space-y-1">
+          <p className="font-medium text-sm">This is a showcase profile</p>
+          <p className="text-xs text-muted-foreground">
+            Nobody is behind it to answer. To play the full flow, open Léa&apos;s profile from Discover
+            and send her your request: she is the account you can switch to.
+          </p>
+        </div>
       ) : canRequest ? (
         <div className="space-y-3">
           <div className="rounded-xl border border-border p-4 bg-muted/30 space-y-1">
@@ -148,11 +161,11 @@ export default async function PublicProfilePage({
           </div>
           <div className="flex items-center justify-between">
             <RequestButton targetId={id} depositDisplay={depositDisplay} />
-            <ReportButton reportedUserId={id} />
+            {!isDemo && <ReportButton reportedUserId={id} />}
           </div>
         </div>
       ) : (
-        !isOwnProfile && <ReportButton reportedUserId={id} />
+        !isOwnProfile && !isDemo && <ReportButton reportedUserId={id} />
       )}
     </div>
   );

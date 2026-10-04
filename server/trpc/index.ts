@@ -4,6 +4,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
+import { isDemo } from "@/lib/demo";
 
 export const createTRPCContext = async (opts: { req: NextRequest }) => {
   const session = await auth.api.getSession({ headers: opts.req.headers });
@@ -11,6 +12,7 @@ export const createTRPCContext = async (opts: { req: NextRequest }) => {
     db,
     session,
     req: opts.req,
+    isDemo,
   };
 };
 

@@ -12,6 +12,7 @@ interface ProfileCardProps {
   depositAmount?: number; // centimes ; absent sur les profils masculins (seules les femmes fixent un dépôt)
   isVerified: boolean;
   isPremium: boolean;
+  isDemoPartner?: boolean; // démo : l'autre compte du visiteur
 }
 
 function getAge(birthdate: string | null | undefined): number | null {
@@ -33,6 +34,7 @@ export function ProfileCard({
   depositAmount,
   isVerified,
   isPremium,
+  isDemoPartner = false,
 }: ProfileCardProps) {
   const age = getAge(birthdate);
   const mainPhoto = photos[0];
@@ -89,6 +91,11 @@ export function ProfileCard({
 
       {/* Bottom overlay: name, age, city */}
       <div className="absolute bottom-0 left-0 right-0 p-4 space-y-1">
+        {isDemoPartner && (
+          <span className="inline-block rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary-foreground">
+            Your other account
+          </span>
+        )}
         <div className="flex items-center gap-2">
           <span className="font-bold text-white text-lg leading-tight">
             {name}{age ? `, ${age}` : ""}

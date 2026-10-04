@@ -9,6 +9,7 @@ import { BfcacheGuard } from "@/components/bfcache-guard";
 import { Heart, Search, User, Settings } from "lucide-react";
 import { isDemo } from "@/lib/demo";
 import { DemoBanner } from "@/components/demo-banner";
+import { countRequestsNeedingAction } from "@/server/requests/pending-count";
 
 export default async function AppLayout({
   children,
@@ -20,6 +21,8 @@ export default async function AppLayout({
   if (!session) {
     redirect("/login");
   }
+
+  const pendingRequests = await countRequestsNeedingAction(session.user.id, session.user.gender);
 
   return (
     <div className="min-h-screen bg-background">
@@ -40,9 +43,17 @@ export default async function AppLayout({
               </Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/requests" className="gap-1.5">
+              <Link href="/requests" className="relative gap-1.5">
                 <Heart size={15} />
                 <span className="hidden sm:inline">Requests</span>
+                {pendingRequests > 0 && (
+                  <span
+                    aria-label={`${pendingRequests} request${pendingRequests > 1 ? "s" : ""} waiting for you`}
+                    className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold leading-none text-primary-foreground"
+                  >
+                    {pendingRequests}
+                  </span>
+                )}
               </Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>

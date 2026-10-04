@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
 import { api } from "@/lib/trpc-react";
 import { Button } from "@/components/ui/button";
@@ -39,7 +41,13 @@ export default function RequestsPage() {
   const { data: me } = api.users.me.useQuery();
   const hasStripeAccount = !!me?.stripeAccountId;
 
-  const { data: requests, refetch } = api.requests.myRequests.useQuery();
+  const router = useRouter();
+  const { data: requests, refetch: refetchRequests } = api.requests.myRequests.useQuery();
+  // Après chaque action : recharger la liste, et la pastille du menu (calculée côté serveur)
+  const refetch = () => {
+    void refetchRequests();
+    router.refresh();
+  };
   const acceptRequest = api.requests.accept.useMutation({
     onSuccess: () => refetch(),
   });
@@ -49,6 +57,20 @@ export default function RequestsPage() {
   const confirmDate = api.requests.confirm.useMutation({
     onSuccess: () => refetch(),
   });
+
+  // Retour du formulaire Stripe : l'adresse contient l'identifiant du paiement.
+  // On le fait vérifier par le serveur, sans attendre le webhook.
+  const syncPayment = api.deposits.syncPayment.useMutation({
+    onSuccess: () => refetch(),
+  });
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const paymentIntentId = params.get("payment_intent");
+    if (!paymentIntentId) return;
+    window.history.replaceState(null, "", "/requests");
+    if (params.get("redirect_status") === "succeeded") syncPayment.mutate({ paymentIntentId });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="max-w-2xl mx-auto space-y-4">

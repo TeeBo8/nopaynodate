@@ -1,10 +1,16 @@
 import { createHmac } from "node:crypto";
-import { and, eq, isNotNull, ne, count } from "drizzle-orm";
+import { and, eq, gt, isNotNull, lt, ne, count, countDistinct } from "drizzle-orm";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
-import { users, profiles } from "@/server/db/schema";
+import { users, profiles, sessions } from "@/server/db/schema";
 import { generateId } from "@/lib/utils";
-import { DEMO_EMAIL_DOMAIN, DEMO_MAX_ACTIVE_SANDBOXES, DEMO_PERSONAS } from "@/lib/demo";
+import {
+  DEMO_EMAIL_DOMAIN,
+  DEMO_MAX_ACTIVE_SANDBOXES,
+  DEMO_MAX_SANDBOXES_PER_IP_PER_HOUR,
+  DEMO_PERSONAS,
+  DEMO_SANDBOX_TTL_HOURS,
+} from "@/lib/demo";
 
 // Mot de passe d'un compte de démo : dérivé de son email avec le secret du serveur.
 // Rien n'est stocké, et personne ne peut le recalculer sans BETTER_AUTH_SECRET.
@@ -23,8 +29,41 @@ export async function isDemoFull(): Promise<boolean> {
   return (row?.n ?? 0) >= DEMO_MAX_ACTIVE_SANDBOXES * 2;
 }
 
+// Limite par adresse IP : nombre de bacs à sable ouverts depuis cette adresse sur la dernière heure.
+// L'adresse est celle que Better Auth enregistre sur chaque session (en-tête x-forwarded-for).
+// Sans adresse lisible, la limite ne s'applique pas : le plafond global reste le filet de sécurité.
+export async function isIpOverLimit(headers: Headers): Promise<boolean> {
+  const ip = headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  if (!ip) return false;
+
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+  const [row] = await db
+    .select({ n: countDistinct(users.demoSandboxId) })
+    .from(sessions)
+    .innerJoin(users, eq(sessions.userId, users.id))
+    .where(
+      and(
+        eq(sessions.ipAddress, ip),
+        gt(sessions.createdAt, oneHourAgo),
+        isNotNull(users.demoSandboxId)
+      )
+    );
+  return (row?.n ?? 0) >= DEMO_MAX_SANDBOXES_PER_IP_PER_HOUR;
+}
+
+// Supprime les bacs à sable expirés. Les suppressions en cascade emportent sessions, profils,
+// demandes, dépôts et messages. Renvoie le nombre de comptes supprimés.
+export async function deleteExpiredSandboxes(): Promise<number> {
+  const cutoff = new Date(Date.now() - DEMO_SANDBOX_TTL_HOURS * 60 * 60 * 1000);
+  const deleted = await db
+    .delete(users)
+    .where(and(isNotNull(users.demoSandboxId), lt(users.createdAt, cutoff)))
+    .returning({ id: users.id });
+  return deleted.length;
+}
+
 // Crée la paire de comptes d'un visiteur (un homme, une femme) et renvoie l'email du compte homme.
-export async function createSandbox(): Promise<string> {
+export async function createSandbox(headers: Headers): Promise<string> {
   const sandboxId = generateId();
 
   for (const gender of ["man", "woman"] as const) {
@@ -40,10 +79,20 @@ export async function createSandbox(): Promise<string> {
         city: persona.city,
         bio: persona.bio,
       },
+      // Transmis pour que la session ouverte à l'inscription porte l'adresse IP du visiteur
+      headers,
     });
     await db
       .update(users)
-      .set({ demoSandboxId: sandboxId, emailVerified: true })
+      .set({
+        demoSandboxId: sandboxId,
+        emailVerified: true,
+        // Le versement Connect est simulé en démo : la femme est créée « déjà connectée »
+        ...(gender === "woman" && {
+          stripeAccountId: `acct_demo_${sandboxId}`,
+          isStripeVerified: true,
+        }),
+      })
       .where(eq(users.id, user.id));
     await db.insert(profiles).values({
       id: generateId(),

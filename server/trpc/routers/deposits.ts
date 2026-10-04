@@ -6,6 +6,7 @@ import { dateRequests, deposits, users } from "@/server/db/schema";
 import { stripe } from "@/server/stripe/client";
 import { generateId } from "@/lib/utils";
 import { siteUrl } from "@/lib/site";
+import { markDepositHeld } from "@/server/deposits/mark-held";
 
 export const depositsRouter = createTRPCRouter({
   createPaymentIntent: protectedProcedure
@@ -80,7 +81,33 @@ export const depositsRouter = createTRPCRouter({
       return { clientSecret: paymentIntent.client_secret };
     }),
 
+  // Retour du formulaire de paiement : on vérifie le paiement auprès de Stripe sans attendre
+  // le webhook (qui peut arriver en retard, ou ne pas exister sur une preview).
+  syncPayment: protectedProcedure
+    .input(z.object({ paymentIntentId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const deposit = await ctx.db.query.deposits.findFirst({
+        where: eq(deposits.stripePaymentIntentId, input.paymentIntentId),
+        with: { dateRequest: true },
+      });
+      if (!deposit || deposit.dateRequest.requesterId !== ctx.session.user.id) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+      if (deposit.status !== "pending") return { status: deposit.status };
+
+      const pi = await stripe.paymentIntents.retrieve(input.paymentIntentId);
+      if (pi.status !== "succeeded") return { status: deposit.status };
+
+      await markDepositHeld(ctx.db, input.paymentIntentId, deposit.dateRequestId);
+      return { status: "held" as const };
+    }),
+
   createConnectedAccount: protectedProcedure.mutation(async ({ ctx }) => {
+    // Démo : pas d'inscription Stripe Connect, la femme est créée « déjà connectée »
+    if (ctx.isDemo) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "Disabled in the demo" });
+    }
+
     const user = await ctx.db.query.users.findFirst({
       where: eq(users.id, ctx.session.user.id),
     });

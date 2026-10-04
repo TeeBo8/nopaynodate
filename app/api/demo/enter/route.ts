@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/server/auth";
 import { isDemo } from "@/lib/demo";
 import { isSameOrigin, redirectTo } from "@/server/demo/http";
-import { createSandbox, isDemoFull, signInDemoUser } from "@/server/demo/sandbox";
+import { createSandbox, isDemoFull, isIpOverLimit, signInDemoUser } from "@/server/demo/sandbox";
 
 // Entrée dans la démo : crée la paire de comptes du visiteur et le connecte côté homme
 export async function POST(req: Request) {
@@ -13,9 +13,11 @@ export async function POST(req: Request) {
   const session = await auth.api.getSession({ headers: req.headers });
   if (session) return redirectTo(req, "/browse");
 
-  if (await isDemoFull()) return redirectTo(req, "/login?full=1");
+  if ((await isDemoFull()) || (await isIpOverLimit(req.headers))) {
+    return redirectTo(req, "/login?full=1");
+  }
 
-  const email = await createSandbox();
+  const email = await createSandbox(req.headers);
   const cookies = await signInDemoUser(email, req.headers);
   return redirectTo(req, "/browse", cookies);
 }
