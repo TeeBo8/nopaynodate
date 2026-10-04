@@ -4,7 +4,7 @@
 
 ## What this site is
 
-A portfolio project by TeeBo Studio (https://teebostudio.fr). Visitors enter the demo in one click and receive two throwaway accounts, one on each side of the flow. The accounts are deleted after 24 hours. Nobody can sign up.
+A portfolio project by TeeBo Studio (https://teebostudio.fr). Visitors enter the demo in one click and receive two throwaway accounts, one on each side of the flow. The accounts are deleted within 48 hours. Nobody can sign up.
 
 ## The flow being demonstrated
 

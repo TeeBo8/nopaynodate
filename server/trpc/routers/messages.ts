@@ -32,7 +32,7 @@ export const messagesRouter = createTRPCRouter({
 
       return ctx.db.query.messages.findMany({
         where: eq(messages.dateRequestId, input.requestId),
-        with: { sender: true },
+        with: { sender: { columns: { id: true, name: true } } },
         orderBy: [asc(messages.createdAt)],
       });
     }),
@@ -80,13 +80,18 @@ export const messagesRouter = createTRPCRouter({
         content: input.content,
       });
 
-      // Déclencher l'événement temps réel
-      await pusherServer.trigger(`private-chat-${input.requestId}`, "new-message", {
-        id,
-        senderId: ctx.session.user.id,
-        content: input.content,
-        createdAt: new Date().toISOString(),
-      });
+      // Déclencher l'événement temps réel. Le message est déjà enregistré : une panne de Pusher
+      // ne doit pas faire échouer l'envoi (l'autre le verra au prochain chargement).
+      try {
+        await pusherServer.trigger(`private-chat-${input.requestId}`, "new-message", {
+          id,
+          senderId: ctx.session.user.id,
+          content: input.content,
+          createdAt: new Date().toISOString(),
+        });
+      } catch (err) {
+        console.error("[Pusher] Erreur d'envoi temps réel:", err);
+      }
 
       return { id };
     }),

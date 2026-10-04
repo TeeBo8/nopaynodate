@@ -1,18 +1,44 @@
 import { z } from "zod";
-import { eq, and } from "drizzle-orm";
+import { eq, and, or, inArray } from "drizzle-orm";
 import { createTRPCRouter, protectedProcedure } from "../index";
-import { users, reports, subscriptions } from "@/server/db/schema";
+import { users, reports, subscriptions, dateRequests } from "@/server/db/schema";
 import { stripe } from "@/server/stripe/client";
 import { TRPCError } from "@trpc/server";
 
+// Date au format AAAA-MM-JJ, réelle, pour une personne de 18 à 120 ans
+function isAdultBirthdate(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const birth = new Date(`${value}T00:00:00Z`);
+  if (Number.isNaN(birth.getTime()) || birth.toISOString().slice(0, 10) !== value) return false;
+  const now = new Date();
+  let age = now.getUTCFullYear() - birth.getUTCFullYear();
+  const beforeBirthday =
+    now.getUTCMonth() < birth.getUTCMonth() ||
+    (now.getUTCMonth() === birth.getUTCMonth() && now.getUTCDate() < birth.getUTCDate());
+  if (beforeBirthday) age--;
+  return age >= 18 && age <= 120;
+}
+
 export const usersRouter = createTRPCRouter({
+  // Les champs du compte utiles à l'interface. Les identifiants Stripe et de bac à sable restent côté serveur.
   me: protectedProcedure.query(async ({ ctx }) => {
-    const user = await ctx.db
-      .select()
+    const [user] = await ctx.db
+      .select({
+        id: users.id,
+        name: users.name,
+        gender: users.gender,
+        birthdate: users.birthdate,
+        city: users.city,
+        bio: users.bio,
+        stripeAccountId: users.stripeAccountId,
+      })
       .from(users)
       .where(eq(users.id, ctx.session.user.id))
       .limit(1);
-    return user[0] ?? null;
+    if (!user) return null;
+
+    const { stripeAccountId, ...publicFields } = user;
+    return { ...publicFields, hasStripeAccount: !!stripeAccountId };
   }),
 
   isAdmin: protectedProcedure.query(({ ctx }) => {
@@ -26,7 +52,7 @@ export const usersRouter = createTRPCRouter({
         name: z.string().min(1).max(100).optional(),
         bio: z.string().max(500).optional(),
         city: z.string().max(100).optional(),
-        birthdate: z.string().optional(),
+        birthdate: z.union([z.literal(""), z.string().refine(isAdultBirthdate, "Invalid date of birth")]).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -48,6 +74,13 @@ export const usersRouter = createTRPCRouter({
       if (input.reportedUserId === ctx.session.user.id) {
         throw new TRPCError({ code: "BAD_REQUEST", message: "You cannot report yourself" });
       }
+      const reported = await ctx.db
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.id, input.reportedUserId))
+        .limit(1);
+      if (reported.length === 0) throw new TRPCError({ code: "NOT_FOUND" });
+
       const existing = await ctx.db
         .select({ id: reports.id })
         .from(reports)
@@ -74,6 +107,21 @@ export const usersRouter = createTRPCRouter({
     // Démo : les comptes sont supprimés par le nettoyage automatique
     if (ctx.isDemo) throw new TRPCError({ code: "FORBIDDEN", message: "Disabled in the demo" });
     const userId = ctx.session.user.id;
+
+    // Un dépôt en séquestre serait effacé sans être remboursé : il faut d'abord clore les demandes en cours
+    const openRequest = await ctx.db.query.dateRequests.findFirst({
+      where: and(
+        or(eq(dateRequests.requesterId, userId), eq(dateRequests.targetId, userId)),
+        inArray(dateRequests.status, ["paid", "accepted"])
+      ),
+      columns: { id: true },
+    });
+    if (openRequest) {
+      throw new TRPCError({
+        code: "PRECONDITION_FAILED",
+        message: "You still have requests with a held deposit. Resolve them before deleting your account.",
+      });
+    }
 
     // Annuler l'abonnement Stripe si actif
     const sub = await ctx.db

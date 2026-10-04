@@ -16,7 +16,7 @@ Démo en ligne : https://nopaynodate.teebostudio.fr
 4. Cliquer sur « Switch to Léa » dans le bandeau, accepter la demande, écrire dans le chat, confirmer le rendez-vous.
 5. Revenir sur Marc et confirmer à son tour : la demande passe en « Completed ».
 
-Les deux comptes sont supprimés automatiquement au bout de 24 heures.
+Les deux comptes vivent au moins 24 heures et sont supprimés automatiquement sous 48 heures.
 
 ## Ce que le projet montre
 
@@ -92,9 +92,9 @@ En mode démo :
 - chaque visiteur ne voit que les profils de décor et ses deux comptes
 - le paiement du dépôt est réel (Stripe en mode test), le versement à la femme est simulé
 - l'envoi d'emails, l'upload de photos, la suppression de compte, le signalement et l'abonnement premium sont désactivés
-- le serveur refuse de démarrer si la clé Stripe n'est pas une clé de test
-- au plus 5 bacs à sable par adresse IP et par heure, 200 actifs au total, 50 messages par conversation
-- une tâche planifiée supprime chaque nuit les bacs à sable de plus de 24 heures
+- tout ce qui touche à Stripe refuse de fonctionner si la clé n'est pas une clé de test
+- au plus 3 bacs à sable par adresse IP et par heure (8 par jour), 200 actifs au total, 20 demandes par compte, 50 messages par conversation
+- les bacs à sable de plus de 24 heures sont supprimés à chaque nouvelle entrée, et par une tâche planifiée chaque nuit
 - le site est en `noindex`
 
 ## Démarrage local

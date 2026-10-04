@@ -54,7 +54,7 @@ export function ReportButton({ reportedUserId }: { reportedUserId: string }) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>Report ce profil</DialogTitle>
+          <DialogTitle>Report this profile</DialogTitle>
           <DialogDescription>
             Your report will be reviewed by our team.
           </DialogDescription>

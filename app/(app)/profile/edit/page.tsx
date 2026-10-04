@@ -54,7 +54,7 @@ export default function ProfileEditPage() {
 
   const { data: myProfile } = api.profiles.myProfile.useQuery();
   const { data: me } = api.users.me.useQuery();
-  const hasStripeAccount = !!me?.stripeAccountId;
+  const hasStripeAccount = !!me?.hasStripeAccount;
 
   const serverPhotos = myProfile?.photos ?? [];
   const [photosOverride, setPhotosOverride] = useState<string[] | null>(null);
@@ -93,7 +93,8 @@ export default function ProfileEditPage() {
       birthdate: values.birthdate,
     });
     await upsertProfile.mutateAsync({
-      photos,
+      // Démo : les avatars illustrés ne sont pas modifiables, on n'envoie pas les photos
+      photos: isDemo ? undefined : photos,
       depositAmount: isWoman ? (values.depositAmount ?? 50) * 100 : undefined,
     });
     setSaved(true);
@@ -230,7 +231,7 @@ export default function ProfileEditPage() {
           {photos.length === 0 && (
             <p className="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
               <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-              At least one photo is required to appear in browse.
+              Without a photo, your card in Discover shows a placeholder.
             </p>
           )}
         </CardContent>

@@ -30,7 +30,7 @@ export default function PrivacyPage() {
 
         <section>
           <h2 className="text-lg font-semibold text-foreground mb-2">4. Data Retention</h2>
-          <p>Your data is retained for as long as your account is active. Upon account deletion, your profile, photos, and conversation data are permanently erased within 30 days. Payment records may be retained longer for legal compliance.</p>
+          <p>Your data is retained for as long as your account is active. Upon account deletion, your profile and conversation data are deleted from our database. Photos already uploaded to our storage provider may remain until they are purged. Payment records may be retained longer for legal compliance.</p>
         </section>
 
         <section>

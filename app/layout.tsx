@@ -10,12 +10,17 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
+const title = isDemo ? "NoPayNoDate — Technical demo" : "NoPayNoDate — Serious Dating. Guaranteed.";
+const shareDescription = isDemo
+  ? "Technical demo of a deposit-backed dating flow. Stripe test mode, fictional profiles, no real money."
+  : "No more ghosting. Men pay a secure deposit. 100% refunded if she declines.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   // La démo ne doit pas être référencée : c'est l'étude de cas qui doit être trouvée
   robots: isDemo ? { index: false, follow: false } : undefined,
   title: {
-    default: isDemo ? "NoPayNoDate — Technical demo" : "NoPayNoDate — Serious Dating. Guaranteed.",
+    default: title,
     template: "%s | NoPayNoDate",
   },
   description: isDemo
@@ -26,17 +31,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "NoPayNoDate",
-    title: "NoPayNoDate — Serious Dating. Guaranteed.",
-    description:
-      "No more ghosting. Men pay a secure deposit. 100% refunded if she declines.",
+    title,
+    description: shareDescription,
     url: siteUrl,
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "NoPayNoDate — Serious Dating. Guaranteed.",
-    description:
-      "No more ghosting. Men pay a secure deposit. 100% refunded if she declines.",
+    title,
+    description: shareDescription,
   },
   icons: {
     icon: [{ url: "/logo.svg", type: "image/svg+xml" }],

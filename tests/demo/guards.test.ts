@@ -27,7 +27,7 @@ import { subscriptionsRouter } from "@/server/trpc/routers/subscriptions";
 import { createCallerFactory } from "@/server/trpc/index";
 import { stripe } from "@/server/stripe/client";
 import { pusherServer } from "@/server/pusher/server";
-import { DEMO_MAX_MESSAGES_PER_CHAT } from "@/lib/demo";
+import { DEMO_MAX_MESSAGES_PER_CHAT, DEMO_MAX_REQUESTS_PER_ACCOUNT } from "@/lib/demo";
 import { createMockDb, type MockDb } from "../utils/mock-db";
 
 function makeCtx(userId: string, db: MockDb, isDemo: boolean) {
@@ -53,12 +53,13 @@ beforeEach(() => {
 });
 
 describe("démo : une demande ne vise que la femme du même bac à sable", () => {
-  const send = (target: object) => {
+  const send = (target: object, alreadySent = 0) => {
     db.query.users.findFirst
       .mockResolvedValueOnce({ id: MAN_ID, gender: "man", demoSandboxId: "box-A" })
       .mockResolvedValueOnce({ id: WOMAN_ID, gender: "woman", ...target });
     db.query.profiles.findFirst.mockResolvedValue({ userId: WOMAN_ID });
     db.query.dateRequests.findFirst.mockResolvedValue(null);
+    db.query.dateRequests.findMany.mockResolvedValue(Array.from({ length: alreadySent }, () => ({})));
     return createCallerFactory(requestsRouter)(makeCtx(MAN_ID, db, true)).send({
       targetId: WOMAN_ID,
     });
@@ -77,6 +78,13 @@ describe("démo : une demande ne vise que la femme du même bac à sable", () =>
   it("accepte la femme du même bac à sable", async () => {
     await expect(send({ demoSandboxId: "box-A" })).resolves.toHaveProperty("id");
     expect(db.insert).toHaveBeenCalledTimes(1);
+  });
+
+  it("refuse au-delà du plafond de demandes par compte", async () => {
+    await expect(
+      send({ demoSandboxId: "box-A" }, DEMO_MAX_REQUESTS_PER_ACCOUNT)
+    ).rejects.toThrow(forbidden);
+    expect(db.insert).not.toHaveBeenCalled();
   });
 });
 
@@ -101,6 +109,20 @@ describe("confirmation du rendez-vous", () => {
 
     expect(stripe.paymentIntents.retrieve).not.toHaveBeenCalled();
     expect(stripe.transfers.create).not.toHaveBeenCalled();
+    // confirmation, dépôt → released, demande → completed
+    expect(db.update).toHaveBeenCalledTimes(3);
+  });
+
+  it("démo : deux confirmations simultanées libèrent quand même le dépôt", async () => {
+    // À la première lecture, personne n'a confirmé ; à la relecture, les deux drapeaux sont vrais
+    const nobody = { ...accepted, targetConfirmed: false };
+    const both = { ...accepted, requesterConfirmed: true, targetConfirmed: true };
+    db.query.dateRequests.findFirst.mockResolvedValueOnce(nobody).mockResolvedValueOnce(both);
+    db.query.users.findFirst.mockResolvedValue(woman);
+
+    const caller = createCallerFactory(requestsRouter)(makeCtx(MAN_ID, db, true));
+    await expect(caller.confirm({ requestId: "req-1" })).resolves.toEqual({ success: true });
+
     // confirmation, dépôt → released, demande → completed
     expect(db.update).toHaveBeenCalledTimes(3);
   });
@@ -198,7 +220,8 @@ describe("photos du profil", () => {
   it("démo : les photos envoyées sont ignorées, le dépôt est enregistré", async () => {
     select([{ userId: WOMAN_ID }]);
     const caller = createCallerFactory(profilesRouter)(makeCtx(WOMAN_ID, db, true));
-    await caller.upsert({ photos: ["https://utfs.io/f/abc"], depositAmount: 8000 });
+    // Ce que la démo a réellement en base : un avatar local, qui n'est pas une adresse Uploadthing
+    await caller.upsert({ photos: ["/demo/avatars/lea.svg"], depositAmount: 8000 });
 
     const written = db.update.mock.results[0]?.value.set.mock.calls[0][0];
     expect(written).not.toHaveProperty("photos");
@@ -214,6 +237,40 @@ describe("photos du profil", () => {
       caller.upsert({ photos: ["javascript:alert(1)"] })
     ).rejects.toThrow(expect.objectContaining({ code: "BAD_REQUEST" }));
     expect(db.update).not.toHaveBeenCalled();
+  });
+});
+
+describe("hors démo : règles du compte", () => {
+  it("refuse la suppression tant qu'un dépôt est en séquestre", async () => {
+    db.query.dateRequests.findFirst.mockResolvedValue({ id: "req-1" });
+    (db as any).delete = vi.fn();
+    const caller = createCallerFactory(usersRouter)(makeCtx(WOMAN_ID, db, false));
+
+    await expect(caller.deleteAccount()).rejects.toThrow(
+      expect.objectContaining({ code: "PRECONDITION_FAILED" })
+    );
+    expect((db as any).delete).not.toHaveBeenCalled();
+  });
+
+  it("refuse une date de naissance invalide ou d'un mineur", async () => {
+    const caller = createCallerFactory(usersRouter)(makeCtx(MAN_ID, db, false));
+    const bad = expect.objectContaining({ code: "BAD_REQUEST" });
+    const minor = `${new Date().getUTCFullYear() - 10}-01-01`;
+
+    await expect(caller.updateProfile({ birthdate: "abc" })).rejects.toThrow(bad);
+    await expect(caller.updateProfile({ birthdate: "1990-02-31" })).rejects.toThrow(bad);
+    await expect(caller.updateProfile({ birthdate: minor })).rejects.toThrow(bad);
+    expect(db.update).not.toHaveBeenCalled();
+
+    await expect(caller.updateProfile({ birthdate: "1990-06-15" })).resolves.toBeUndefined();
+    expect(db.update).toHaveBeenCalledTimes(1);
+  });
+
+  it("refuse un montant de dépôt qui n'est pas un nombre entier de centimes", async () => {
+    const caller = createCallerFactory(profilesRouter)(makeCtx(WOMAN_ID, db, false));
+    await expect(caller.upsert({ depositAmount: 2500.5 })).rejects.toThrow(
+      expect.objectContaining({ code: "BAD_REQUEST" })
+    );
   });
 });
 

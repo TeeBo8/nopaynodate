@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { isDemo } from "@/lib/demo";
 
 export const runtime = "edge";
 export const size = { width: 1200, height: 630 };
@@ -97,8 +98,9 @@ export default function OGImage() {
             lineHeight: 1.5,
           }}
         >
-          No more ghosting — men pay a secure deposit via Stripe.
-          100% refunded if she declines.
+          {isDemo
+            ? "Technical demo of a deposit-backed dating flow. Stripe test mode, no real money."
+            : "No more ghosting — men pay a secure deposit via Stripe. 100% refunded if she declines."}
         </p>
 
         {/* Bottom badges */}

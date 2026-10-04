@@ -221,7 +221,6 @@ export function BrowseClient({
               userId={user.id}
               name={user.name}
               city={user.city}
-              bio={user.bio}
               birthdate={user.birthdate}
               photos={profile.photos ?? []}
               depositAmount={gender === "man" ? profile.depositAmount : undefined}

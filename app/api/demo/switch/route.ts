@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/server/auth";
 import { isDemo } from "@/lib/demo";
 import { isSameOrigin, redirectTo } from "@/server/demo/http";
-import { getOtherSandboxEmail, signInDemoUser } from "@/server/demo/sandbox";
+import { getOtherSandboxEmail, revokeSessions, signInDemoUser } from "@/server/demo/sandbox";
 
 // Changement de rôle : connecte le visiteur sur l'autre compte de son bac à sable
 export async function POST(req: Request) {
@@ -16,5 +16,6 @@ export async function POST(req: Request) {
   if (!otherEmail) return redirectTo(req, "/browse");
 
   const cookies = await signInDemoUser(otherEmail, req.headers);
+  await revokeSessions(session.user.id);
   return redirectTo(req, "/browse", cookies);
 }

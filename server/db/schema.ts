@@ -234,13 +234,3 @@ export const reportsRelations = relations(reports, ({ one }) => ({
   reporter: one(users, { fields: [reports.reporterId], references: [users.id] }),
   reportedUser: one(users, { fields: [reports.reportedUserId], references: [users.id] }),
 }));
-
-// Types inférés
-export type User = typeof users.$inferSelect;
-export type NewUser = typeof users.$inferInsert;
-export type Profile = typeof profiles.$inferSelect;
-export type DateRequest = typeof dateRequests.$inferSelect;
-export type Deposit = typeof deposits.$inferSelect;
-export type Message = typeof messages.$inferSelect;
-export type Subscription = typeof subscriptions.$inferSelect;
-export type Report = typeof reports.$inferSelect;

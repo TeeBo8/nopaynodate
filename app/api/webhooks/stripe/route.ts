@@ -10,6 +10,13 @@ import { DepotRecuFemmeEmail } from "@/server/emails/templates/depot-recu-femme"
 import { siteUrl } from "@/lib/site";
 import { markDepositHeld } from "@/server/deposits/mark-held";
 
+// Stripe connaît plus de statuts que la base (incomplete, trialing, unpaid, paused…)
+function toSubscriptionStatus(status: string): "active" | "past_due" | "canceled" {
+  if (status === "active" || status === "trialing") return "active";
+  if (status === "past_due" || status === "unpaid" || status === "incomplete") return "past_due";
+  return "canceled";
+}
+
 export async function POST(req: Request) {
   const body = await req.text();
   const signature = (await headers()).get("stripe-signature");
@@ -108,7 +115,7 @@ export async function POST(req: Request) {
         await db
           .update(subscriptions)
           .set({
-            status: sub.status as "active" | "past_due" | "canceled",
+            status: toSubscriptionStatus(sub.status),
             currentPeriodEnd: periodEnd,
             updatedAt: new Date(),
           })
@@ -119,7 +126,7 @@ export async function POST(req: Request) {
           userId: user.id,
           stripeSubscriptionId: sub.id,
           stripePriceId: priceId,
-          status: sub.status as "active" | "past_due" | "canceled",
+          status: toSubscriptionStatus(sub.status),
           currentPeriodEnd: periodEnd,
         });
       }

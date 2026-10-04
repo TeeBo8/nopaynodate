@@ -9,6 +9,13 @@ import { sendEmail } from "@/server/emails";
 import { MatchAccepteHommeEmail } from "@/server/emails/templates/match-accepte-homme";
 import { VirementRecuFemmeEmail } from "@/server/emails/templates/virement-recu-femme";
 import { siteUrl } from "@/lib/site";
+import { DEMO_MAX_REQUESTS_PER_ACCOUNT } from "@/lib/demo";
+
+// Ce que le navigateur reçoit de l'autre utilisateur d'une demande : jamais son email ni ses identifiants Stripe
+const PUBLIC_USER = {
+  columns: { id: true, name: true },
+  with: { profile: { columns: { photos: true, depositAmount: true } } },
+} as const;
 
 export const requestsRouter = createTRPCRouter({
   send: protectedProcedure
@@ -50,6 +57,19 @@ export const requestsRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
       }
 
+      if (ctx.isDemo) {
+        const sent = await ctx.db.query.dateRequests.findMany({
+          where: eq(dateRequests.requesterId, ctx.session.user.id),
+          columns: { id: true },
+        });
+        if (sent.length >= DEMO_MAX_REQUESTS_PER_ACCOUNT) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: `The demo is limited to ${DEMO_MAX_REQUESTS_PER_ACCOUNT} requests per account.`,
+          });
+        }
+      }
+
       // Renvoyer la demande existante si déjà active
       const existing = await ctx.db.query.dateRequests.findFirst({
         where: and(
@@ -81,7 +101,7 @@ export const requestsRouter = createTRPCRouter({
       return ctx.db.query.dateRequests.findMany({
         where: eq(dateRequests.requesterId, ctx.session.user.id),
         with: {
-          target: { with: { profile: true } },
+          target: PUBLIC_USER,
           deposit: true,
         },
         orderBy: [desc(dateRequests.createdAt)],
@@ -90,7 +110,7 @@ export const requestsRouter = createTRPCRouter({
       return ctx.db.query.dateRequests.findMany({
         where: eq(dateRequests.targetId, ctx.session.user.id),
         with: {
-          requester: { with: { profile: true } },
+          requester: PUBLIC_USER,
           deposit: true,
         },
         orderBy: [desc(dateRequests.createdAt)],
@@ -118,7 +138,7 @@ export const requestsRouter = createTRPCRouter({
       const currentUser = await ctx.db.query.users.findFirst({
         where: eq(users.id, ctx.session.user.id),
       });
-      if (!currentUser?.stripeAccountId) {
+      if (!currentUser?.stripeAccountId || !currentUser.isStripeVerified) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
           message: "You need to set up your Stripe Express account before accepting a request.",
@@ -202,12 +222,32 @@ export const requestsRouter = createTRPCRouter({
       const updateData = isRequester
         ? { requesterConfirmed: true as const, updatedAt: new Date() }
         : { targetConfirmed: true as const, updatedAt: new Date() };
+      const writeConfirmation = () =>
+        ctx.db.update(dateRequests).set(updateData).where(eq(dateRequests.id, input.requestId));
 
       // Si l'autre a déjà confirmé → libérer les fonds.
       // Le versement Stripe part AVANT toute écriture en base : s'il échoue, rien n'est
       // enregistré et la confirmation peut être relancée (avant, la demande restait bloquée).
-      const bothConfirmed = isRequester ? request.targetConfirmed : request.requesterConfirmed;
-      const deposit = bothConfirmed ? request.deposit : null;
+      let deposit = (isRequester ? request.targetConfirmed : request.requesterConfirmed)
+        ? request.deposit
+        : null;
+      let confirmationWritten = false;
+
+      if (!deposit) {
+        // Premier à confirmer : on enregistre, puis on relit la demande. Si l'autre a confirmé
+        // au même instant, les deux drapeaux sont vrais et c'est à nous de libérer les fonds.
+        await writeConfirmation();
+        confirmationWritten = true;
+        const fresh = await ctx.db.query.dateRequests.findFirst({
+          where: eq(dateRequests.id, input.requestId),
+          with: { deposit: true },
+        });
+        const bothConfirmed =
+          fresh?.status === "accepted" && fresh.requesterConfirmed && fresh.targetConfirmed;
+        if (!bothConfirmed) return { success: true };
+        deposit = fresh.deposit;
+      }
+
       const targetUser = deposit
         ? await ctx.db.query.users.findFirst({ where: eq(users.id, request.targetId) })
         : null;
@@ -237,10 +277,7 @@ export const requestsRouter = createTRPCRouter({
         }
       }
 
-      await ctx.db
-        .update(dateRequests)
-        .set(updateData)
-        .where(eq(dateRequests.id, input.requestId));
+      if (!confirmationWritten) await writeConfirmation();
 
       if (released && deposit) {
         await ctx.db

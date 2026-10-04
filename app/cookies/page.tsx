@@ -31,18 +31,23 @@ export default function CookiesPage() {
               </thead>
               <tbody className="divide-y divide-border">
                 <tr>
-                  <td className="px-4 py-3 font-mono">better-auth.session</td>
+                  <td className="px-4 py-3 font-mono">better-auth.session_token</td>
                   <td className="px-4 py-3">Authentication session — keeps you logged in</td>
-                  <td className="px-4 py-3">Session / 30 days</td>
+                  <td className="px-4 py-3">7 days</td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-3 font-mono">theme</td>
-                  <td className="px-4 py-3">Stores your light/dark mode preference</td>
-                  <td className="px-4 py-3">1 year</td>
+                  <td className="px-4 py-3 font-mono">better-auth.session_data</td>
+                  <td className="px-4 py-3">Short-lived copy of the session, to avoid a database lookup on every page</td>
+                  <td className="px-4 py-3">5 minutes</td>
                 </tr>
               </tbody>
             </table>
           </div>
+        </section>
+
+        <section>
+          <h2 className="text-lg font-semibold text-foreground mb-2">Local storage</h2>
+          <p>Your light or dark mode preference is kept in your browser&apos;s local storage, not in a cookie. It never leaves your device.</p>
         </section>
 
         <section>
