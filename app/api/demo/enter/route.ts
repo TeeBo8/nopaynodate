@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     return redirectTo(req, "/login?full=1");
   }
 
-  const email = await createSandbox();
+  const email = await createSandbox(req.headers);
   const cookies = await signInDemoUser(email, req.headers);
   return redirectTo(req, "/browse", cookies);
 }

@@ -63,7 +63,7 @@ export async function deleteExpiredSandboxes(): Promise<number> {
 }
 
 // Crée la paire de comptes d'un visiteur (un homme, une femme) et renvoie l'email du compte homme.
-export async function createSandbox(): Promise<string> {
+export async function createSandbox(headers: Headers): Promise<string> {
   const sandboxId = generateId();
 
   for (const gender of ["man", "woman"] as const) {
@@ -79,6 +79,8 @@ export async function createSandbox(): Promise<string> {
         city: persona.city,
         bio: persona.bio,
       },
+      // Transmis pour que la session ouverte à l'inscription porte l'adresse IP du visiteur
+      headers,
     });
     await db
       .update(users)
