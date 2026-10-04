@@ -64,13 +64,20 @@ export default function ProfileEditPage() {
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
-    defaultValues: {
-      name: session?.user?.name ?? "",
-      bio: me?.bio ?? "",
-      city: me?.city ?? "",
-      birthdate: me?.birthdate ?? "",
-      depositAmount: myProfile?.depositAmount ? myProfile.depositAmount / 100 : 50,
-    },
+    defaultValues: { name: "", bio: "", city: "", birthdate: "", depositAmount: 50 },
+    // `values` remplit le formulaire quand les données arrivent (elles sont chargées après le premier rendu)
+    values:
+      me && myProfile !== undefined
+        ? {
+            name: me.name,
+            bio: me.bio ?? "",
+            city: me.city ?? "",
+            birthdate: me.birthdate ?? "",
+            depositAmount: myProfile?.depositAmount ? myProfile.depositAmount / 100 : 50,
+          }
+        : undefined,
+    // Un rafraîchissement des données en arrière-plan n'écrase pas une saisie en cours
+    resetOptions: { keepDirtyValues: true },
   });
 
   const watched = useWatch({ control: form.control });

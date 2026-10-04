@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../index";
 import { users } from "@/server/db/schema";
 import { stripe } from "@/server/stripe/client";
+import { siteUrl } from "@/lib/site";
 
 export const subscriptionsRouter = createTRPCRouter({
   createCheckoutSession: protectedProcedure.mutation(async ({ ctx }) => {
@@ -44,8 +45,8 @@ export const subscriptionsRouter = createTRPCRouter({
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings?premium=success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
+      success_url: `${siteUrl}/settings?premium=success`,
+      cancel_url: `${siteUrl}/settings`,
       metadata: { userId: user.id },
     });
 
@@ -62,7 +63,7 @@ export const subscriptionsRouter = createTRPCRouter({
 
     const session = await stripe.billingPortal.sessions.create({
       customer: user.stripeCustomerId,
-      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
+      return_url: `${siteUrl}/settings`,
     });
 
     return { url: session.url };
