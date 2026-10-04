@@ -3,7 +3,7 @@ import { inferAdditionalFields } from "better-auth/client/plugins";
 import type { auth } from "@/server/auth";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
+  // Pas de baseURL : le client appelle le domaine sur lequel la page est servie (prod, preview, local)
   plugins: [inferAdditionalFields<typeof auth>()],
 });
 

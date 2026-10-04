@@ -7,6 +7,7 @@ import { generateId } from "@/lib/utils";
 import { sendEmail } from "@/server/emails";
 import { DepotRecuHommeEmail } from "@/server/emails/templates/depot-recu-homme";
 import { DepotRecuFemmeEmail } from "@/server/emails/templates/depot-recu-femme";
+import { siteUrl } from "@/lib/site";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -52,7 +53,7 @@ export async function POST(req: Request) {
         with: { requester: true, target: true },
       });
       if (deposit && request) {
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+        const appUrl = siteUrl;
         await Promise.all([
           sendEmail({
             to: request.requester.email,

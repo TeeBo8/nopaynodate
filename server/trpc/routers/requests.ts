@@ -8,6 +8,7 @@ import { generateId } from "@/lib/utils";
 import { sendEmail } from "@/server/emails";
 import { MatchAccepteHommeEmail } from "@/server/emails/templates/match-accepte-homme";
 import { VirementRecuFemmeEmail } from "@/server/emails/templates/virement-recu-femme";
+import { siteUrl } from "@/lib/site";
 
 export const requestsRouter = createTRPCRouter({
   send: protectedProcedure
@@ -125,7 +126,7 @@ export const requestsRouter = createTRPCRouter({
         where: eq(users.id, ctx.session.user.id),
       });
       if (requesterUser && targetUser) {
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+        const appUrl = siteUrl;
         await sendEmail({
           to: requesterUser.email,
           subject: `${targetUser.name} a accepté votre demande — le chat est ouvert !`,
@@ -230,7 +231,7 @@ export const requestsRouter = createTRPCRouter({
               .where(eq(dateRequests.id, request.id));
 
             // Email femme : virement reçu
-            const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+            const appUrl = siteUrl;
             await sendEmail({
               to: targetUser.email,
               subject: `Virement de $${(request.deposit.netAmount / 100).toFixed(2)} reçu`,

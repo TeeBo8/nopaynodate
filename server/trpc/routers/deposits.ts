@@ -5,6 +5,7 @@ import { createTRPCRouter, protectedProcedure } from "../index";
 import { dateRequests, deposits, users } from "@/server/db/schema";
 import { stripe } from "@/server/stripe/client";
 import { generateId } from "@/lib/utils";
+import { siteUrl } from "@/lib/site";
 
 export const depositsRouter = createTRPCRouter({
   createPaymentIntent: protectedProcedure
@@ -104,8 +105,8 @@ export const depositsRouter = createTRPCRouter({
 
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
-      refresh_url: `${process.env.NEXT_PUBLIC_APP_URL}/payments/onboarding`,
-      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/payments/onboarding?success=1`,
+      refresh_url: `${siteUrl}/payments/onboarding`,
+      return_url: `${siteUrl}/payments/onboarding?success=1`,
       type: "account_onboarding",
     });
 
