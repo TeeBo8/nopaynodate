@@ -25,7 +25,7 @@ export const depositsRouter = createTRPCRouter({
       if (request.status !== "pending") {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Cette demande n'est plus en attente de paiement",
+          message: "This request is no longer awaiting payment",
         });
       }
 

@@ -60,7 +60,7 @@ export async function POST(req: Request) {
           }),
           sendEmail({
             to: request.target.email,
-            subject: `${request.requester.name} vous a envoyé une demande`,
+            subject: `${request.requester.name} sent you a request`,
             react: DepotRecuFemmeEmail({
               womanName: request.target.name,
               manName: request.requester.name,

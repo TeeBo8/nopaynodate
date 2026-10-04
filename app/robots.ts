@@ -1,6 +1,11 @@
 import { MetadataRoute } from "next";
+import { siteUrl } from "@/lib/site";
+import { isDemo } from "@/lib/demo";
 
 export default function robots(): MetadataRoute.Robots {
+  // Démo : rien n'est proposé à l'indexation
+  if (isDemo) return { rules: [{ userAgent: "*", disallow: "/" }] };
+
   return {
     rules: [
       {
@@ -9,6 +14,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin", "/api/", "/payments/"],
       },
     ],
-    sitemap: "https://nopaynodate.com/sitemap.xml",
+    sitemap: `${siteUrl}/sitemap.xml`,
   };
 }

@@ -17,7 +17,7 @@ export const subscriptionsRouter = createTRPCRouter({
     if (user.premiumUntil && new Date(user.premiumUntil) > new Date()) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Vous êtes déjà abonné premium",
+        message: "You already have a Premium subscription",
       });
     }
 
@@ -60,7 +60,7 @@ export const subscriptionsRouter = createTRPCRouter({
       where: eq(users.id, ctx.session.user.id),
     });
     if (!user?.stripeCustomerId) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: "Aucun abonnement actif" });
+      throw new TRPCError({ code: "BAD_REQUEST", message: "No active subscription" });
     }
 
     const session = await stripe.billingPortal.sessions.create({

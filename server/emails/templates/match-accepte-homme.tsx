@@ -24,7 +24,7 @@ export function MatchAccepteHommeEmail({ manName, womanName, chatUrl }: Props) {
       <Preview>{womanName} accepted your request — the chat is now open!</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>C&apos;est un match !</Heading>
+          <Heading style={h1}>It&apos;s a match!</Heading>
           <Text style={text}>Hi {manName},</Text>
           <Text style={text}>
             <strong>{womanName}</strong> accepted your request. The chat is now

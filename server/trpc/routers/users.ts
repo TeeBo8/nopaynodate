@@ -46,7 +46,7 @@ export const usersRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       if (ctx.isDemo) throw new TRPCError({ code: "FORBIDDEN", message: "Disabled in the demo" });
       if (input.reportedUserId === ctx.session.user.id) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Impossible de se signaler soi-même" });
+        throw new TRPCError({ code: "BAD_REQUEST", message: "You cannot report yourself" });
       }
       const existing = await ctx.db
         .select({ id: reports.id })
@@ -59,7 +59,7 @@ export const usersRouter = createTRPCRouter({
         )
         .limit(1);
       if (existing.length > 0) {
-        throw new TRPCError({ code: "CONFLICT", message: "Vous avez déjà signalé ce profil" });
+        throw new TRPCError({ code: "CONFLICT", message: "You have already reported this profile" });
       }
       const id = crypto.randomUUID();
       await ctx.db.insert(reports).values({

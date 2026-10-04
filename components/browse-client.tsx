@@ -204,7 +204,7 @@ export function BrowseClient({
             <p className="text-sm text-muted-foreground mt-1">
               {hasActiveFilters
                 ? "Try broadening your filters."
-                : "Check back later — new profiles are added every day."}
+                : "There is nobody to show right now."}
             </p>
           </div>
           {hasActiveFilters && (

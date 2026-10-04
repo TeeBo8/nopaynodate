@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
 import { isDemo } from "@/lib/demo";
 
@@ -10,15 +9,13 @@ const freeFeatures = [
   "Access to browse",
   "Receive requests (women)",
   "Send requests with deposit (men)",
-  "Chat after acceptance",
+  "Chat once the deposit is paid",
 ];
 
 const premiumFeatures = [
   "Everything in the free plan",
   "Boosted profile in browse",
   "Visible premium badge",
-  "Priority access to new profiles",
-  "Priority support",
 ];
 
 export function LandingPricing() {
@@ -38,10 +35,10 @@ export function LandingPricing() {
           {/* Gratuit */}
           <Card className="border-border/60">
             <CardHeader className="p-6 pb-0">
-              <div className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Gratuit</div>
+              <div className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Free</div>
               <div className="mt-2 flex items-baseline gap-1">
                 <span className="text-4xl font-bold">$0</span>
-                <span className="text-muted-foreground">/mois</span>
+                <span className="text-muted-foreground">/month</span>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">To start and explore.</p>
             </CardHeader>
@@ -62,14 +59,11 @@ export function LandingPricing() {
 
           {/* Premium */}
           <Card className="border-primary/40 relative overflow-hidden">
-            <div className="absolute right-4 top-4">
-              <Badge>Popular</Badge>
-            </div>
             <CardHeader className="p-6 pb-0">
               <div className="text-sm font-semibold text-primary uppercase tracking-wide">Premium</div>
               <div className="mt-2 flex items-baseline gap-1">
                 <span className="text-4xl font-bold">$19.99</span>
-                <span className="text-muted-foreground">/mois</span>
+                <span className="text-muted-foreground">/month</span>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">To maximize your chances.</p>
             </CardHeader>

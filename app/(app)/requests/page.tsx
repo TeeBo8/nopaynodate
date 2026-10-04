@@ -211,7 +211,7 @@ export default function RequestsPage() {
                           <p className="text-xs text-muted-foreground">
                             {otherConfirmed
                               ? "Both confirmed ✓"
-                              : "Confirmation envoyée — en attente de l'autre partie"}
+                              : "Confirmation sent, waiting for the other side"}
                           </p>
                         );
                       }

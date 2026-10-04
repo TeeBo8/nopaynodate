@@ -152,7 +152,9 @@ export function LandingHero() {
         {/* Badge */}
         <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/8 px-4 py-1.5 text-sm text-primary backdrop-blur-sm">
           <ShieldCheck className="h-3.5 w-3.5" />
-          Deposits held in Stripe escrow — refunded if declined
+          {isDemo
+            ? "Technical demo · fictional profiles · no real money"
+            : "Deposits held in Stripe escrow — refunded if declined"}
         </div>
 
         {/* Headline */}
@@ -197,24 +199,6 @@ export function LandingHero() {
         </div>
 
         <p className="text-sm text-muted-foreground">{isDemo ? "No sign-up · Stripe test mode, no real money" : "Free sign-up · No credit card required"}</p>
-
-        {/* Stats */}
-        <div className="flex items-center gap-8 pt-2">
-          <div className="text-center">
-            <div className="text-xl font-bold">12,847</div>
-            <div className="text-xs text-muted-foreground">Women registered</div>
-          </div>
-          <div className="h-8 w-px bg-border" />
-          <div className="text-center">
-            <div className="text-xl font-bold">$2.4M</div>
-            <div className="text-xs text-muted-foreground">Deposits secured</div>
-          </div>
-          <div className="h-8 w-px bg-border" />
-          <div className="text-center">
-            <div className="text-xl font-bold">4,200+</div>
-            <div className="text-xs text-muted-foreground">Connections made</div>
-          </div>
-        </div>
       </div>
 
       {/* ── Scroll indicator ── */}

@@ -26,7 +26,7 @@ export const messagesRouter = createTRPCRouter({
       if (!request.deposit || !["held", "released"].includes(request.deposit.status)) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Le chat n'est pas encore débloqué",
+          message: "The chat is not unlocked yet",
         });
       }
 
@@ -55,7 +55,7 @@ export const messagesRouter = createTRPCRouter({
       if (!request.deposit || !["held", "released"].includes(request.deposit.status)) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Le chat n'est pas encore débloqué",
+          message: "The chat is not unlocked yet",
         });
       }
 

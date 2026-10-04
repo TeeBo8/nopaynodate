@@ -13,7 +13,7 @@ const NAV = [
             { label: "Create account", href: "/register" },
             { label: "Sign in", href: "/login" },
           ]),
-      { label: "Go Premium", href: "/settings" },
+      ...(isDemo ? [] : [{ label: "Go Premium", href: "/settings" }]),
     ],
   },
   {
@@ -89,7 +89,20 @@ export function LandingFooter() {
       <div className="border-t border-border/40">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-5 flex flex-col items-center justify-between gap-3 sm:flex-row">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} NoPayNoDate. All rights reserved.
+            {isDemo ? (
+              <>
+                Technical demo by{" "}
+                <a
+                  href="https://teebostudio.fr"
+                  className="underline underline-offset-4 hover:text-foreground transition-colors"
+                >
+                  TeeBo Studio
+                </a>{" "}
+                · not a real service, no real money
+              </>
+            ) : (
+              <>© {new Date().getFullYear()} NoPayNoDate. All rights reserved.</>
+            )}
           </p>
           <p className="text-xs text-muted-foreground text-center">
             For adults 18+ only · By using this platform you agree to our{" "}

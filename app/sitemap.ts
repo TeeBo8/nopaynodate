@@ -1,7 +1,11 @@
 import { MetadataRoute } from "next";
+import { siteUrl } from "@/lib/site";
+import { isDemo } from "@/lib/demo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://nopaynodate.com";
+  if (isDemo) return [];
+
+  const base = siteUrl;
   return [
     {
       url: base,
