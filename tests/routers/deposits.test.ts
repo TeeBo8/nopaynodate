@@ -33,7 +33,7 @@ function makeCtx(userId: string, db: MockDb) {
       session: { id: "sess-1", userId, expiresAt: new Date(Date.now() + 86400000) },
     },
     req: {} as any,
-  };
+  } as any;
 }
 
 const USER_ID = "user-man-1";
